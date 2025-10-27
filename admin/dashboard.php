@@ -48,16 +48,16 @@ if (isset($_GET['status'])) {
     if ($alert_message) {
         // Get the clean URL (current page without parameters)
         $clean_url = strtok($_SERVER["REQUEST_URI"], '?');
-        
+
         // Use JavaScript to display the alert, and then redirect to the clean URL
         echo "<script>";
         // 1. Show the alert
         echo "alert('{$alert_message}');";
         // 2. Redirect to the clean URL to prevent the alert on refresh
-        echo "window.location.replace('{$clean_url}');"; 
+        echo "window.location.replace('{$clean_url}');";
         echo "</script>";
-        
-        exit(); 
+
+        exit();
     }
 }
 
@@ -101,13 +101,12 @@ if ($result_state && $result_state->num_rows > 0) {
         <h1 class="text-3xl font-extrabold mb-6 text-gray-800">Admin Dashboard</h1>
         <p class="mb-8 text-gray-600">This is the admin dashboard. Here you can manage users and site settings.</p>
 
-        <!-- Manage Students -->
         <section class="mb-12">
-            <div class="w-full lg:w-3/4 mx-auto">
+            <div class="max-w-6xl mx-auto">
                 <h2 class="text-2xl font-semibold mb-4 text-blue-700">Manage Students</h2>
 
                 <div class="overflow-x-auto shadow border-b border-gray-200 sm:rounded-lg">
-                    <table class="w-full divide-y divide-gray-200 table-fixed">
+                    <table class="w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="w-16 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
@@ -130,12 +129,12 @@ if ($result_state && $result_state->num_rows > 0) {
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            <?php echo ($user['status'] == 'active') ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'; ?>">
+                                        <?php echo ($user['status'] == 'active') ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'; ?>">
                                                 <?= htmlspecialchars($user['status']) ?>
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 text-center text-sm font-medium">
-                                            <a href="edit_user.php?id=<?= $user['id'] ?>" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</a>
+                                            <a href="edit_user.php?id=<?= $user['id'] ?>" class="text-indigo-600 hover:text-indigo-900 mr-4">Activate</a>
                                             <a href="delete_user.php?id=<?= $user['id'] ?>" onclick="return confirm('Are you sure you want to delete this user?')" class="text-red-600 hover:text-red-900">Delete</a>
                                         </td>
                                     </tr>
@@ -151,13 +150,12 @@ if ($result_state && $result_state->num_rows > 0) {
             </div>
         </section>
 
-        <!-- Manage Lecturers -->
         <section>
-            <div class="w-full lg:w-3/4 mx-auto">
+            <div class="max-w-6xl mx-auto">
                 <h2 class="text-2xl font-semibold mb-4 text-blue-700">Manage Lecturers</h2>
 
                 <div class="overflow-x-auto shadow border-b border-gray-200 sm:rounded-lg">
-                    <table class="w-full divide-y divide-gray-200 table-fixed">
+                    <table class="w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
                                 <th class="w-16 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
@@ -180,12 +178,12 @@ if ($result_state && $result_state->num_rows > 0) {
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                                            <?php echo ($lecturer['status'] == 'active') ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'; ?>">
+                                        <?php echo ($lecturer['status'] == 'active') ? 'bg-blue-100 text-blue-800' : 'bg-red-100 text-red-800'; ?>">
                                                 <?= htmlspecialchars($lecturer['status']) ?>
                                             </span>
                                         </td>
                                         <td class="px-6 py-4 text-center text-sm font-medium">
-                                            <a href="edit_user.php?id=<?= $lecturer['id'] ?>" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</a>
+                                            <a href="edit_user.php?id=<?= $lecturer['id'] ?>" class="text-indigo-600 hover:text-indigo-900 mr-4">Activate</a>
                                             <a href="delete_user.php?id=<?= $lecturer['id'] ?>" onclick="return confirm('Are you sure you want to delete this user?')" class="text-red-600 hover:text-red-900">Delete</a>
                                         </td>
                                     </tr>
