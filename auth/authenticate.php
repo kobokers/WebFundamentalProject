@@ -17,6 +17,7 @@ if (mysqli_num_rows($result) > 0) {
     // Check if account active
     if ($user['status'] != 'active') {
         echo "<p class='text-yellow-500'>Your account is not activated by admin.</p>";
+        echo "<script> window.history.back(); </script>";
         exit;
     }
 

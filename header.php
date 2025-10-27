@@ -44,7 +44,7 @@ if (file_exists('config.php')) {
                     
                     <?php if(isset($_SESSION['user_id'])): ?>
                         <li><a href="<?php echo BASE_URL; ?>auth/dashboard.php" class="text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 transition">Dashboard</a></li>
-                        <li><a href="<?php echo BASE_URL; ?>auth/logout.php" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">Logout</a></li>
+                        <li><a href="<?php echo BASE_URL; ?>logout.php" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">Logout</a></li>
                     <?php else: ?>
                         <li><a href="<?php echo BASE_URL; ?>auth/login.php" class="text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 transition">Login</a></li>
                         <li><a href="<?php echo BASE_URL; ?>auth/register.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Register</a></li>
@@ -61,7 +61,7 @@ if (file_exists('config.php')) {
                 
                 <?php if(isset($_SESSION['user_id'])): ?>
                     <li><a href="<?php echo BASE_URL; ?>auth/dashboard.php" class="block text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 mx-2">Dashboard</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>auth/logout.php" class="block bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-center mx-2">Logout</a></li>
+                    <li><a href="<?php echo BASE_URL; ?>logout.php" class="block bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-center mx-2">Logout</a></li>
                 <?php else: ?>
                     <li><a href="<?php echo BASE_URL; ?>auth/login.php" class="block text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 mx-2">Login</a></li>
                     <li><a href="<?php echo BASE_URL; ?>auth/register.php" class="block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center mx-2">Register</a></li>
