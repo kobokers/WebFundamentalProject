@@ -1,7 +1,20 @@
 <?php
+session_start();
 $pageTitle = "Home - OLMS";
 include('connection.php');
 include('header.php');
+
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
+    echo "<script> alert('Access denied.'); </script>";
+    header("Location: ./admin/index.php");
+    exit();
+}
+
+if (!isset($_SESSION["user_id"])) {
+    echo "<script> alert('Please Login'); </script>";
+    header("Location: ./admin/index.php");
+    exit(); // Always exit after a header redirect
+}
 ?>
 
 <body>
