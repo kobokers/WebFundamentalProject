@@ -14,13 +14,9 @@ if(!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
     exit();
 }
 
-// *** CHANGE THIS LINE ***
 if(isset($_GET['id'])) { 
-    // *** CHANGE THIS LINE ***
     $user_id = $_GET['id']; 
 
-    // Assuming your users table primary key column is 'id' (from the dashboard code)
-    // If your column is 'user_id', change the SQL: WHERE user_id = ?
     $stmt = $conn->prepare("DELETE FROM users WHERE id = ?"); 
     
     // Check if the prepare statement failed
@@ -33,13 +29,12 @@ if(isset($_GET['id'])) {
         if($stmt->execute()) {
             $redirect_url = "dashboard.php?status=success"; // Adjust the path as necessary
         } else {
-            // *** CRITICAL DEBUGGING STEP: SHOW THE MYSQL ERROR ***
             $redirect_url = "dashboard.php?status=error";
         }
 
         $stmt->close();
 
-        header("Location: " . $redirect_url); // Assuming delete_user.php is in the same directory as dashboard.php
+        header("Location: " . $redirect_url); 
         exit();
     }
 } else {
