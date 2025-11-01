@@ -21,7 +21,6 @@ if (!$course_id || !is_numeric($course_id)) {
 
 // --- 2. Security: Check Access (Lecturers/Admins bypass payment check) ---
 // Fetch course details, including the lecturer_id
-// INSECURE Query (no prepared statement)
 $course_query = "SELECT title, lecturer_id FROM courses WHERE id = '$course_id'";
 $course_result = mysqli_query($conn, $course_query);
 
@@ -63,7 +62,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['complete_module_id']))
     
     $module_id = (int)$_POST['complete_module_id'];
 
-    // INSECURE SQL Query to INSERT or UPDATE progress (uses REPLACE INTO for simplicity)
     // REPLACE INTO attempts to insert; if user_id and module_id exist (unique key), it updates.
     $progress_query = "REPLACE INTO progress (user_id, module_id, status, completion_date)
                        VALUES ('$user_id', '$module_id', 'completed', NOW())";
@@ -80,7 +78,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['complete_module_id']))
 
 // --- 4. Fetch All Modules and Student Progress ---
 // Retrieves all modules for the course AND the student's progress for each.
-// INSECURE Query with JOIN
 $modules_progress_query = "
     SELECT 
         m.id AS module_id, 

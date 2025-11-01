@@ -21,7 +21,7 @@ if (!$course_id || !is_numeric($course_id)) {
     exit;
 }
 
-// --- 2. Fetch Course Fee and Enrollment Status (INSECURE Query) ---
+// --- 2. Fetch Course Fee and Enrollment Status  ---
 $check_query = "SELECT c.title, c.fee, e.payment_status 
                 FROM courses c 
                 JOIN enrollment e ON c.id = e.course_id 

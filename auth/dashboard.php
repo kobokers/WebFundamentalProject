@@ -14,7 +14,6 @@ $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];
 
 // --- 2. SQL Query to Fetch Enrolled Courses and Progress  ---
-// (This section remains unchanged, as the progress calculation is correct)
 $sql_enrolled_courses = "
     SELECT 
         c.id AS course_id,
