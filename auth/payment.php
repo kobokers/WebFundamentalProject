@@ -46,7 +46,7 @@ if ($course_data['payment_status'] == 'paid') {
     exit;
 }
 
-// --- 3. Process Payment Simulation (CRITICAL UPDATE) ---
+// --- 3. Process Payment Simulation ---
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['pay_submit'])) {
     
     // ************************************************

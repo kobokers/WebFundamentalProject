@@ -62,6 +62,7 @@ $result = mysqli_query($conn, $sql_courses);
                                 <th class="py-3 px-6 text-left">Level</th>
                                 <th class="py-3 px-6 text-center">Fee</th>
                                 <th class="py-3 px-6 text-center">Actions</th>
+                                <th class="py-3 px-6 text-center">Enrollments</th>
                             </tr>
                         </thead>
                         <tbody class="text-gray-600 text-sm font-light">
@@ -79,6 +80,9 @@ $result = mysqli_query($conn, $sql_courses);
                                     <td class="py-3 px-6 text-center space-x-2">
                                         <a href="module_setup.php?course_id=<?php echo $row['course_id']; ?>" class="text-blue-500 hover:text-blue-700 font-medium text-xs">Manage Modules</a>
                                         <a href="edit_course.php?course_id=<?php echo $row['course_id']; ?>" class="text-gray-500 hover:text-gray-700 font-medium text-xs">Edit Details</a>
+                                    </td>
+                                    <td class="py-3 px-10 text-center">
+                                        <a href="view_enrollment.php?course_id=<?php echo $row['course_id']; ?>" class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-3 rounded text-xs transition duration-200 ml-2">View Students</a>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
