@@ -19,17 +19,16 @@ if (!$course_id || !is_numeric($course_id)) {
     exit;
 }
 
-// --- 2. Handle Form Submission (UPDATE) ---
+// --- 2. Handle Form Submission ---
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_course'])) {
     
-    // Collect and minimally escape input (INSECURE)
+    // Collect and minimally escape input
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     $level = mysqli_real_escape_string($conn, $_POST['level']);
     $language = mysqli_real_escape_string($conn, $_POST['language']);
     $fee = (float)$_POST['fee'];
 
-    // INSECURE SQL Query to UPDATE Course Details
-    // It verifies that the course belongs to the logged-in lecturer before updating (essential security practice, even with insecure methods).
+    // It verifies that the course belongs to the logged-in lecturer before updating.
     $update_query = "UPDATE courses 
                      SET title = '$title', level = '$level', language = '$language', fee = '$fee' 
                      WHERE id = '$course_id' AND lecturer_id = '$lecturer_id'";
@@ -45,7 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_course'])) {
 }
 
 // --- 3. Fetch Existing Course Data (for display in form) ---
-// INSECURE SQL Query, also verifies ownership
 $fetch_query = "SELECT title, level, language, fee FROM courses 
                 WHERE id = '$course_id' AND lecturer_id = '$lecturer_id'";
                 

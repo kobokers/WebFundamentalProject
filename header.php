@@ -1,5 +1,5 @@
 <?php
-// Include config from wherever we are
+
 if (file_exists('config.php')) {
     require_once('config.php');
 } elseif (file_exists('../config.php')) {

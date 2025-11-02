@@ -1,7 +1,7 @@
 <?php
 session_start();
-include("../header.php"); 
-include("../connection.php"); 
+include("../header.php");
+include("../connection.php");
 
 // --- 1. Authentication Check ---
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'student') {
@@ -55,7 +55,7 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
 
         <section id="enrolled-courses" class="mb-10">
             <h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-book-open mr-2"></i> My Learning Path</h2>
-            
+
             <?php if (mysqli_num_rows($result) > 0): ?>
                 <div class="overflow-x-auto">
                     <table class="min-w-full bg-white shadow-md rounded-lg">
@@ -84,44 +84,47 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
                                         <span class="text-xs mt-1 block"><?php echo (int)$row['progress_percentage']; ?>% Complete</span>
                                     </td>
                                     <td class="py-3 px-6 text-center">
-                                        <?php 
-                                            $status_class = ($row['payment_status'] == 'paid') ? 'bg-green-200 text-green-600' : 'bg-yellow-200 text-yellow-600';
+                                        <?php
+                                        $status_class = ($row['payment_status'] == 'paid') ? 'bg-green-200 text-green-600' : 'bg-yellow-200 text-yellow-600';
                                         ?>
                                         <span class="py-1 px-3 rounded-full text-xs font-semibold <?php echo $status_class; ?>">
                                             <?php echo ucfirst(htmlspecialchars($row['payment_status'])); ?>
                                         </span>
                                     </td>
                                     <td class="py-3 px-6 text-center">
-                                        <?php 
+                                        <div class="flex flex-col space-y-2 items-center">
+                                            <?php
                                             $progress = (int)$row['progress_percentage'];
                                             $is_paid = ($row['payment_status'] == 'paid');
 
-                                            // Determine the correct action button
+                                            // --- 1. Primary Action Link (Continue/Certificate/Pay Now) ---
                                             if ($is_paid && $progress === 100) {
-                                                // ---  COURSE COMPLETE: SHOW CERTIFICATE LINK ---
-                                                // Link to the action file with the certificate parameter
-                                                ?>
-                                                <a href="../auth/student_actions.php?action=certificate&course_id=<?php echo $row['course_id']; ?>" 
-                                                   class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-1 px-3 rounded text-xs transition duration-200">
-                                                    View Certificate
-                                                </a>
-                                                <?php
+                                                // COURSE COMPLETE: SHOW CERTIFICATE LINK
+                                                $primary_link = '../auth/student_actions.php?action=certificate&course_id=' . $row['course_id'];
+                                                $primary_class = 'bg-purple-600 hover:bg-purple-700';
+                                                $primary_text = 'View Certificate';
                                             } elseif ($is_paid) {
-                                                // --- COURSE IN PROGRESS: SHOW CONTINUE LINK ---
-                                                ?>
-                                                <a href="course_view.php?id=<?php echo $row['course_id']; ?>" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-3 rounded text-xs transition duration-200">
-                                                    Continue Course
-                                                </a>
-                                                <?php
+                                                // COURSE IN PROGRESS: SHOW CONTINUE LINK
+                                                $primary_link = 'course_view.php?id=' . $row['course_id'];
+                                                $primary_class = 'bg-blue-500 hover:bg-blue-600';
+                                                $primary_text = 'Continue Course';
                                             } else {
-                                                // --- PENDING PAYMENT: SHOW PAY NOW LINK ---
-                                                ?>
-                                                <a href="../auth/payment.php?course_id=<?php echo $row['course_id']; ?>" class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded text-xs transition duration-200">
-                                                    Pay Now ($<?php echo number_format($row['fee'], 2); ?>)
-                                                </a>
-                                                <?php
+                                                // PENDING PAYMENT: SHOW PAY NOW LINK
+                                                $primary_link = '../auth/payment.php?course_id=' . $row['course_id'];
+                                                $primary_class = 'bg-red-500 hover:bg-red-600';
+                                                $primary_text = 'Pay Now ($' . number_format($row['fee'], 2) . ')';
                                             }
-                                        ?>
+                                            ?>
+                                            <a href="<?php echo $primary_link; ?>"
+                                                class="<?php echo $primary_class; ?> text-white font-bold py-1 px-3 w-full rounded text-xs transition duration-200">
+                                                <?php echo $primary_text; ?>
+                                            </a>
+
+                                            <a href="course_discussion.php?course_id=<?php echo $row['course_id']; ?>"
+                                                class="bg-indigo-500 hover:bg-indigo-600 text-white font-bold py-1 px-3 w-full rounded text-xs transition duration-200 mt-1">
+                                                <i class="fas fa-comments mr-1"></i> Discussion
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endwhile; ?>
@@ -144,10 +147,11 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
                 <a href="../auth/logout.php" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-200">Logout</a>
             </div>
         </section>
-        
+
         <?php mysqli_close($conn); ?>
 
     </div>
 </body>
 <?php include("../footer.php"); ?>
+
 </html>

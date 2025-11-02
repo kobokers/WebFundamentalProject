@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['pay_submit'])) {
     // For this simulation, we assume payment is successful.
     // ************************************************
 
-    // --- CRITICAL INSECURE SQL: Update Payment Status ---
+    // --- Update Payment Status ---
     $update_query = "UPDATE enrollment 
                      SET payment_status = 'paid', payment_date = NOW() 
                      WHERE user_id = '{$user_id}' AND course_id = '{$course_id}'";

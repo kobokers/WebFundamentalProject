@@ -4,7 +4,6 @@ include("../header.php");
 include("../connection.php"); 
 
 // --- 1. Basic Validation ---
-// (Authentication checks omitted for brevity but are required)
 $module_id = isset($_GET['module_id']) ? $_GET['module_id'] : null;
 
 if (!$module_id || !is_numeric($module_id)) {
@@ -13,14 +12,13 @@ if (!$module_id || !is_numeric($module_id)) {
     exit;
 }
 
-// --- 2. Handle Form Submission (UPDATE) ---
+// --- 2. Handle Form Submission  ---
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_module'])) {
     
     $module_title = mysqli_real_escape_string($conn, $_POST['module_title']);
     $module_order = (int)$_POST['module_order'];
     $course_id = (int)$_POST['course_id'];
 
-    // INSECURE SQL Query to UPDATE Module
     $update_query = "UPDATE modules 
                      SET title = '$module_title', module_order = '$module_order' 
                      WHERE id = '$module_id'";

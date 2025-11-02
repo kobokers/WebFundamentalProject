@@ -1,6 +1,5 @@
 <?php
 session_start();
-// Use relative path for includes, assuming this file is in 'auth/'
 include("../connection.php"); 
 
 // --- 1. Authentication and Validation ---
@@ -21,20 +20,20 @@ if ($action === 'certificate') {
 
     if (!$course_id || !is_numeric($course_id)) {
         $_SESSION['error'] = "Invalid request.";
-        header("Location: ../dashboard.php"); // Assuming dashboard.php is in the root
+        header("Location: ../dashboard.php"); 
         exit;
     }
 
-    // --- 2. Fetch Course Data and Calculate Progress (CRITICAL CHECK) ---
+    // --- 2. Fetch Course Data and Calculate Progress ---
 
-    // a) Get Total Modules (INSECURE)
+    // 1) Get Total Modules 
     $total_modules_query = "SELECT COUNT(id) AS total_modules 
                             FROM modules 
                             WHERE course_id = '$course_id'";
     $total_modules_result = mysqli_query($conn, $total_modules_query);
     $total_modules = mysqli_fetch_assoc($total_modules_result)['total_modules'];
 
-    // b) Get Completed Modules (INSECURE)
+    // 2) Get Completed Modules 
     $completed_modules_query = "SELECT COUNT(p.id) AS completed_modules
                                 FROM progress p
                                 JOIN modules m ON p.module_id = m.id
@@ -42,10 +41,10 @@ if ($action === 'certificate') {
     $completed_modules_result = mysqli_query($conn, $completed_modules_query);
     $completed_modules = mysqli_fetch_assoc($completed_modules_result)['completed_modules'];
 
-    // Calculate completion status
+    // 3) Calculate completion status
     $is_complete = ($total_modules > 0 && $completed_modules == $total_modules);
 
-    // c) Fetch Course Title and Lecturer Name (INSECURE)
+    // 4) Fetch Course Title and Lecturer Name (INSECURE)
     $course_data_query = "SELECT c.title AS course_title, u.name AS lecturer_name
                           FROM courses c
                           JOIN users u ON c.lecturer_id = u.id

@@ -7,7 +7,7 @@
     </footer>
 
     <script>
-        // Mobile menu toggle with smooth animation
+        // Mobile menu toggle 
         const navToggle = document.getElementById('navToggle');
         const mobileMenu = document.getElementById('mobileMenu');
         

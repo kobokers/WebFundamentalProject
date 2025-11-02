@@ -1,11 +1,11 @@
 <?php
 session_start();
-include("../header.php");
-include("../connection.php"); 
+include("../header.php"); // Up to root
+include("../connection.php"); // Up to root
 
 // --- 1. Basic Validation ---
 if (!isset($_SESSION['user_id'])) {
-    header("Location: ../auth/login.php");
+    header("Location: login.php");
     exit;
 }
 
@@ -41,31 +41,31 @@ if (!$is_lecturer) {
     $enroll_query = "SELECT payment_status FROM enrollment 
                      WHERE user_id = '$user_id' AND course_id = '$course_id' LIMIT 1";
     $enroll_result = mysqli_query($conn, $enroll_query);
-    
+
     if (mysqli_num_rows($enroll_result) > 0) {
         $enroll_data = mysqli_fetch_assoc($enroll_result);
         if ($enroll_data['payment_status'] === 'paid') {
             $has_paid = true;
         }
     }
-    
+
     // DENY ACCESS if student hasn't paid
     if (!$has_paid) {
         $_SESSION['error'] = "You must complete payment to access this course.";
-        header("Location: ../auth/payment.php?course_id={$course_id}");
+        header("Location: payment.php?course_id={$course_id}");
         exit;
     }
 }
 
 // --- 3. Handle Progress Update (Mark Module Complete) ---
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['complete_module_id'])) {
-    
+
     $module_id = (int)$_POST['complete_module_id'];
 
     // REPLACE INTO attempts to insert; if user_id and module_id exist (unique key), it updates.
     $progress_query = "REPLACE INTO progress (user_id, module_id, status, completion_date)
                        VALUES ('$user_id', '$module_id', 'completed', NOW())";
-    
+
     if (mysqli_query($conn, $progress_query)) {
         $_SESSION['success'] = "Module marked as complete!";
     } else {
@@ -77,7 +77,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['complete_module_id']))
 }
 
 // --- 4. Fetch All Modules and Student Progress ---
-// Retrieves all modules for the course AND the student's progress for each.
 $modules_progress_query = "
     SELECT 
         m.id AS module_id, 
@@ -94,15 +93,11 @@ $modules_progress_query = "
         m.module_order ASC";
 
 $modules_progress_result = mysqli_query($conn, $modules_progress_query);
-?>
 
-<?php 
 // Calculate overall progress for the display
 $total_modules = mysqli_num_rows($modules_progress_result);
 $completed_modules = 0;
-// Need to reset the pointer to iterate again in the HTML, or store results in an array
 $modules_list = mysqli_fetch_all($modules_progress_result, MYSQLI_ASSOC);
-mysqli_data_seek($modules_progress_result, 0); // Reset pointer for HTML loop
 
 foreach ($modules_list as $module) {
     if (isset($module['progress_status']) && $module['progress_status'] === 'completed') {
@@ -114,8 +109,16 @@ $progress_percentage = ($total_modules > 0) ? round(($completed_modules / $total
 
 <body>
     <div class="container mx-auto p-8 max-w-4xl">
+        
         <header class="mb-8">
-            <h1 class="text-4xl font-extrabold text-blue-800"><?php echo $course_title; ?></h1>
+            <div class="flex justify-between items-center mb-2">
+                <h1 class="text-4xl font-extrabold text-blue-800"><?php echo $course_title; ?></h1>
+                
+                <a href="course_discussion.php?course_id=<?php echo $course_id; ?>"
+                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 flex items-center shrink-0">
+                    <i class="fas fa-comments mr-2"></i> **Go to Discussion**
+                </a>
+            </div>
             <p class="text-lg text-gray-600">Course Content and Progress Tracker</p>
         </header>
 
@@ -128,15 +131,17 @@ $progress_percentage = ($total_modules > 0) ? round(($completed_modules / $total
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
-            <div class="p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+            <div class="p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded"><?php echo $_SESSION['success'];
+            unset($_SESSION['success']); ?></div>
         <?php endif; ?>
         <?php if (isset($_SESSION['error'])): ?>
-            <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+            <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded"><?php echo $_SESSION['error'];
+            unset($_SESSION['error']); ?></div>
         <?php endif; ?>
 
         <section id="course-modules" class="space-y-4">
             <h2 class="text-2xl font-bold mb-4">Course Modules</h2>
-            
+
             <?php foreach ($modules_list as $module): ?>
                 <?php $is_completed = (isset($module['progress_status']) && $module['progress_status'] === 'completed'); ?>
                 <div class="flex items-center justify-between p-5 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
@@ -144,9 +149,9 @@ $progress_percentage = ($total_modules > 0) ? round(($completed_modules / $total
                         <span class="text-xl font-bold mr-4 text-blue-600"><?php echo $module['module_order']; ?>.</span>
                         <h3 class="text-lg font-medium <?php echo $is_completed ? 'text-gray-500 line-through' : 'text-gray-900'; ?>">
                             <?php echo htmlspecialchars($module['module_title']); ?>
-                            </h3>
+                        </h3>
                     </div>
-                    
+
                     <div>
                         <?php if ($is_completed): ?>
                             <span class="py-1 px-3 text-xs font-semibold bg-green-100 text-green-600 rounded-full flex items-center">
@@ -165,8 +170,8 @@ $progress_percentage = ($total_modules > 0) ? round(($completed_modules / $total
             <?php endforeach; ?>
 
             <?php if ($total_modules == 0): ?>
-                 <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 rounded-lg">
-                    This course has no modules yet. Please check back later!
+                <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 rounded-lg">
+                    This course has no modules yet. Please check back later.
                 </div>
             <?php endif; ?>
         </section>
@@ -176,5 +181,4 @@ $progress_percentage = ($total_modules > 0) ? round(($completed_modules / $total
         </div>
     </div>
 </body>
-
-<?php mysqli_close($conn); ?>
+<?php include("../footer.php"); ?>

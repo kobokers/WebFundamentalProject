@@ -4,6 +4,7 @@ $pageTitle = "Home - OLMS";
 include('connection.php');
 include('header.php');
 
+// bugged code
 // if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'admin') {
 //     echo "<script> alert('Access denied.'); </script>";
 //     header("Location: ./index.php");

@@ -20,7 +20,7 @@ if (!$course_id || !is_numeric($course_id)) {
     exit;
 }
 
-// --- 2. Verify Lecturer Owns the Course (INSECURE Query) ---
+// --- 2. Verify Lecturer Owns the Course  ---
 $verify_query = "SELECT title FROM courses WHERE id = '$course_id' AND lecturer_id = '$lecturer_id'";
 $verify_result = mysqli_query($conn, $verify_query);
 
@@ -39,7 +39,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['module_title'])) {
     $module_title = mysqli_real_escape_string($conn, $_POST['module_title']);
     $module_order = (int)$_POST['module_order'];
 
-    // --- INSECURE SQL Query to Insert New Module ---
     $insert_query = "INSERT INTO modules (course_id, title, module_order) 
                      VALUES ('$course_id', '$module_title', '$module_order')";
 
@@ -54,7 +53,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['module_title'])) {
 }
 
 // --- 4. Fetch Existing Modules ---
-// (INSECURE query)
 $modules_query = "SELECT id, title, module_order FROM modules WHERE course_id = '$course_id' ORDER BY module_order ASC";
 $modules_result = mysqli_query($conn, $modules_query);
 
