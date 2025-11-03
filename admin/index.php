@@ -13,6 +13,7 @@ include("header.php");
 //     header("Location: ../index.php");
 //     exit(); // Always exit after a header redirect
 // }
+// bug bug bug bug bug bug bug bug bug bug
 
 ?>
 
