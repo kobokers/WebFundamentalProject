@@ -50,7 +50,7 @@ if ($course_data['payment_status'] == 'paid') {
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['pay_submit'])) {
     
     // ************************************************
-    // In a real application, a secure payment gateway (e.g., Stripe, PayPal) 
+    // In a real application, a secure payment gateway (e.g., Stripe, PayPal and Toyyibpay) 
     // API call would be placed here.
     // For this simulation, we assume payment is successful.
     // ************************************************
