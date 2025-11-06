@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 03, 2025 at 07:00 AM
+-- Generation Time: Nov 06, 2025 at 02:37 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -33,17 +33,21 @@ CREATE TABLE `courses` (
   `level` varchar(50) DEFAULT NULL,
   `language` varchar(50) DEFAULT NULL,
   `fee` double(10,2) DEFAULT NULL,
-  `lecturer_id` int(11) DEFAULT NULL
+  `lecturer_id` int(11) DEFAULT NULL,
+  `description` varchar(500) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `courses`
 --
 
-INSERT INTO `courses` (`id`, `title`, `level`, `language`, `fee`, `lecturer_id`) VALUES
-(1, 'Advanced Javascript', 'Intermediate', 'English', 1000.00, 4),
-(2, 'CS150 Computer Science', 'Advanced', 'English', 0.00, 8),
-(3, 'Fundamentals Mathematics', 'Beginner', 'English', 100.00, 8);
+INSERT INTO `courses` (`id`, `title`, `level`, `language`, `fee`, `lecturer_id`, `description`) VALUES
+(1, 'Advanced Javascript', 'Intermediate', 'English', 1000.00, 4, 'Text about javascript'),
+(2, 'CS150 Computer Science', 'Advanced', 'English', 0.00, 8, ''),
+(3, 'Fundamentals Mathematics', 'Beginner', 'English', 100.00, 8, ''),
+(4, 'Deep Learning', 'Advanced', 'English', 10.00, 8, ''),
+(5, 'Database Design', 'Intermediate', 'English', 0.00, 4, ''),
+(6, 'Web Programming', 'Intermediate', 'English', 100.00, 4, 'Learn more challenge about web programming');
 
 -- --------------------------------------------------------
 
@@ -88,7 +92,8 @@ CREATE TABLE `discussion_threads` (
 --
 
 INSERT INTO `discussion_threads` (`id`, `course_id`, `user_id`, `title`, `content`, `created_at`) VALUES
-(1, 1, 4, 'Basic javascript task', 'Make a js code where it will show alert to the webpage', '2025-11-02 08:11:26');
+(1, 1, 4, 'Basic javascript task', 'Make a js code where it will show alert to the webpage', '2025-11-02 08:11:26'),
+(2, 2, 8, 'TASK: DO A HTML CODE', 'make sure finish on friday', '2025-11-04 20:11:04');
 
 -- --------------------------------------------------------
 
@@ -113,7 +118,8 @@ INSERT INTO `enrollment` (`id`, `user_id`, `course_id`, `enroll_date`, `payment_
 (1, 2, 1, '2025-11-01', '2025-11-01 17:59:10', 'paid'),
 (2, 9, 2, '2025-11-02', NULL, 'paid'),
 (3, 9, 1, '2025-11-02', '2025-11-02 10:02:15', 'paid'),
-(4, 9, 3, '2025-11-02', NULL, 'pending');
+(4, 9, 3, '2025-11-02', NULL, 'pending'),
+(5, 2, 4, '2025-11-04', NULL, 'pending');
 
 -- --------------------------------------------------------
 
@@ -143,7 +149,13 @@ INSERT INTO `modules` (`id`, `course_id`, `title`, `module_order`) VALUES
 (9, 2, 'Frameworks (Laravel)', 6),
 (10, 3, 'Introduction to math', 1),
 (11, 3, 'Quadratic 1', 2),
-(12, 3, 'Calculus I', 3);
+(12, 3, 'Calculus I', 3),
+(13, 4, 'Introduction to AI', 1),
+(14, 4, 'Matrix I', 2),
+(15, 4, 'Python ', 3),
+(16, 4, 'Pytorch', 4),
+(17, 4, 'C Language', 5),
+(18, 4, 'Automated Script', 6);
 
 -- --------------------------------------------------------
 
@@ -264,7 +276,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `courses`
 --
 ALTER TABLE `courses`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `discussion_replies`
@@ -276,19 +288,19 @@ ALTER TABLE `discussion_replies`
 -- AUTO_INCREMENT for table `discussion_threads`
 --
 ALTER TABLE `discussion_threads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `enrollment`
 --
 ALTER TABLE `enrollment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `modules`
 --
 ALTER TABLE `modules`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT for table `progress`
