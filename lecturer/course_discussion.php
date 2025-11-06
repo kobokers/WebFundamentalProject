@@ -67,7 +67,7 @@ $topics_result = mysqli_query($conn, $topics_query);
     <div class="container mx-auto p-8 max-w-5xl">
         <header class="mb-8">
             <h1 class="text-4xl font-extrabold text-purple-800">Course Discussion Board</h1>
-            <p class="text-lg text-gray-600">Course: **<?php echo htmlspecialchars($course_title); ?>**</p>
+            <p class="text-lg text-gray-600">Course: <b><?php echo htmlspecialchars($course_title); ?></b></p>
             <a href="dashboard.php" class="text-purple-500 hover:text-purple-700 mt-2 inline-block">← Back to Dashboard</a>
         </header>
 

@@ -30,6 +30,4 @@ include('header.php');
     </main>
 </body>
 
-<!-- Swiper JS -->
-
 <?php include('footer.php'); ?>

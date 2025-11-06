@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['username'] = $username;
 
                 $_SESSION['success'] = "Profile updated successfully!";
-                header("Location: edit_profile.php");
+                header("Location: profile_edit.php");
                 exit;
             } else {
                 $_SESSION['error'] = "Profile update failed: " . mysqli_error($conn);
@@ -129,7 +129,7 @@ if (!isset($current_user) && mysqli_num_rows($result) > 0) {
         }
         ?>
 
-        <form method="POST" action="edit_profile.php" class="space-y-5">
+        <form method="POST" action="profile_edit.php" class="space-y-5">
 
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700">Name:</label>
