@@ -133,50 +133,34 @@ if (!isset($current_user) && mysqli_num_rows($result) > 0) {
 
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700">Name:</label>
-                <input
-                    type="text"
-                    id="username"
-                    name="username"
-                    value="<?php echo htmlspecialchars($current_user['name'] ?? ''); ?>"
-                    required
+                <input type="text" id="username" name="username"
+                    value="<?php echo htmlspecialchars($current_user['name'] ?? ''); ?>" required
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value="<?php echo htmlspecialchars($current_user['email'] ?? ''); ?>"
-                    required
+                <input type="email" id="email" name="email"
+                    value="<?php echo htmlspecialchars($current_user['email'] ?? ''); ?>" required
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">New Password (Leave blank to keep current):</label>
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Enter new password"
+                <label for="password" class="block text-sm font-medium text-gray-700">New Password (Leave blank to keep
+                    current):</label>
+                <input type="password" id="password" name="password" placeholder="Enter new password"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <div>
-                <label for="confirm_password" class="block text-sm font-medium text-gray-700">Confirm New Password</label>
-                <input
-                    type="password"
-                    id="confirm_password"
-                    name="confirm_password"
-                    placeholder="Re-enter new password"
+                <label for="confirm_password" class="block text-sm font-medium text-gray-700">Confirm New
+                    Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter new password"
                     class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <div>
-                <input
-                    type="submit"
-                    value="Update Profile"
+                <input type="submit" value="Update Profile"
                     class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out mt-6 cursor-pointer">
             </div>
         </form>

@@ -109,11 +109,11 @@ $progress_percentage = ($total_modules > 0) ? round(($completed_modules / $total
 
 <body>
     <div class="container mx-auto p-8 max-w-4xl">
-        
+
         <header class="mb-8">
             <div class="flex justify-between items-center mb-2">
                 <h1 class="text-4xl font-extrabold text-blue-800"><?php echo $course_title; ?></h1>
-                
+
                 <a href="course_discussion.php?course_id=<?php echo $course_id; ?>"
                     class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 flex items-center shrink-0">
                     <i class="fas fa-comments mr-2"></i> **Go to Discussion**
@@ -125,17 +125,19 @@ $progress_percentage = ($total_modules > 0) ? round(($completed_modules / $total
         <div class="bg-gray-100 p-4 rounded-lg shadow mb-8">
             <h2 class="text-xl font-semibold mb-2">Your Progress: <?php echo $progress_percentage; ?>% Complete</h2>
             <div class="w-full bg-gray-300 rounded-full h-4">
-                <div class="bg-green-600 h-4 rounded-full transition-all duration-500" style="width: <?php echo $progress_percentage; ?>%"></div>
+                <div class="bg-green-600 h-4 rounded-full transition-all duration-500"
+                    style="width: <?php echo $progress_percentage; ?>%"></div>
             </div>
-            <p class="text-sm mt-2 text-gray-700"><?php echo $completed_modules; ?> of <?php echo $total_modules; ?> modules completed.</p>
+            <p class="text-sm mt-2 text-gray-700"><?php echo $completed_modules; ?> of <?php echo $total_modules; ?>
+                modules completed.</p>
         </div>
 
         <?php if (isset($_SESSION['success'])): ?>
-            <div class="p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded"><?php echo $_SESSION['success'];
+        <div class="p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded"><?php echo $_SESSION['success'];
             unset($_SESSION['success']); ?></div>
         <?php endif; ?>
         <?php if (isset($_SESSION['error'])): ?>
-            <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded"><?php echo $_SESSION['error'];
+        <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded"><?php echo $_SESSION['error'];
             unset($_SESSION['error']); ?></div>
         <?php endif; ?>
 
@@ -143,36 +145,40 @@ $progress_percentage = ($total_modules > 0) ? round(($completed_modules / $total
             <h2 class="text-2xl font-bold mb-4">Course Modules</h2>
 
             <?php foreach ($modules_list as $module): ?>
-                <?php $is_completed = (isset($module['progress_status']) && $module['progress_status'] === 'completed'); ?>
-                <div class="flex items-center justify-between p-5 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
-                    <div class="flex items-center">
-                        <span class="text-xl font-bold mr-4 text-blue-600"><?php echo $module['module_order']; ?>.</span>
-                        <h3 class="text-lg font-medium <?php echo $is_completed ? 'text-gray-500 line-through' : 'text-gray-900'; ?>">
-                            <?php echo htmlspecialchars($module['module_title']); ?>
-                        </h3>
-                    </div>
-
-                    <div>
-                        <?php if ($is_completed): ?>
-                            <span class="py-1 px-3 text-xs font-semibold bg-green-100 text-green-600 rounded-full flex items-center">
-                                <i class="fas fa-check-circle mr-1"></i> Completed
-                            </span>
-                        <?php else: ?>
-                            <form action="course_view.php?id=<?php echo $course_id; ?>" method="POST" class="inline">
-                                <input type="hidden" name="complete_module_id" value="<?php echo $module['module_id']; ?>">
-                                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 text-xs font-semibold rounded transition">
-                                    Mark Complete
-                                </button>
-                            </form>
-                        <?php endif; ?>
-                    </div>
+            <?php $is_completed = (isset($module['progress_status']) && $module['progress_status'] === 'completed'); ?>
+            <div
+                class="flex items-center justify-between p-5 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                <div class="flex items-center">
+                    <span class="text-xl font-bold mr-4 text-blue-600"><?php echo $module['module_order']; ?>.</span>
+                    <h3
+                        class="text-lg font-medium <?php echo $is_completed ? 'text-gray-500 line-through' : 'text-gray-900'; ?>">
+                        <?php echo htmlspecialchars($module['module_title']); ?>
+                    </h3>
                 </div>
+
+                <div>
+                    <?php if ($is_completed): ?>
+                    <span
+                        class="py-1 px-3 text-xs font-semibold bg-green-100 text-green-600 rounded-full flex items-center">
+                        <i class="fas fa-check-circle mr-1"></i> Completed
+                    </span>
+                    <?php else: ?>
+                    <form action="course_view.php?id=<?php echo $course_id; ?>" method="POST" class="inline">
+                        <input type="hidden" name="complete_module_id" value="<?php echo $module['module_id']; ?>">
+                        <button type="submit"
+                            class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 text-xs font-semibold rounded transition">
+                            Mark Complete
+                        </button>
+                    </form>
+                    <?php endif; ?>
+                </div>
+            </div>
             <?php endforeach; ?>
 
             <?php if ($total_modules == 0): ?>
-                <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 rounded-lg">
-                    This course has no modules yet. Please check back later.
-                </div>
+            <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 rounded-lg">
+                This course has no modules yet. Please check back later.
+            </div>
             <?php endif; ?>
         </section>
 

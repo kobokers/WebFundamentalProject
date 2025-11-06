@@ -83,25 +83,27 @@ mysqli_close($conn);
         </header>
 
         <?php if (isset($_SESSION['error'])): ?>
-            <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+        <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
         <?php endif; ?>
-        
+
         <div class="p-8 bg-white rounded-xl shadow-2xl border border-gray-100">
-            
+
             <div class="text-center mb-6">
                 <p class="text-xl text-gray-700 font-semibold mb-2">Amount Due:</p>
                 <p class="text-5xl font-bold text-green-600">$<?php echo number_format($course_fee, 2); ?></p>
             </div>
-            
+
             <form action="payment.php" method="POST">
                 <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
                 <input type="hidden" name="pay_submit" value="1">
-                
+
                 <p class="text-sm text-center text-gray-500 mb-4">
                     By clicking below, you simulate a successful payment transaction.
                 </p>
 
-                <button type="submit" class="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-700 transition duration-200 text-xl shadow-lg">
+                <button type="submit"
+                    class="w-full bg-red-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-red-700 transition duration-200 text-xl shadow-lg">
                     <i class="fas fa-credit-card mr-2"></i> Confirm & Pay Now
                 </button>
             </form>

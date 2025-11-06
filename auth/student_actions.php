@@ -61,87 +61,95 @@ if ($action === 'certificate') {
     // --- 3. HTML Output ---
     ?>
 
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Certificate of Completion</title>
-        <link href="../css/tailwind.min.css" rel="stylesheet"> 
-        <style>
-            /* CSS remains the same as previously drafted */
-            .certificate-container {
-                width: 100%;
-                max-width: 1000px;
-                height: 700px;
-                margin: 50px auto;
-                border: 10px solid gold;
-                padding: 50px;
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-                background-color: #fff;
-                background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><text x="50" y="50" font-size="20" font-family="Arial" fill="#f0f0f0" text-anchor="middle" dominant-baseline="central">CERTIFICATE</text></svg>');
-                background-repeat: no-repeat;
-                background-position: center;
-            }
-            @media print {
-                .certificate-container {
-                    margin: 0;
-                    border: none;
-                    box-shadow: none;
-                }
-                .no-print {
-                    display: none;
-                }
-            }
-        </style>
-    </head>
-    <body>
-        <div class="certificate-container text-center">
-            <?php if (!$is_complete): ?>
-                <div class="p-6 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-                    <h2 class="text-3xl font-bold mb-4">Course Not Yet Completed!</h2>
-                    <p class="text-lg">You must complete all **<?php echo $total_modules; ?>** modules to receive your certificate. You currently have **<?php echo $completed_modules; ?>** complete.</p>
-                    <a href="../course_view.php?id=<?php echo $course_id; ?>" class="mt-4 inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 no-print">
-                        Return to Course
-                    </a>
-                </div>
-            <?php else: ?>
-                <h1 class="text-5xl font-extrabold text-blue-800 mb-8 mt-10">CERTIFICATE OF COMPLETION</h1>
+<!DOCTYPE html>
+<html lang="en">
 
-                <p class="text-2xl text-gray-700 mb-4">This acknowledges that</p>
-                
-                <h2 class="text-6xl font-serif font-bold text-teal-600 mb-10 border-b-4 border-teal-200 inline-block px-10">
-                    <?php echo htmlspecialchars($user_name); ?>
-                </h2>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate of Completion</title>
+    <link href="../css/tailwind.min.css" rel="stylesheet">
+    <style>
+    /* CSS remains the same as previously drafted */
+    .certificate-container {
+        width: 100%;
+        max-width: 1000px;
+        height: 700px;
+        margin: 50px auto;
+        border: 10px solid gold;
+        padding: 50px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        background-color: #fff;
+        background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 100 100"><text x="50" y="50" font-size="20" font-family="Arial" fill="#f0f0f0" text-anchor="middle" dominant-baseline="central">CERTIFICATE</text></svg>');
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 
-                <p class="text-2xl text-gray-700 mb-4">Has successfully completed the training course</p>
-                
-                <h3 class="text-4xl font-bold text-gray-800 mb-12">
-                    "<?php echo $course_title; ?>"
-                </h3>
+    @media print {
+        .certificate-container {
+            margin: 0;
+            border: none;
+            box-shadow: none;
+        }
 
-                <div class="flex justify-around items-center mt-16">
-                    <div class="w-1/3">
-                        <p class="text-lg font-semibold border-t border-gray-400 pt-2">
-                            <?php echo $lecturer_name; ?><br>
-                            Instructor Signature
-                        </p>
-                    </div>
-                    <div class="w-1/3">
-                        <p class="text-xl font-semibold text-gray-800">Date Completed:</p>
-                        <p class="text-3xl font-bold text-gray-900"><?php echo $completion_date; ?></p>
-                    </div>
-                </div>
+        .no-print {
+            display: none;
+        }
+    }
+    </style>
+</head>
 
-                <button onclick="window.print()" class="no-print mt-12 bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 shadow-xl">
-                    <i class="fas fa-print mr-2"></i> Print Certificate
-                </button>
-            <?php endif; ?>
+<body>
+    <div class="certificate-container text-center">
+        <?php if (!$is_complete): ?>
+        <div class="p-6 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <h2 class="text-3xl font-bold mb-4">Course Not Yet Completed!</h2>
+            <p class="text-lg">You must complete all **<?php echo $total_modules; ?>** modules to receive your
+                certificate. You currently have **<?php echo $completed_modules; ?>** complete.</p>
+            <a href="../course_view.php?id=<?php echo $course_id; ?>"
+                class="mt-4 inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 no-print">
+                Return to Course
+            </a>
         </div>
-    </body>
-    </html>
+        <?php else: ?>
+        <h1 class="text-5xl font-extrabold text-blue-800 mb-8 mt-10">CERTIFICATE OF COMPLETION</h1>
 
-    <?php
+        <p class="text-2xl text-gray-700 mb-4">This acknowledges that</p>
+
+        <h2 class="text-6xl font-serif font-bold text-teal-600 mb-10 border-b-4 border-teal-200 inline-block px-10">
+            <?php echo htmlspecialchars($user_name); ?>
+        </h2>
+
+        <p class="text-2xl text-gray-700 mb-4">Has successfully completed the training course</p>
+
+        <h3 class="text-4xl font-bold text-gray-800 mb-12">
+            "<?php echo $course_title; ?>"
+        </h3>
+
+        <div class="flex justify-around items-center mt-16">
+            <div class="w-1/3">
+                <p class="text-lg font-semibold border-t border-gray-400 pt-2">
+                    <?php echo $lecturer_name; ?><br>
+                    Instructor Signature
+                </p>
+            </div>
+            <div class="w-1/3">
+                <p class="text-xl font-semibold text-gray-800">Date Completed:</p>
+                <p class="text-3xl font-bold text-gray-900"><?php echo $completion_date; ?></p>
+            </div>
+        </div>
+
+        <button onclick="window.print()"
+            class="no-print mt-12 bg-indigo-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-indigo-700 shadow-xl">
+            <i class="fas fa-print mr-2"></i> Print Certificate
+        </button>
+        <?php endif; ?>
+    </div>
+</body>
+
+</html>
+
+<?php
 } else {
     // If no specific action is set, redirect to dashboard
     header("Location: ../auth/dashboard.php");

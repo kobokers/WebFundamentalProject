@@ -62,16 +62,19 @@ $course_data = mysqli_fetch_assoc($fetch_result);
 <body>
     <div class="container mx-auto p-8 max-w-2xl">
         <header class="mb-6 text-center">
-            <h1 class="text-3xl font-bold text-gray-800">Edit Course Details: <?php echo htmlspecialchars($course_data['title']); ?></h1>
+            <h1 class="text-3xl font-bold text-gray-800">Edit Course Details:
+                <?php echo htmlspecialchars($course_data['title']); ?></h1>
         </header>
 
         <?php if (isset($_SESSION['success'])): ?>
-            <div class="p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded"><?php echo $_SESSION['success'];
+        <div class="p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded">
+            <?php echo $_SESSION['success'];
                                                                                                 unset($_SESSION['success']); ?></div>
         <?php endif; ?>
         <?php if (isset($_SESSION['error'])): ?>
-            <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded"><?php echo $_SESSION['error'];
-                                                                                        unset($_SESSION['error']); ?></div>
+        <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded"><?php echo $_SESSION['error'];
+                                                                                        unset($_SESSION['error']); ?>
+        </div>
         <?php endif; ?>
 
         <div class="p-8 bg-white rounded-xl shadow-2xl border border-gray-100">
@@ -79,7 +82,8 @@ $course_data = mysqli_fetch_assoc($fetch_result);
 
                 <div class="mb-5">
                     <label for="title" class="block text-gray-700 font-semibold mb-2">Course Title:</label>
-                    <input type="text" id="title" name="title" value="<?php echo htmlspecialchars($course_data['title']); ?>" required
+                    <input type="text" id="title" name="title"
+                        value="<?php echo htmlspecialchars($course_data['title']); ?>" required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
                 </div>
 
@@ -99,7 +103,8 @@ $course_data = mysqli_fetch_assoc($fetch_result);
                     </div>
                     <div>
                         <label for="language" class="block text-gray-700 font-semibold mb-2">Language:</label>
-                        <input type="text" id="language" name="language" value="<?php echo htmlspecialchars($course_data['language']); ?>" required
+                        <input type="text" id="language" name="language"
+                            value="<?php echo htmlspecialchars($course_data['language']); ?>" required
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                 </div>
@@ -113,10 +118,11 @@ $course_data = mysqli_fetch_assoc($fetch_result);
                 <div class="mb-6">
                     <label for="fee" class="block text-gray-700 font-semibold mb-2">Course Fee ($):</label>
                     <input value="<?php echo htmlspecialchars($course_data['fee']); ?>" required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
                 </div>
 
-                <button type="submit" name="update_course" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition duration-200 text-xl shadow-lg">
+                <button type="submit" name="update_course"
+                    class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg hover:bg-green-700 transition duration-200 text-xl shadow-lg">
                     <i class="fas fa-save mr-2"></i> Save Course Details
                 </button>
             </form>

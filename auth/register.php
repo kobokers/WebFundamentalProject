@@ -45,46 +45,46 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="flex w-full items-center justify-center p-4 bg-gray-100" style="min-height: calc(100vh - 64px);">
     <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
         <h2 class="text-3xl font-extrabold mb-6 text-gray-900 text-center border-b pb-3">Student Registration</h2>
-        
+
         <form action="register.php" method="POST" class="space-y-5">
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700">Name:</label>
-                <input type="text" id="username" name="username" 
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" 
-                        required>
+                <input type="text" id="username" name="username"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    required>
             </div>
-            
+
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
-                <input type="email" id="email" name="email" 
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" 
-                        required>
+                <input type="email" id="email" name="email"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    required>
             </div>
-            
+
             <div>
                 <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
-                <input type="password" id="password" name="password" 
-                        class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" 
-                        required>
+                <input type="password" id="password" name="password"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    required>
             </div>
-            
+
             <div>
                 <label for="role" class="block text-sm font-medium text-gray-700">I am registering as:</label>
-                <select id="role" name="role" 
-                        class="mt-1 block w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white">
-                    <option value="student">Student</option> 
+                <select id="role" name="role"
+                    class="mt-1 block w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                    <option value="student">Student</option>
                     <option value="lecturer">Lecturer</option>
                 </select>
             </div>
-            
-            <button type="submit" 
-                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out mt-6">
+
+            <button type="submit"
+                class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out mt-6">
                 Register
             </button>
         </form>
-        
+
         <p class="mt-6 text-center text-sm text-gray-600">
-            Already registered? 
+            Already registered?
             <a href="./login.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Sign in here</a>
         </p>
     </div>
