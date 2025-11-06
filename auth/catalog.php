@@ -15,7 +15,8 @@ $catalog_query = "
         c.level,
         c.fee,
         u.name AS lecturer_name,
-        e.payment_status
+        e.payment_status,
+        c.description
     FROM 
         courses c
     JOIN 
@@ -57,12 +58,12 @@ $result = mysqli_query($conn, $catalog_query);
                                 </span>
                             </div>
 
-                            <p class="text-gray-600 text-sm italic mb-4">A short description of the course content goes here.</p>
+                            <p class="text-gray-600 text-sm italic mb-4"><?php echo htmlspecialchars($row['description']); ?></p>
                         </div>
 
                         <div class="p-5 pt-0 border-t border-gray-100">
                             <?php if ($user_role === 'guest'): ?>
-                                <a href="./auth/login.php" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg text-center block hover:bg-blue-600">
+                                <a href="./login.php" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg text-center block hover:bg-blue-600">
                                     Login to Enroll
                                 </a>
                             <?php elseif ($user_role !== 'student'): ?>

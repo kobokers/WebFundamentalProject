@@ -144,7 +144,6 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
             <div class="flex space-x-4">
                 <a href="../auth/profile_edit.php" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition duration-200">Edit Profile</a>
                 <a href="../auth/catalog.php" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition duration-200">Browse Catalog</a>
-                <a href="../auth/logout.php" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded transition duration-200">Logout</a>
             </div>
         </section>
 

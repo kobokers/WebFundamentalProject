@@ -38,7 +38,7 @@ if (file_exists('config.php')) {
                 <!-- Desktop Navigation -->
                 <ul class="hidden md:flex space-x-1 items-center">
                     <li><a href="<?php echo BASE_URL; ?>index.php" class="text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 transition">Home</a></li>
-                    <li><a href="<?php echo BASE_URL; ?>courses.php" class="text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 transition">Courses</a></li>
+                    <li><a href="<?php echo BASE_URL; ?>auth/catalog.php" class="text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 transition">Courses</a></li>
                     <li><a href="<?php echo BASE_URL; ?>about.php" class="text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 transition">About</a></li>
                     <li><a href="<?php echo BASE_URL; ?>contact.php" class="text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 transition">Contact</a></li>
                     
@@ -55,7 +55,7 @@ if (file_exists('config.php')) {
             <!-- Mobile Navigation -->
             <ul id="mobileMenu" class="hidden md:hidden absolute left-0 right-0 top-full bg-slate-800 shadow-lg space-y-2 py-4 z-40">
                 <li><a href="<?php echo BASE_URL; ?>index.php" class="block text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 mx-2">Home</a></li>
-                <li><a href="<?php echo BASE_URL; ?>courses.php" class="block text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 mx-2">Courses</a></li>
+                <li><a href="<?php echo BASE_URL; ?>auth/catalog.php" class="block text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 mx-2">Courses</a></li>
                 <li><a href="<?php echo BASE_URL; ?>about.php" class="block text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 mx-2">About</a></li>
                 <li><a href="<?php echo BASE_URL; ?>contact.php" class="block text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 mx-2">Contact</a></li>
                 

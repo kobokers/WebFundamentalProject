@@ -24,7 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reply_content'])) {
     
     $content = $_POST['reply_content'];
 
-    // USES: 'discussion_replies' table
     $insert_query = "INSERT INTO discussion_replies (thread_id, user_id, content, created_at) 
                      VALUES ('$thread_id', '$user_id', '$content', NOW())";
 

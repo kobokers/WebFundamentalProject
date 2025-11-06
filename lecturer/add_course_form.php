@@ -57,6 +57,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'lecturer') {
                     </div>
                 </div>
 
+                <div class="mb-5">
+                    <label for="description" class="block text-gray-700 font-semibold mb-2">Course Description:</label>
+                    <textarea id="description" name="description" rows="4" required
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"
+                              placeholder="Provide a brief overview of the course content and objectives."></textarea>
+                </div>
+
                 <div class="mb-6">
                     <label for="fee" class="block text-gray-700 font-semibold mb-2">Course Fee ($):</label>
                     <input type="number" id="fee" name="fee" step="0.01" min="0" value="0.00" required 
