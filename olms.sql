@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 06, 2025 at 02:37 AM
+-- Generation Time: Nov 10, 2025 at 02:34 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -93,7 +93,10 @@ CREATE TABLE `discussion_threads` (
 
 INSERT INTO `discussion_threads` (`id`, `course_id`, `user_id`, `title`, `content`, `created_at`) VALUES
 (1, 1, 4, 'Basic javascript task', 'Make a js code where it will show alert to the webpage', '2025-11-02 08:11:26'),
-(2, 2, 8, 'TASK: DO A HTML CODE', 'make sure finish on friday', '2025-11-04 20:11:04');
+(2, 2, 8, 'TASK: DO A HTML CODE', 'make sure finish on friday', '2025-11-04 20:11:04'),
+(3, 2, 2, 'RE: Answer for question 1', 'how to sir ?', '2025-11-10 20:56:08'),
+(4, 2, 2, 'RE: Answer for question 1', 'how to sir ?', '2025-11-10 20:56:31'),
+(5, 2, 2, 'sdad', 'eq', '2025-11-10 21:03:23');
 
 -- --------------------------------------------------------
 
@@ -116,10 +119,32 @@ CREATE TABLE `enrollment` (
 
 INSERT INTO `enrollment` (`id`, `user_id`, `course_id`, `enroll_date`, `payment_date`, `payment_status`) VALUES
 (1, 2, 1, '2025-11-01', '2025-11-01 17:59:10', 'paid'),
-(2, 9, 2, '2025-11-02', NULL, 'paid'),
-(3, 9, 1, '2025-11-02', '2025-11-02 10:02:15', 'paid'),
-(4, 9, 3, '2025-11-02', NULL, 'pending'),
-(5, 2, 4, '2025-11-04', NULL, 'pending');
+(5, 2, 4, '2025-11-04', '2025-11-10 18:12:22', 'paid'),
+(6, 2, 2, '2025-11-10', NULL, 'paid');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `learning_materials`
+--
+
+CREATE TABLE `learning_materials` (
+  `id` int(11) NOT NULL,
+  `module_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `content_type` enum('video','reading','quiz','link') NOT NULL,
+  `content_url` varchar(500) DEFAULT NULL COMMENT 'URL for video/reading file/external link',
+  `material_order` int(11) NOT NULL COMMENT 'Order within the module'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `learning_materials`
+--
+
+INSERT INTO `learning_materials` (`id`, `module_id`, `title`, `content_type`, `content_url`, `material_order`) VALUES
+(2, 1, 'Journal Java Script', 'video', 'https://www.youtube.com/watch?v=lfmg-EJ8gm4', 1),
+(3, 4, 'Journal Java Script', 'video', 'https://www.youtube.com/watch?v=lfmg-EJ8gm4', 1),
+(4, 5, 'pdf test', 'reading', 'https://drive.google.com/file/d/1jM2etFmSBP1aerH2t8W1KDEOClaejlcK/view?usp=sharing', 2);
 
 -- --------------------------------------------------------
 
@@ -180,7 +205,9 @@ INSERT INTO `progress` (`id`, `user_id`, `module_id`, `completion_date`, `status
 (2, 2, 3, '2025-11-01 17:59:21', 'completed'),
 (3, 9, 4, '2025-11-02 10:03:46', 'completed'),
 (4, 9, 5, '2025-11-02 10:03:47', 'completed'),
-(5, 9, 1, '2025-11-02 10:03:55', 'completed');
+(5, 9, 1, '2025-11-02 10:03:55', 'completed'),
+(6, 2, 4, '2025-11-10 20:55:24', 'completed'),
+(7, 2, 5, '2025-11-10 21:03:45', 'completed');
 
 -- --------------------------------------------------------
 
@@ -204,7 +231,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `role`, `status`) VALUES
 (1, 'Admin', 'admin@example.com', '123', 'admin', 'active'),
 (2, 'akmal', 'akmal@example.com', '123', 'student', 'active'),
-(4, 'rizal', 'rizal@lecturer.com', '123', 'lecturer', 'active'),
+(4, 'Dr. Rizal Ahmad bin Asnawi', 'rizal@lecturer.com', '123', 'lecturer', 'active'),
 (8, 'Dr. Tan Wen Cheng', 'tan0103@lecturer.olms.com', '123', 'lecturer', 'active'),
 (9, 'aiman', 'aiman@student.olms.com', '123', 'student', 'active'),
 (10, 'siti', 'siti@lecturer.olms.com', '$2y$10$yPF8pEiNGlS/7kBL2wy5v.7DbYh16ve8Hs20xqDzC6gZbsW/Wj3p2', 'lecturer', 'pending'),
@@ -245,6 +272,13 @@ ALTER TABLE `enrollment`
   ADD PRIMARY KEY (`id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `course_id` (`course_id`);
+
+--
+-- Indexes for table `learning_materials`
+--
+ALTER TABLE `learning_materials`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `module_id` (`module_id`);
 
 --
 -- Indexes for table `modules`
@@ -288,13 +322,19 @@ ALTER TABLE `discussion_replies`
 -- AUTO_INCREMENT for table `discussion_threads`
 --
 ALTER TABLE `discussion_threads`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `enrollment`
 --
 ALTER TABLE `enrollment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `learning_materials`
+--
+ALTER TABLE `learning_materials`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `modules`
@@ -306,7 +346,7 @@ ALTER TABLE `modules`
 -- AUTO_INCREMENT for table `progress`
 --
 ALTER TABLE `progress`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -344,6 +384,12 @@ ALTER TABLE `discussion_threads`
 ALTER TABLE `enrollment`
   ADD CONSTRAINT `enrollment_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   ADD CONSTRAINT `enrollment_ibfk_2` FOREIGN KEY (`course_id`) REFERENCES `courses` (`id`);
+
+--
+-- Constraints for table `learning_materials`
+--
+ALTER TABLE `learning_materials`
+  ADD CONSTRAINT `learning_materials_ibfk_1` FOREIGN KEY (`module_id`) REFERENCES `modules` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `modules`
