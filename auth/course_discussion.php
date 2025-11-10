@@ -1,6 +1,5 @@
 <?php
 session_start();
-include("../header.php");
 include("../connection.php");
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'student') {
@@ -60,6 +59,7 @@ $topics_query = "
         d.created_at DESC";
 
 $topics_result = mysqli_query($conn, $topics_query);
+include("../header.php");
 ?>
 
 <body>

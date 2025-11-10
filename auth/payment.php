@@ -1,7 +1,6 @@
 <?php
 session_start();
-include("../header.php"); // Includes necessary HTML/CSS headers
-include("../connection.php"); // Includes the database connection logic
+include("../connection.php"); // Database connection only (no HTML output)
 
 // --- 1. Authentication and Validation ---
 // Ensure user is logged in as a student
@@ -71,20 +70,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['pay_submit'])) {
     }
 }
 
-mysqli_close($conn);
+include("../header.php");
 
+mysqli_close($conn);
 ?>
 
 <body>
     <div class="container mx-auto p-8 max-w-lg">
         <header class="mb-8 text-center">
             <h1 class="text-3xl font-extrabold text-red-700">Finalize Payment</h1>
-            <p class="text-lg text-gray-600">Complete your transaction for **<?php echo $course_title; ?>**.</p>
+            <p class="text-lg text-gray-600">Complete your transaction for <strong><?php echo $course_title; ?></strong>.</p>
         </header>
 
         <?php if (isset($_SESSION['error'])): ?>
         <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
-            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+        </div>
         <?php endif; ?>
 
         <div class="p-8 bg-white rounded-xl shadow-2xl border border-gray-100">
