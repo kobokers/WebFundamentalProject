@@ -1,11 +1,28 @@
 <?php
-
 if (file_exists('config.php')) {
     require_once('config.php');
 } elseif (file_exists('../config.php')) {
     require_once('../config.php');
 } else {
     die("Configuration file not found!");
+}
+
+// Determine dashboard URL based on user role
+$dashboardUrl = '';
+if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
+    switch ($_SESSION['user_role']) {
+        case 'admin':
+            $dashboardUrl = BASE_URL . 'admin/dashboard.php';
+            break;
+        case 'lecturer':
+            $dashboardUrl = BASE_URL . 'lecturer/dashboard.php';
+            break;
+        case 'student':
+            $dashboardUrl = BASE_URL . 'auth/dashboard.php';
+            break;
+        default:
+            $dashboardUrl = BASE_URL . 'auth/dashboard.php';
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -53,8 +70,8 @@ if (file_exists('config.php')) {
                             class="text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 transition">Contact</a>
                     </li>
 
-                    <?php if(isset($_SESSION['user_id'])): ?>
-                    <li><a href="<?php echo BASE_URL; ?>auth/dashboard.php"
+                    <?php if(isset($_SESSION['user_id']) && isset($_SESSION['user_role'])): ?>
+                    <li><a href="<?php echo $dashboardUrl; ?>"
                             class="text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 transition">Dashboard</a>
                     </li>
                     <li><a href="<?php echo BASE_URL; ?>logout.php"
@@ -86,8 +103,8 @@ if (file_exists('config.php')) {
                         class="block text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 mx-2">Contact</a>
                 </li>
 
-                <?php if(isset($_SESSION['user_id'])): ?>
-                <li><a href="<?php echo BASE_URL; ?>auth/dashboard.php"
+                <?php if(isset($_SESSION['user_id']) && isset($_SESSION['user_role'])): ?>
+                <li><a href="<?php echo $dashboardUrl; ?>"
                         class="block text-gray-200 hover:text-white px-4 py-2 rounded hover:bg-slate-700 mx-2">Dashboard</a>
                 </li>
                 <li><a href="<?php echo BASE_URL; ?>logout.php"
@@ -105,5 +122,5 @@ if (file_exists('config.php')) {
         </nav>
     </header>
 
-    <!-- Main content starts here -->
+<!-- Main content starts here -->
     <main class="flex-grow">

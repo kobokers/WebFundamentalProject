@@ -154,7 +154,7 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
                     class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition duration-200">Browse
                     Catalog</a>
             </div>
-        </section>
+        </section><br><br>
 
         <?php mysqli_close($conn); ?>
 
