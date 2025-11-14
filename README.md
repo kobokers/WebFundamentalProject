@@ -35,11 +35,13 @@ https://github.com/kobokers/WebFundamentalProject.git
 3. Start MySQL
 4. Go phpmyadmin database and import database (make sure create olms database first !!!)
 
-# Step 1
+# Step 1 create database name to olms make sure no capital letter
 <img width="802" height="142" alt="image" src="https://github.com/user-attachments/assets/3b774c40-5e12-4e98-99b8-1768518dc3bc" />
-# Step 2
+
+# Step 2 go to import tab (make sure click on olms database first) then click on choose a file, olms.sql can be found on htdocs folder)
 <img width="1425" height="736" alt="image" src="https://github.com/user-attachments/assets/87cd17a8-f783-4fb2-8868-98b788765af8" />
-# Step 3
+
+# Step 3 
 <img width="955" height="506" alt="image" src="https://github.com/user-attachments/assets/31aaa1db-b9bc-435d-9d3a-c98b7bc462f0" />
 
 ## 4. Run the Website Locally
