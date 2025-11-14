@@ -60,5 +60,5 @@ https://github.com/kobokers/WebFundamentalProject.git
 2. GitHub Desktop will show the file changes
 3. Enter a commit message
 4. Click "Commit to main"
-5. Click "Push origin"
+5. Click "Push main"
 
