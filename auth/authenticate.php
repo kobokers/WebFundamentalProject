@@ -3,15 +3,6 @@ session_start();
 include "../config.php";
 include "../connection.php";
 
-// Set a default error message for failed login attempts (password or email not found)
-$_SESSION['error'] = "Incorrect email or password.";
-
-// Check if POST data is available (Basic check)
-if (!isset($_POST['email'], $_POST['password'])) {
-    header("Location: login.php");
-    exit;
-}
-
 // Get POST data
 $email = $_POST['email'];
 $password = $_POST['password'];
@@ -23,36 +14,41 @@ $result = mysqli_query($conn, $query);
 if (mysqli_num_rows($result) > 0) {
     $user = mysqli_fetch_assoc($result);
 
-    // 1. Check if account active
+    // Check if account active
     if ($user['status'] != 'active') {
+        // FIX: Added session error and redirection
         $_SESSION['error'] = "Account inactive. Please contact admin for activation.";
         header("Location: login.php");
-        exit; 
+        exit; // Stop execution
     }
 
-    // 2. Verify Password
     if (password_verify($password, $user['password'])) {
 
-        // Credentials are correct - CLEAR the error and proceed
-        unset($_SESSION['error']); 
-        
+        // Credentials are correct - proceed to set sessions and redirect
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['name'];
         $_SESSION['user_role'] = $user['role'];
 
-        // Redirect by role (using BASE_URL for external redirects)
         if ($user['role'] == 'student') {
-            header("Location: " . BASE_URL . "auth/dashboard.php");
+            header("Location: dashboard.php"); 
         } elseif ($user['role'] == 'lecturer') {
-            header("Location: " . BASE_URL . "lecturer/dashboard.php");
+            header("Location: ../lecturer/dashboard.php");
         } else {
-            header("Location: " . BASE_URL . "admin/dashboard.php");
+            header("Location: ../admin/dashboard.php");
         }
         exit;
-    } 
-    // If password_verify fails, the script continues to the final redirect.
-} 
+    } else {
+        // Handle incorrect password with session and redirect
+        $_SESSION['error'] = "Incorrect password.";
+    }
+} else {
+    // Handle email not found with session and redirect
+    $_SESSION['error'] = "Email not found.";
+}
 
-header("Location: login.php");
-exit;
+// Final redirection for any failed login attempt
+if (isset($_SESSION['error'])) {
+    header("Location: login.php");
+    exit;
+}
 ?>
