@@ -132,8 +132,8 @@ if ($display_content == '') {
         <header class="mb-8 border-b pb-4">
             <h1 class="text-3xl font-bold text-gray-800"><?php echo htmlspecialchars($material['material_title']); ?></h1>
             <p class="text-md text-gray-600">
-                Course: **<?php echo htmlspecialchars($material['course_title']); ?>** | 
-                Module <?php echo $material['module_order']; ?>: **<?php echo $material['module_title']; ?>**
+                Course: <b><?php echo htmlspecialchars($material['course_title']); ?></b> | 
+                Module <?php echo $material['module_order']; ?>: <b><?php echo $material['module_title']; ?></b>
             </p>
             <a href="course_view.php?id=<?php echo $course_id; ?>" class="text-sm text-blue-600 hover:underline mt-2 inline-block">
                 ← Back to Course Curriculum

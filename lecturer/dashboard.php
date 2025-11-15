@@ -101,11 +101,11 @@ $result = mysqli_query($conn, $sql_courses);
             <?php else: ?>
             <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700">
                 <p class="font-bold">No Courses Found!</p>
-                <p>You have not registered any courses yet. Click the **Register New Course** button above to get
+                <p>You have not registered any courses yet. Click the <b>Register New Course</b> button above to get
                     started.</p>
             </div>
             <?php endif; ?>
-        </section>
+        </section><br><br>
 
         <section id="account-actions">
             <h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-user-cog mr-2"></i> Account
@@ -115,7 +115,7 @@ $result = mysqli_query($conn, $sql_courses);
                     class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition duration-200">Edit
                     Profile</a>
             </div>
-        </section>
+        </section><br><br>
 
         <?php mysqli_close($conn); ?>
 

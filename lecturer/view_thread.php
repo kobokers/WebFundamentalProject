@@ -77,7 +77,7 @@ $replies_result = mysqli_query($conn, $replies_query);
     <div class="container mx-auto p-8 max-w-5xl">
         <header class="mb-8">
             <h1 class="text-4xl font-extrabold text-purple-800"><?php echo htmlspecialchars($thread['title']); ?></h1>
-            <p class="text-lg text-gray-600">Course: **<?php echo htmlspecialchars($thread['course_title']); ?>**</p>
+            <p class="text-lg text-gray-600">Course: <b><?php echo htmlspecialchars($thread['course_title']); ?></b></p>
             <a href="course_discussion.php?course_id=<?php echo $thread['course_id']; ?>"
                 class="text-purple-500 hover:text-purple-700 mt-2 inline-block">← Back to Discussions</a>
         </header>

@@ -70,7 +70,6 @@ if ($action === 'certificate') {
     <title>Certificate of Completion</title>
     <link href="../css/tailwind.min.css" rel="stylesheet">
     <style>
-    /* CSS remains the same as previously drafted */
     .certificate-container {
         width: 100%;
         max-width: 1000px;
@@ -102,11 +101,12 @@ if ($action === 'certificate') {
 <body>
     <div class="certificate-container text-center">
         <?php if (!$is_complete): ?>
+        <!-- add a check if used cheated to complete the course -->    
         <div class="p-6 bg-red-100 border border-red-400 text-red-700 rounded-lg">
             <h2 class="text-3xl font-bold mb-4">Course Not Yet Completed!</h2>
-            <p class="text-lg">You must complete all **<?php echo $total_modules; ?>** modules to receive your
-                certificate. You currently have **<?php echo $completed_modules; ?>** complete.</p>
-            <a href="../course_view.php?id=<?php echo $course_id; ?>"
+            <p class="text-lg">You must complete all <b><?php echo $total_modules; ?></b> modules to receive your
+                certificate. You currently have <b><?php echo $completed_modules; ?></b> complete.</p>
+            <a href="./dashboard.php?id=<?php echo $course_id; ?>"
                 class="mt-4 inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 no-print">
                 Return to Course
             </a>

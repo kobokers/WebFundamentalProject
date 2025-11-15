@@ -88,7 +88,7 @@ $current_order = $material['material_order'];
         <header class="mb-8">
             <h1 class="text-3xl font-bold text-gray-800">Edit Learning Material</h1>
             <p class="text-md text-gray-600">
-                Course: **<?php echo $course_title; ?>** | Module: **<?php echo $module_title; ?>**
+                Course: <b><?php echo $course_title; ?></b> | Module: <b><?php echo $module_title; ?></b>
             </p>
         </header>
 
