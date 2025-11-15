@@ -37,9 +37,13 @@ if(isset($_GET['id'])) {
         $query4 = "DELETE FROM discussion_threads WHERE user_id = $user_id";
         $conn->query($query4);
 
-        // Delete the user
-        $query5 = "DELETE FROM users WHERE id = $user_id";
+        // Delete courses created by this lecturer
+        $query5 = "DELETE FROM courses WHERE lecturer_id = $user_id";
         $conn->query($query5);
+
+        // Finally delete the user
+        $query6 = "DELETE FROM users WHERE id = $user_id";
+        $conn->query($query6);
 
         // Commit transaction
         $conn->commit();
@@ -50,7 +54,7 @@ if(isset($_GET['id'])) {
     } catch (Exception $e) {
         // Rollback on error
         $conn->rollback();
-        header("Location: dashboard.php?status=error");
+        header("Location: dashboard.php?status=error&msg=" . urlencode($e->getMessage()));
         exit();
     }
 
