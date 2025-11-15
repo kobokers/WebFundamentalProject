@@ -3,6 +3,15 @@ session_start();
 include "../config.php";
 include "../connection.php";
 
+// Set a default error message for failed login attempts (password or email not found)
+$_SESSION['error'] = "Incorrect email or password.";
+
+// Check if POST data is available (Basic check)
+if (!isset($_POST['email'], $_POST['password'])) {
+    header("Location: login.php");
+    exit;
+}
+
 // Get POST data
 $email = $_POST['email'];
 $password = $_POST['password'];
@@ -14,31 +23,36 @@ $result = mysqli_query($conn, $query);
 if (mysqli_num_rows($result) > 0) {
     $user = mysqli_fetch_assoc($result);
 
-    // Check if account active
+    // 1. Check if account active
     if ($user['status'] != 'active') {
-        echo "<p class='text-yellow-500'>Your account is not activated by admin.</p>";
-        echo "<script> window.history.back(); </script>";
-        exit;
+        $_SESSION['error'] = "Account inactive. Please contact admin for activation.";
+        header("Location: login.php");
+        exit; 
     }
 
-    // If password stored as plain text for testing will use hashed version in production
-    if ($password == $user['password']) {
+    // 2. Verify Password
+    if (password_verify($password, $user['password'])) {
+
+        // Credentials are correct - CLEAR the error and proceed
+        unset($_SESSION['error']); 
+        
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_name'] = $user['name'];
         $_SESSION['user_role'] = $user['role'];
 
-        // Redirect by role
+        // Redirect by role (using BASE_URL for external redirects)
         if ($user['role'] == 'student') {
-            header("Location: ../auth/dashboard.php");
+            header("Location: " . BASE_URL . "auth/dashboard.php");
         } elseif ($user['role'] == 'lecturer') {
-            header("Location: ../lecturer/dashboard.php");
+            header("Location: " . BASE_URL . "lecturer/dashboard.php");
         } else {
-            header("Location: ../admin/dashboard.php");
+            header("Location: " . BASE_URL . "admin/dashboard.php");
         }
         exit;
-    } else {
-        echo "<p class='text-red-500'>Incorrect password.</p>";
-    }
-} else {
-    echo "<p class='text-red-500'>Email not found.</p>";
-}
+    } 
+    // If password_verify fails, the script continues to the final redirect.
+} 
+
+header("Location: login.php");
+exit;
+?>

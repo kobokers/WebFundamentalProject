@@ -6,7 +6,6 @@ include("../header.php");
 
 <body>
     <div>
-        <!-- will add flash animation later -->
         <?php if (isset($_SESSION['error'])): ?>
         <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded"><?php echo $_SESSION['error'];
             unset($_SESSION['error']); ?></div>
