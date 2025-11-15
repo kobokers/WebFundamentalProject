@@ -70,7 +70,7 @@ if ($result && $result->num_rows > 0) {
         $users[] = $row;
     }
 } else {
-    echo "<p><b>No student users found.</p></b>";
+    error_log(message: "No student users found.");
 }
 
 // --- Fetch Lecturers ---
@@ -82,19 +82,9 @@ if ($result_state && $result_state->num_rows > 0) {
         $users_lect[] = $row;
     }
 } else {
-    echo "<p><b>No lecturer users found.</p></b>";
+    error_log(message: "No lecturer users found.");
 }
 ?>
-
-<div class="container mx-auto p-4">
-    <?php
-    echo "Welcome, <strong>" . htmlspecialchars($_SESSION['user_name']) . "</strong>";
-    echo "<br>";
-    echo "Your role is <strong>" . htmlspecialchars($_SESSION['user_role']) . "</strong>";
-    echo '<br>';
-    echo "Welcome Master Controll User";
-    ?>
-</div>
 
 <body>
     <main class="container mx-auto p-4">
