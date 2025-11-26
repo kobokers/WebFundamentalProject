@@ -88,10 +88,15 @@ $result = mysqli_query($conn, $catalog_query);
                 <?php endwhile; ?>
             </div>
         </section>
-
-        <div class="mt-8 text-center">
+        <?php if ($user_role === 'student'): ?>
+            <div class="mt-8 text-center">
              <a href="./dashboard.php" class="text-gray-500 hover:text-gray-700 font-medium">← Go to Dashboard</a>
-        </div>
+            </div>
+        <?php else: ?>
+            <div class="mt-8 text-center">
+             <a href="./index.php" class="text-gray-500 hover:text-gray-700 font-medium">← Go back</a>
+            </div>   
+        <?php endif; ?>
     </div>
 </body>
 </html>
