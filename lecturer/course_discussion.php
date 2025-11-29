@@ -1,6 +1,5 @@
 <?php
 session_start();
-include("../header.php");
 include("../connection.php");
 
 if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] !== 'lecturer')) {
@@ -61,18 +60,19 @@ $topics_query = "
         d.created_at DESC";
 
 $topics_result = mysqli_query($conn, $topics_query);
+include("../header.php");
 ?>
 
 <body>
     <div class="container mx-auto p-8 max-w-5xl">
         <header class="mb-8">
-            <h1 class="text-4xl font-extrabold text-purple-800">Course Discussion Board</h1>
-            <p class="text-lg text-gray-600">Course: <b><?php echo htmlspecialchars($course_title); ?></b></p>
-            <a href="dashboard.php" class="text-purple-500 hover:text-purple-700 mt-2 inline-block">← Back to
+            <h1 class="text-4xl font-extrabold text-purple-800 dark:text-purple-300">Course Discussion Board</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">Course: <b><?php echo htmlspecialchars($course_title); ?></b></p>
+            <a href="dashboard.php" class="text-purple-500 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300 mt-2 inline-block">← Back to
                 Dashboard</a>
         </header>
 
-        <hr class="mb-8">
+        <hr class="mb-8 border-gray-300 dark:border-gray-700">
 
         <?php if (isset($_SESSION['success'])): ?>
         <div class="p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded">
@@ -83,19 +83,19 @@ $topics_result = mysqli_query($conn, $topics_query);
             <?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
         <?php endif; ?>
 
-        <div class="p-6 bg-purple-50 border-l-4 border-purple-500 rounded-lg shadow-md mb-8">
-            <h2 class="text-xl font-semibold text-purple-700 mb-4">Start a New Topic</h2>
+        <div class="p-6 bg-purple-50 dark:bg-purple-900 border-l-4 border-purple-500 dark:border-purple-400 rounded-lg shadow-md mb-8 transition-colors duration-200">
+            <h2 class="text-xl font-semibold text-purple-700 dark:text-purple-200 mb-4">Start a New Topic</h2>
             <form action="course_discussion.php?course_id=<?php echo $course_id; ?>" method="POST">
                 <div class="mb-4">
-                    <label for="new_topic_title" class="block text-gray-700 font-semibold mb-2">Topic Title:</label>
+                    <label for="new_topic_title" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Topic Title:</label>
                     <input type="text" id="new_topic_title" name="new_topic_title" required
-                        class="w-full px-3 py-2 border rounded-lg">
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
                 </div>
                 <div class="mb-6">
-                    <label for="new_topic_content" class="block text-gray-700 font-semibold mb-2">Initial Post
+                    <label for="new_topic_content" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Initial Post
                         Content:</label>
                     <textarea id="new_topic_content" name="new_topic_content" rows="4" required
-                        class="w-full px-3 py-2 border rounded-lg"></textarea>
+                        class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white"></textarea>
                 </div>
                 <button type="submit"
                     class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
@@ -106,23 +106,23 @@ $topics_result = mysqli_query($conn, $topics_query);
 
 
         <section id="discussion-topics">
-            <h2 class="text-2xl font-semibold mb-4 border-b pb-2 flex items-center"><i class="fas fa-comments mr-2"></i>
+            <h2 class="text-2xl font-semibold mb-4 border-b dark:border-gray-700 pb-2 flex items-center text-gray-800 dark:text-white"><i class="fas fa-comments mr-2"></i>
                 Existing Discussions</h2>
 
             <?php if (mysqli_num_rows($topics_result) > 0): ?>
             <div class="overflow-x-auto">
-                <table class="min-w-full bg-white shadow-md rounded-lg">
+                <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg transition-colors duration-200">
                     <thead>
-                        <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                        <tr class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 uppercase text-sm leading-normal">
                             <th class="py-3 px-6 text-left">Topic Title</th>
                             <th class="py-3 px-6 text-left">Started By</th>
                             <th class="py-3 px-6 text-center">Date Posted</th>
                             <th class="py-3 px-6 text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="text-gray-600 text-sm font-light">
+                    <tbody class="text-gray-600 dark:text-gray-400 text-sm font-light">
                         <?php while ($topic = mysqli_fetch_assoc($topics_result)): ?>
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                             <td class="py-3 px-6 text-left whitespace-nowrap font-medium">
                                 <?php echo htmlspecialchars($topic['title']); ?>
                             </td>
@@ -147,7 +147,7 @@ $topics_result = mysqli_query($conn, $topics_query);
                 </table>
             </div>
             <?php else: ?>
-            <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700">
+            <div class="p-4 bg-yellow-50 dark:bg-yellow-900 border-l-4 border-yellow-500 dark:border-yellow-400 text-yellow-700 dark:text-yellow-200 transition-colors duration-200">
                 <p class="font-bold">No Discussion Threads Yet!</p>
                 <p>Use the section above to post the first discussion topic.</p>
             </div>

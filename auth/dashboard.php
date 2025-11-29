@@ -47,21 +47,21 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
 <body>
     <div class="container mx-auto p-4">
         <header class="mb-8">
-            <h1 class="text-4xl font-extrabold text-blue-800">Hello, <?php echo htmlspecialchars($user_name); ?>!</h1>
-            <p class="text-lg text-gray-600">Your Student Dashboard</p>
+            <h1 class="text-4xl font-extrabold text-blue-800 dark:text-blue-300">Hello, <?php echo htmlspecialchars($user_name); ?>!</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">Your Student Dashboard</p>
         </header>
 
-        <hr class="mb-8">
+        <hr class="mb-8 border-gray-300 dark:border-gray-700">
 
         <section id="enrolled-courses" class="mb-10">
-            <h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-book-open mr-2"></i> My Learning
+            <h2 class="text-2xl font-semibold mb-4 flex items-center text-gray-800 dark:text-white"><i class="fas fa-book-open mr-2"></i> My Learning
                 Path</h2>
 
             <?php if (mysqli_num_rows($result) > 0): ?>
             <div class="overflow-x-auto">
-                <table class="min-w-full bg-white shadow-md rounded-lg">
+                <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg transition-colors duration-200">
                     <thead>
-                        <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                        <tr class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 uppercase text-sm leading-normal">
                             <th class="py-3 px-6 text-left">Course Title</th>
                             <th class="py-3 px-6 text-left">Instructor</th>
                             <th class="py-3 px-6 text-center">Progress</th>
@@ -69,9 +69,9 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
                             <th class="py-3 px-6 text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody class="text-gray-600 text-sm font-light">
+                    <tbody class="text-gray-600 dark:text-gray-400 text-sm font-light">
                         <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                             <td class="py-3 px-6 text-left whitespace-nowrap font-medium">
                                 <?php echo htmlspecialchars($row['course_title']); ?>
                             </td>
@@ -79,7 +79,7 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
                                 <?php echo htmlspecialchars($row['lecturer_name']); ?>
                             </td>
                             <td class="py-3 px-6 text-center">
-                                <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
                                     <div class="bg-green-600 h-2.5 rounded-full"
                                         style="width: <?php echo $row['progress_percentage']; ?>%"></div>
                                 </div>
@@ -135,7 +135,7 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
                 </table>
             </div>
             <?php else: ?>
-            <div class="p-4 bg-blue-50 border-l-4 border-blue-500 text-blue-700">
+            <div class="p-4 bg-blue-50 dark:bg-blue-900 border-l-4 border-blue-500 dark:border-blue-400 text-blue-700 dark:text-blue-200 transition-colors duration-200">
                 <p class="font-bold">No Courses Enrolled!</p>
                 <p>You haven't signed up for any courses yet. <a href="../auth/catalog.php"
                         class="text-blue-500 hover:text-blue-700 font-medium">Browse our courses</a> to get started.</p>
@@ -144,14 +144,14 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
         </section>
 
         <section id="account-actions">
-            <h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-user-cog mr-2"></i> Account
+            <h2 class="text-2xl font-semibold mb-4 flex items-center text-gray-800 dark:text-white"><i class="fas fa-user-cog mr-2"></i> Account
                 Actions</h2>
             <div class="flex space-x-4">
                 <a href="../auth/profile_edit.php"
-                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition duration-200">Edit
+                    class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-2 px-4 rounded transition duration-200">Edit
                     Profile</a>
                 <a href="../auth/catalog.php"
-                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition duration-200">Browse
+                    class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-2 px-4 rounded transition duration-200">Browse
                     Catalog</a>
             </div>
         </section><br><br>
@@ -161,5 +161,4 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
     </div>
 </body>
 <?php include("../footer.php"); ?>
-
 </html>

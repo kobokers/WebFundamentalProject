@@ -143,148 +143,83 @@ $progress_percentage = ($total_modules > 0) ? round(($completed_modules / $total
 include("../header.php");
 ?>
 
-<body>
-    <div class="container mx-auto p-8 max-w-4xl">
-
-        <header class="mb-8">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-2">
-                <h1 class="text-4xl font-extrabold text-blue-800"><?php echo $course_title; ?></h1>
-
-                <a href="course_discussion.php?course_id=<?php echo $course_id; ?>"
-                    class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 flex items-center justify-center whitespace-nowrap">
-                    <i class="fas fa-comments mr-2"></i>Go to Discussion
-                </a>
-            </div>
-            <p class="text-lg text-gray-600">Course Content and Progress Tracker</p>
-        </header>
+<div class="container mx-auto p-6 max-w-5xl">
+    <!-- Course Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl mb-3 font-bold text-gray-800 dark:text-gray-100"><?php echo $course_title; ?></h1>
+        <a href="dashboard.php" class="text-sm text-blue-600 dark:text-blue-400 hover:underline mb-3 inline-block">
+            ← Back to Dashboard
+        </a>
         
-        <div class="bg-gray-100 p-4 rounded-lg shadow mb-8">
-            <h2 class="text-xl font-semibold mb-2">Your Progress: <?php echo $progress_percentage; ?>% Complete</h2>
-            <div class="w-full bg-gray-300 rounded-full h-4">
-                <div class="bg-green-600 h-4 rounded-full transition-all duration-500"
-                    style="width: <?php echo $progress_percentage; ?>%"></div>
+        <!-- Progress Bar -->
+        <div class="mt-4">
+            <div class="flex justify-between mb-1">
+                <span class="text-base font-medium text-blue-700 dark:text-blue-400">Course Progress</span>
+                <span class="text-sm font-medium text-blue-700 dark:text-blue-400"><?php echo $progress_percentage; ?>%</span>
             </div>
-            <p class="text-sm mt-2 text-gray-700"><?php echo $completed_modules; ?> of <?php echo $total_modules; ?>
-                modules completed.</p>
-        </div>
-
-        <?php if (isset($_SESSION['success'])): ?>
-        <div class="p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded">
-            <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
-        </div>
-        <?php endif; ?>
-        
-        <?php if (isset($_SESSION['error'])): ?>
-        <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
-            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
-        </div>
-        <?php endif; ?>
-
-        <section id="course-modules" class="space-y-4">
-            <h2 class="text-2xl font-bold mb-4">Course Curriculum</h2>
-
-            <?php foreach ($modules_list as $module): ?>
-            <?php $is_completed = (isset($module['progress_status']) && $module['progress_status'] === 'completed'); ?>
-            
-            <div class="bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden">
-                
-                <!-- Module Header - Clickable to expand/collapse -->
-                <div class="module-header flex flex-col sm:flex-row sm:items-center sm:justify-between w-full p-5 transition duration-200 cursor-pointer
-                    <?php echo $is_completed ? 'bg-green-50' : 'bg-gray-50 hover:bg-gray-100'; ?>"
-                    data-module-id="<?php echo $module['module_id']; ?>">
-                    
-                    <!-- Left side: Module number and title -->
-                    <div class="flex items-center mb-3 sm:mb-0 flex-1 min-w-0">
-                        <span class="text-xl font-bold mr-3 sm:mr-4 text-blue-600 shrink-0"><?php echo $module['module_order']; ?>.</span>
-                        <h3 class="text-lg font-semibold <?php echo $is_completed ? 'text-gray-500 line-through' : 'text-gray-900'; ?>">
-                            <?php echo htmlspecialchars($module['module_title']); ?>
-                        </h3>
-                    </div>
-
-                    <!-- Right side: Status badge and chevron -->
-                    <div class="flex items-center gap-3">
-                        <?php if ($is_completed): ?>
-                        <span class="py-1 px-3 text-xs font-semibold bg-green-200 text-green-800 rounded-full flex items-center whitespace-nowrap">
-                            <i class="fas fa-check-circle mr-1"></i> Completed
-                        </span>
-                        <?php else: ?>
-                        <form action="course_view.php?id=<?php echo $course_id; ?>" method="POST" 
-                            class="inline" 
-                            onclick="event.stopPropagation();">
-                            <input type="hidden" name="complete_module_id" value="<?php echo $module['module_id']; ?>">
-                            <button type="submit"
-                                class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 text-xs font-semibold rounded transition whitespace-nowrap">
-                                Mark Complete
-                            </button>
-                        </form>
-                        <?php endif; ?>
-                        <i class="fas fa-chevron-down text-gray-500 transition-transform transform module-chevron"></i>
-                    </div>
-                </div>
-
-                <!-- Module Content - Hidden by default -->
-                <div id="content-<?php echo $module['module_id']; ?>" class="module-content hidden border-t p-5 bg-white">
-                    <h4 class="text-md font-bold mb-3 text-gray-700">Learning Materials:</h4>
-                    
-                    <?php if (!empty($module['materials'])): ?>
-                    <ul class="space-y-3 pl-4">
-                        <?php foreach ($module['materials'] as $material): ?>
-                        <?php
-                            $icon = '';
-                            switch ($material['content_type']) {
-                                case 'video': $icon = 'fas fa-video text-red-500'; break;
-                                case 'reading': $icon = 'fas fa-file-alt text-blue-500'; break;
-                                case 'quiz': $icon = 'fas fa-clipboard-list text-purple-500'; break;
-                                case 'link': default: $icon = 'fas fa-external-link-alt text-gray-500'; break;
-                            }
-                        ?>
-                        <li class="flex items-start">
-                            <i class="<?php echo $icon; ?> mt-1 mr-3 text-sm shrink-0"></i>
-                            <div class="text-gray-700 text-base">
-                                <span class="font-semibold mr-1"><?php echo $material['material_order']; ?>.</span>
-                                
-                                <a href="view_material.php?material_id=<?php echo $material['id']; ?>"
-                                    class="text-blue-700 hover:text-blue-900 hover:underline transition">
-                                    <?php echo htmlspecialchars($material['title']); ?> 
-                                    (<?php echo ucfirst($material['content_type']); ?>)
-                                
-                                    <?php if ($material['content_type'] != 'quiz'): ?>
-                                        <i class="fas fa-external-link-square-alt text-xs ml-1 text-gray-400"></i>
-                                    <?php endif; ?>
-                                </a>
-                            </div>
-                        </li>
-                        <?php endforeach; ?>
-                    </ul>
-                    <?php else: ?>
-                    <p class="text-gray-500 text-sm italic">No learning materials have been added to this module yet.</p>
-                    <?php endif; ?>
-                </div>
-            
+            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                <div class="bg-blue-600 h-2.5 rounded-full" style="width: <?php echo $progress_percentage; ?>%"></div>
             </div>
-            <?php endforeach; ?>
-
-            <?php if ($total_modules == 0): ?>
-            <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700 rounded-lg">
-                This course has no modules yet. Please check back later.
-            </div>
-            <?php endif; ?>
-        </section>
-
-        <div class="mt-8 text-center">
-            <a href="dashboard.php" class="text-gray-500 hover:text-gray-700 font-medium">← Back to Dashboard</a>
         </div>
     </div>
-</body>
+
+    <!-- Modules List -->
+    <div class="space-y-4">
+        <?php foreach ($modules_list as $module): ?>
+            <div class="border dark:border-gray-700 rounded-lg shadow-sm bg-white dark:bg-gray-800 overflow-hidden">
+                <!-- Module Header -->
+                <div class="module-header p-4 bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 cursor-pointer flex justify-between items-center transition" data-module-id="<?php echo $module['module_id']; ?>">
+                    <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200">
+                        Module <?php echo $module['module_order']; ?>: <?php echo htmlspecialchars($module['module_title']); ?>
+                    </h3>
+                    <div class="flex items-center">
+                        <?php if (isset($module['progress_status']) && $module['progress_status'] === 'completed'): ?>
+                            <span class="text-green-600 dark:text-green-400 mr-3"><i class="fas fa-check-circle"></i> Completed</span>
+                        <?php endif; ?>
+                        <i class="fas fa-chevron-down module-chevron transition-transform duration-300 text-gray-500 dark:text-gray-400"></i>
+                    </div>
+                </div>
+
+                <!-- Module Content (Hidden by default) -->
+                <div id="content-<?php echo $module['module_id']; ?>" class="hidden p-4 border-t dark:border-gray-700 bg-white dark:bg-gray-800">
+                    <?php if (!empty($module['materials'])): ?>
+                        <ul class="space-y-3">
+                            <?php foreach ($module['materials'] as $material): ?>
+                                <li class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded hover:bg-gray-100 dark:hover:bg-gray-600 transition">
+                                    <a href="view_material.php?material_id=<?php echo $material['id']; ?>" class="flex items-center text-blue-600 dark:text-blue-400 hover:underline">
+                                        <i class="fas fa-file-alt mr-3"></i>
+                                        <?php echo htmlspecialchars($material['title']); ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p class="text-gray-500 dark:text-gray-400 italic">No materials in this module yet.</p>
+                    <?php endif; ?>
+
+                    <!-- Mark Complete Button -->
+                    <?php if (!isset($module['progress_status']) || $module['progress_status'] !== 'completed'): ?>
+                        <form method="POST" class="mt-4 text-right">
+                            <input type="hidden" name="complete_module_id" value="<?php echo $module['module_id']; ?>">
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition text-sm shadow">
+                                Mark Module as Complete
+                            </button>
+                        </form>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         const moduleHeaders = document.querySelectorAll('.module-header');
 
         moduleHeaders.forEach(header => {
             header.addEventListener('click', function (e) {
-                // Prevent toggle when clicking the form button
-                if (e.target.closest('form') || e.target.closest('button')) {
+                // Prevent toggle when clicking the form button or links
+                if (e.target.closest('form') || e.target.closest('button') || e.target.closest('a')) {
                     return;
                 }
                 

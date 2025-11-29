@@ -1,6 +1,5 @@
 <?php
 session_start();
-include("../header.php");
 include("../connection.php");
 
 // --- 1. Authentication and Authorization ---
@@ -57,12 +56,15 @@ if (mysqli_num_rows($fetch_result) == 0) {
 }
 
 $course_data = mysqli_fetch_assoc($fetch_result);
+
+// NOW include header after all redirects
+include("../header.php");
 ?>
 
 <body>
     <div class="container mx-auto p-8 max-w-2xl">
         <header class="mb-6 text-center">
-            <h1 class="text-3xl font-bold text-gray-800">Edit Course Details:
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Edit Course Details:
                 <?php echo htmlspecialchars($course_data['title']); ?></h1>
         </header>
 
@@ -77,21 +79,21 @@ $course_data = mysqli_fetch_assoc($fetch_result);
         </div>
         <?php endif; ?>
 
-        <div class="p-8 bg-white rounded-xl shadow-2xl border border-gray-100">
+        <div class="p-8 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 transition-colors duration-200">
             <form action="edit_course.php?course_id=<?php echo $course_id; ?>" method="POST">
 
                 <div class="mb-5">
-                    <label for="title" class="block text-gray-700 font-semibold mb-2">Course Title:</label>
+                    <label for="title" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Course Title:</label>
                     <input type="text" id="title" name="title"
                         value="<?php echo htmlspecialchars($course_data['title']); ?>" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
                     <div>
-                        <label for="level" class="block text-gray-700 font-semibold mb-2">Difficulty Level:</label>
+                        <label for="level" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Difficulty Level:</label>
                         <select id="level" name="level" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
                             <?php
                             $levels = ['Beginner', 'Intermediate', 'Advanced'];
                             foreach ($levels as $level) {
@@ -102,23 +104,23 @@ $course_data = mysqli_fetch_assoc($fetch_result);
                         </select>
                     </div>
                     <div>
-                        <label for="language" class="block text-gray-700 font-semibold mb-2">Language:</label>
+                        <label for="language" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Language:</label>
                         <input type="text" id="language" name="language"
                             value="<?php echo htmlspecialchars($course_data['language']); ?>" required
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
                     </div>
                 </div>
 
                 <div class="mb-5">
-                    <label for="description" class="block text-gray-700 font-semibold mb-2">Course Description:</label>
+                    <label for="description" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Course Description:</label>
                     <textarea id="description" name="description" rows="4" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg"><?php echo htmlspecialchars($course_data['description']); ?></textarea>
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white"><?php echo htmlspecialchars($course_data['description']); ?></textarea>
                 </div>
 
                 <div class="mb-6">
-                    <label for="fee" class="block text-gray-700 font-semibold mb-2">Course Fee ($):</label>
-                    <input value="<?php echo htmlspecialchars($course_data['fee']); ?>" required
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg">
+                    <label for="fee" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Course Fee ($):</label>
+                    <input type="number" id="fee" name="fee" step="0.01" min="0" value="<?php echo htmlspecialchars($course_data['fee']); ?>" required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white">
                 </div>
 
                 <button type="submit" name="update_course"
@@ -129,7 +131,7 @@ $course_data = mysqli_fetch_assoc($fetch_result);
         </div>
 
         <div class="mt-8 text-center">
-            <a href="dashboard.php" class="text-gray-500 hover:text-gray-700 font-medium">← Back to Dashboard</a>
+            <a href="dashboard.php" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium">← Back to Dashboard</a>
         </div>
     </div>
 </body>

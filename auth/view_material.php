@@ -105,23 +105,23 @@ switch ($content_type) {
         
     case 'reading':
         $link_text = 'View Reading/Document (Opens in New Tab)';
-        $display_content = '<p class="text-gray-700">This is a reading assignment. Click the link below to access the document (e.g., PDF or article).</p>';
+        $display_content = '<p class="text-gray-700 dark:text-gray-300">This is a reading assignment. Click the link below to access the document (e.g., PDF or article).</p>';
         break;
 
     case 'quiz':
         $link_text = 'Start Quiz/Assessment';
-        $display_content = '<p class="text-gray-700">This link will take you to the external quiz system or the designated quiz page.</p>';
+        $display_content = '<p class="text-gray-700 dark:text-gray-300">This link will take you to the external quiz system or the designated quiz page.</p>';
         break;
 
     case 'link':
         $link_text = 'Go to External Link';
-        $display_content = '<p class="text-gray-700">This is an external resource link.</p>';
+        $display_content = '<p class="text-gray-700 dark:text-gray-300">This is an external resource link.</p>';
         break;
 }
 
 // Fallback for types that don't embed or if embedding failed
 if ($display_content == '') {
-    $display_content = '<p class="text-gray-700">Click the link below to access the content.</p>';
+    $display_content = '<p class="text-gray-700 dark:text-gray-300">Click the link below to access the content.</p>';
 }
 
 ?>
@@ -129,26 +129,26 @@ if ($display_content == '') {
 <body>
     <div class="container mx-auto p-8 max-w-4xl">
 
-        <header class="mb-8 border-b pb-4">
-            <h1 class="text-3xl font-bold text-gray-800"><?php echo htmlspecialchars($material['material_title']); ?></h1>
-            <p class="text-md text-gray-600">
+        <header class="mb-8 border-b dark:border-gray-700 pb-4">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100"><?php echo htmlspecialchars($material['material_title']); ?></h1>
+            <p class="text-md text-gray-600 dark:text-gray-400">
                 Course: <b><?php echo htmlspecialchars($material['course_title']); ?></b> | 
                 Module <?php echo $material['module_order']; ?>: <b><?php echo $material['module_title']; ?></b>
             </p>
-            <a href="course_view.php?id=<?php echo $course_id; ?>" class="text-sm text-blue-600 hover:underline mt-2 inline-block">
+            <a href="course_view.php?id=<?php echo $course_id; ?>" class="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-2 inline-block">
                 ← Back to Course Curriculum
             </a>
         </header>
 
-        <section class="bg-white p-6 rounded-lg shadow-xl">
-            <h2 class="text-2xl font-semibold mb-4 text-indigo-700">
+        <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-semibold mb-4 text-indigo-700 dark:text-indigo-400">
                 Content Type: <?php echo ucfirst($content_type); ?>
             </h2>
 
             <?php echo $display_content; ?>
             
-            <div class="mt-8 pt-4 border-t-2 border-dashed border-gray-200">
-                <p class="text-lg font-semibold mb-4">Direct Link Access:</p>
+            <div class="mt-8 pt-4 border-t-2 border-dashed border-gray-200 dark:border-gray-700">
+                <p class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Direct Link Access:</p>
                 
                 <a href="<?php echo $content_url; ?>" target="_blank"
                     class="inline-flex items-center bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition shadow-lg">
@@ -156,7 +156,7 @@ if ($display_content == '') {
                     <?php echo $link_text; ?>
                 </a>
 
-                <p class="text-sm text-gray-500 mt-3">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-3">
                     URL: <code><?php echo $content_url; ?></code>
                 </p>
             </div>

@@ -1,8 +1,8 @@
 <?php
 session_start();
 include("../connection.php");
-include("../header.php");
 
+// Process registration BEFORE including header
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     // Escape all user inputs before use
     $username = mysqli_real_escape_string($conn, $_POST['username'] ?? '');
@@ -41,37 +41,46 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 }
+
+// NOW include header after all redirects are done
+include("../header.php");
 ?>
-<div class="flex w-full items-center justify-center p-4 bg-gray-100" style="min-height: calc(100vh - 64px);">
-    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md">
-        <h2 class="text-3xl font-extrabold mb-6 text-gray-900 text-center border-b pb-3">Student Registration</h2>
+<div class="flex w-full items-center justify-center p-4 bg-gray-100 dark:bg-gray-900 transition-colors duration-200" style="min-height: calc(100vh - 64px);">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md transition-colors duration-200">
+        <h2 class="text-3xl font-extrabold mb-6 text-gray-900 dark:text-white text-center border-b dark:border-gray-700 pb-3">Student Registration</h2>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                <span class="block sm:inline"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></span>
+            </div>
+        <?php endif; ?>
 
         <form action="register.php" method="POST" class="space-y-5">
             <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Name:</label>
+                <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name:</label>
                 <input type="text" id="username" name="username"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                     required>
             </div>
 
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email:</label>
                 <input type="email" id="email" name="email"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                     required>
             </div>
 
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
+                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password:</label>
                 <input type="password" id="password" name="password"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white"
                     required>
             </div>
 
             <div>
-                <label for="role" class="block text-sm font-medium text-gray-700">I am registering as:</label>
+                <label for="role" class="block text-sm font-medium text-gray-700 dark:text-gray-300">I am registering as:</label>
                 <select id="role" name="role"
-                    class="mt-1 block w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white">
+                    class="mt-1 block w-full pl-4 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-white dark:bg-gray-700 dark:text-white">
                     <option value="student">Student</option>
                     <option value="lecturer">Lecturer</option>
                 </select>
@@ -83,7 +92,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             </button>
         </form>
 
-        <p class="mt-6 text-center text-sm text-gray-600">
+        <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             Already registered?
             <a href="./login.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Sign in here</a>
         </p>

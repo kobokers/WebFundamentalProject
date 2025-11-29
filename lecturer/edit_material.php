@@ -1,7 +1,6 @@
 <?php
 session_start();
-include("../header.php");
-include("../connection.php"); 
+include("../connection.php");
 
 // --- 1. Authentication and Authorization ---
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'lecturer') {
@@ -81,13 +80,15 @@ $current_type = $material['content_type'];
 $current_url = htmlspecialchars($material['content_url']);
 $current_order = $material['material_order'];
 
+// NOW include header after all redirects
+include("../header.php");
 ?>
 
 <body>
     <div class="container mx-auto p-8">
         <header class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800">Edit Learning Material</h1>
-            <p class="text-md text-gray-600">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Edit Learning Material</h1>
+            <p class="text-md text-gray-600 dark:text-gray-400">
                 Course: <b><?php echo $course_title; ?></b> | Module: <b><?php echo $module_title; ?></b>
             </p>
         </header>
@@ -97,22 +98,22 @@ $current_order = $material['material_order'];
             <?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
         <?php endif; ?>
 
-        <div class="max-w-xl mx-auto p-6 bg-white rounded-lg shadow-xl">
-            <h2 class="text-xl font-semibold mb-4 text-blue-600">Update Material Details</h2>
+        <div class="max-w-xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl transition-colors duration-200">
+            <h2 class="text-xl font-semibold mb-4 text-blue-600 dark:text-blue-400">Update Material Details</h2>
             
             <form action="edit_material.php?material_id=<?php echo $material_id; ?>" method="POST">
 
                 <div class="mb-4">
-                    <label for="material_title" class="block text-gray-700 font-semibold mb-2">Material Title:</label>
+                    <label for="material_title" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Material Title:</label>
                     <input type="text" id="material_title" name="material_title" value="<?php echo $current_title; ?>" required
-                        class="w-full px-4 py-2 border rounded-lg">
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                        <label for="content_type" class="block text-gray-700 font-semibold mb-2">Content Type:</label>
+                        <label for="content_type" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Content Type:</label>
                         <select id="content_type" name="content_type" required
-                            class="w-full px-4 py-2 border rounded-lg">
+                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
                             <option value="reading" <?php echo ($current_type == 'reading' ? 'selected' : ''); ?>>Reading/Document</option>
                             <option value="video" <?php echo ($current_type == 'video' ? 'selected' : ''); ?>>Video</option>
                             <option value="quiz" <?php echo ($current_type == 'quiz' ? 'selected' : ''); ?>>Quiz/Assessment</option>
@@ -120,17 +121,17 @@ $current_order = $material['material_order'];
                         </select>
                     </div>
                     <div>
-                        <label for="material_order" class="block text-gray-700 font-semibold mb-2">Order:</label>
+                        <label for="material_order" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Order:</label>
                         <input type="number" id="material_order" name="material_order" min="1" value="<?php echo $current_order; ?>" required
-                            class="w-full px-4 py-2 border rounded-lg">
+                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
                     </div>
                 </div>
 
                 <div class="mb-6">
-                    <label for="content_url" class="block text-gray-700 font-semibold mb-2">URL/Link:</label>
+                    <label for="content_url" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">URL/Link:</label>
                     <input type="text" id="content_url" name="content_url" value="<?php echo $current_url; ?>"
-                        class="w-full px-4 py-2 border rounded-lg" placeholder="e.g., https://www.youtube.com/...">
-                    <p class="text-sm text-gray-500 mt-1">Provide the direct link to the content (Video, PDF, or website).</p>
+                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white" placeholder="e.g., https://www.youtube.com/...">
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Provide the direct link to the content (Video, PDF, or website).</p>
                 </div>
 
                 <button type="submit"
@@ -141,7 +142,7 @@ $current_order = $material['material_order'];
             
             <div class="mt-4 text-center">
                 <a href="module_setup.php?course_id=<?php echo $course_id; ?>" 
-                    class="text-gray-500 hover:text-gray-700 font-medium">← Back to Course Structure</a>
+                    class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium">← Back to Course Structure</a>
             </div>
         </div>
 

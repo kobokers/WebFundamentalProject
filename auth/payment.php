@@ -78,8 +78,8 @@ mysqli_close($conn);
 <body>
     <div class="container mx-auto p-8 max-w-lg">
         <header class="mb-8 text-center">
-            <h1 class="text-3xl font-extrabold text-red-700">Finalize Payment</h1>
-            <p class="text-lg text-gray-600">Complete your transaction for <strong><?php echo $course_title; ?></strong>.</p>
+            <h1 class="text-3xl font-extrabold text-red-700 dark:text-red-400">Finalize Payment</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">Complete your transaction for <strong><?php echo $course_title; ?></strong>.</p>
         </header>
 
         <?php if (isset($_SESSION['error'])): ?>
@@ -88,18 +88,18 @@ mysqli_close($conn);
         </div>
         <?php endif; ?>
 
-        <div class="p-8 bg-white rounded-xl shadow-2xl border border-gray-100">
+        <div class="p-8 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 transition-colors duration-200">
 
             <div class="text-center mb-6">
-                <p class="text-xl text-gray-700 font-semibold mb-2">Amount Due:</p>
-                <p class="text-5xl font-bold text-green-600">$<?php echo number_format($course_fee, 2); ?></p>
+                <p class="text-xl text-gray-700 dark:text-gray-300 font-semibold mb-2">Amount Due:</p>
+                <p class="text-5xl font-bold text-green-600 dark:text-green-400">$<?php echo number_format($course_fee, 2); ?></p>
             </div>
 
             <form action="payment.php" method="POST">
                 <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
                 <input type="hidden" name="pay_submit" value="1">
 
-                <p class="text-sm text-center text-gray-500 mb-4">
+                <p class="text-sm text-center text-gray-500 dark:text-gray-400 mb-4">
                     By clicking below, you simulate a successful payment transaction.
                 </p>
 
@@ -111,7 +111,8 @@ mysqli_close($conn);
         </div>
 
         <div class="mt-8 text-center">
-            <a href="dashboard.php" class="text-gray-500 hover:text-gray-700 font-medium">← Back to Dashboard</a>
+            <a href="dashboard.php" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium">← Back to Dashboard</a>
         </div>
     </div>
 </body>
+<?php include("../footer.php"); ?>

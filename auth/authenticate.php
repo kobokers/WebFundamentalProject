@@ -14,12 +14,21 @@ $result = mysqli_query($conn, $query);
 if (mysqli_num_rows($result) > 0) {
     $user = mysqli_fetch_assoc($result);
 
-    // Check if account active
-    if ($user['status'] != 'active') {
-        // FIX: Added session error and redirection
-        $_SESSION['error'] = "Account inactive. Please contact admin for activation.";
+    // Trim status to remove any whitespace
+    $user_status = trim(strtolower($user['status']));
+
+    // Check if account is pending approval
+    if ($user_status === 'pending') {
+        $_SESSION['error'] = "Your account is pending approval. Please wait for admin activation.";
         header("Location: login.php");
-        exit; // Stop execution
+        exit;
+    }
+
+    // Check if account is active
+    if ($user_status !== 'active') {
+        $_SESSION['error'] = "Your account is inactive. Please contact admin for assistance.";
+        header("Location: login.php");
+        exit;
     }
 
     if (password_verify($password, $user['password'])) {

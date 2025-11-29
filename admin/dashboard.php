@@ -20,18 +20,6 @@ if ($_SESSION['user_role'] !== 'admin') {
     exit();
 }
 
-//check for status parameter (bugged)
-// if (isset($_GET['status'])) {
-//     $status = $_GET['status'];
-//     if ($status === 'success') {
-//         echo "<script>alert('User deleted successfully.');</script>";
-//     } elseif ($status === 'error') {
-//         echo "<script>alert('Error deleting user.');</script>";
-//     } elseif ($status === 'no_id') {
-//         echo "<script>alert('No user specified for deletion.');</script>";
-//     }
-// }
-
 //check for status parameter
 if (isset($_GET['status'])) {
     $status = $_GET['status'];
@@ -88,33 +76,33 @@ if ($result_state && $result_state->num_rows > 0) {
 
 <body>
     <main class="container mx-auto p-4">
-        <h1 class="text-3xl font-extrabold mb-6 text-gray-800">Admin Dashboard</h1>
-        <p class="mb-8 text-gray-600">This is the admin dashboard. Here you can manage users and site settings.</p>
+        <h1 class="text-3xl font-extrabold mb-6 text-gray-800 dark:text-gray-100">Admin Dashboard</h1>
+        <p class="mb-8 text-gray-600 dark:text-gray-400">This is the admin dashboard. Here you can manage users and site settings.</p>
 
         <section class="mb-12">
             <div class="max-w-6xl mx-auto">
-                <h2 class="text-2xl font-semibold mb-4 text-blue-700">Manage Students</h2>
+                <h2 class="text-2xl font-semibold mb-4 text-blue-700 dark:text-blue-400">Manage Students</h2>
 
-                <div class="overflow-x-auto shadow border-b border-gray-200 sm:rounded-lg">
-                    <table class="w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                <div class="overflow-x-auto shadow border-b border-gray-200 dark:border-gray-700 sm:rounded-lg">
+                    <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th class="w-16 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th class="w-40 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th class="w-56 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="w-32 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th class="w-16 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                                <th class="w-40 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+                                <th class="w-56 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
+                                <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
+                                <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                                <th class="w-32 px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             <?php if (count($users) > 0): ?>
                                 <?php foreach ($users as $user): ?>
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= htmlspecialchars($user['id']) ?></td>
-                                        <td class="px-6 py-4 truncate text-sm text-gray-700"><?= htmlspecialchars($user['name']) ?></td>
-                                        <td class="px-6 py-4 truncate text-sm text-gray-700"><?= htmlspecialchars($user['email']) ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100"><?= htmlspecialchars($user['id']) ?></td>
+                                        <td class="px-6 py-4 truncate text-sm text-gray-700 dark:text-gray-300"><?= htmlspecialchars($user['name']) ?></td>
+                                        <td class="px-6 py-4 truncate text-sm text-gray-700 dark:text-gray-300"><?= htmlspecialchars($user['email']) ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"><?= htmlspecialchars($user['role']) ?></span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -131,7 +119,7 @@ if ($result_state && $result_state->num_rows > 0) {
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No student users found.</td>
+                                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">No student users found.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -142,28 +130,28 @@ if ($result_state && $result_state->num_rows > 0) {
 
         <section>
             <div class="max-w-6xl mx-auto">
-                <h2 class="text-2xl font-semibold mb-4 text-blue-700">Manage Lecturers</h2>
+                <h2 class="text-2xl font-semibold mb-4 text-blue-700 dark:text-blue-400">Manage Lecturers</h2>
 
-                <div class="overflow-x-auto shadow border-b border-gray-200 sm:rounded-lg">
-                    <table class="w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                <div class="overflow-x-auto shadow border-b border-gray-200 dark:border-gray-700 sm:rounded-lg">
+                    <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
+                        <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th class="w-16 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                                <th class="w-40 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                                <th class="w-56 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                                <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                                <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                                <th class="w-32 px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                                <th class="w-16 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">ID</th>
+                                <th class="w-40 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Name</th>
+                                <th class="w-56 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Email</th>
+                                <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Role</th>
+                                <th class="w-24 px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Status</th>
+                                <th class="w-32 px-6 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">Actions</th>
                             </tr>
                         </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
+                        <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             <?php if (count($users_lect) > 0): ?>
                                 <?php foreach ($users_lect as $lecturer): ?>
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900"><?= htmlspecialchars($lecturer['id']) ?></td>
-                                        <td class="px-6 py-4 truncate text-sm text-gray-700"><?= htmlspecialchars($lecturer['name']) ?></td>
-                                        <td class="px-6 py-4 truncate text-sm text-gray-700"><?= htmlspecialchars($lecturer['email']) ?></td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100"><?= htmlspecialchars($lecturer['id']) ?></td>
+                                        <td class="px-6 py-4 truncate text-sm text-gray-700 dark:text-gray-300"><?= htmlspecialchars($lecturer['name']) ?></td>
+                                        <td class="px-6 py-4 truncate text-sm text-gray-700 dark:text-gray-300"><?= htmlspecialchars($lecturer['email']) ?></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300">
                                             <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800"><?= htmlspecialchars($lecturer['role']) ?></span>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -180,7 +168,7 @@ if ($result_state && $result_state->num_rows > 0) {
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500">No lecturer users found.</td>
+                                    <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">No lecturer users found.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

@@ -1,7 +1,6 @@
 <?php
 session_start();
 include("../connection.php");
-include("../header.php");
 
 // --- Access Control ---
 if (!isset($_SESSION['user_id'])) {
@@ -110,10 +109,12 @@ if (!isset($current_user) && mysqli_num_rows($result) > 0) {
     $current_user = mysqli_fetch_assoc($result);
 }
 
+// NOW include header after all redirects
+include("../header.php");
 ?>
-<div class="flex flex-col items-center justify-center bg-gray-50" style="min-height: calc(100vh - 64px);">
-    <div class="w-full max-w-md bg-white p-8 rounded-lg shadow-xl my-8">
-        <h2 class="text-3xl font-extrabold text-gray-900 mb-6 text-center border-b pb-3">
+<div class="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors duration-200" style="min-height: calc(100vh - 64px);">
+    <div class="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl my-8 transition-colors duration-200">
+        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-6 text-center border-b dark:border-gray-700 pb-3">
             Edit Your Profile
         </h2>
 
@@ -132,31 +133,31 @@ if (!isset($current_user) && mysqli_num_rows($result) > 0) {
         <form method="POST" action="edit_profile.php" class="space-y-5">
 
             <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Name:</label>
+                <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name:</label>
                 <input type="text" id="username" name="username"
                     value="<?php echo htmlspecialchars($current_user['name'] ?? ''); ?>" required
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
             </div>
 
             <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email:</label>
                 <input type="email" id="email" name="email"
                     value="<?php echo htmlspecialchars($current_user['email'] ?? ''); ?>" required
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
             </div>
 
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">New Password (Leave blank to keep
+                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">New Password (Leave blank to keep
                     current):</label>
                 <input type="password" id="password" name="password" placeholder="Enter new password"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
             </div>
 
             <div>
-                <label for="confirm_password" class="block text-sm font-medium text-gray-700">Confirm New
+                <label for="confirm_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm New
                     Password</label>
                 <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter new password"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
             </div>
 
             <div>
@@ -165,7 +166,7 @@ if (!isset($current_user) && mysqli_num_rows($result) > 0) {
             </div>
         </form>
 
-        <p class="mt-6 text-center text-sm text-gray-600">
+        <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             <a href="./dashboard.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Back to Dashboard</a>
         </p>
 

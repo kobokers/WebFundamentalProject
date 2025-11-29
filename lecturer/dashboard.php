@@ -1,6 +1,5 @@
 <?php
 session_start();
-include("../header.php");
 include("../connection.php");
 
 // --- 1. Authentication and Authorization Check ---
@@ -31,21 +30,24 @@ $sql_courses = "
     c.title ASC";
 
 $result = mysqli_query($conn, $sql_courses);
+
+// NOW include header after authentication check
+include("../header.php");
 ?>
 
 <body>
     <div class="container mx-auto p-8">
         <header class="mb-8">
-            <h1 class="text-4xl font-extrabold text-purple-800">Lecturer Dashboard</h1>
-            <p class="text-lg text-gray-600">Welcome, <b><?php echo htmlspecialchars($lecturer_name); ?>! </b> Manage
+            <h1 class="text-4xl font-extrabold text-purple-800 dark:text-purple-300">Lecturer Dashboard</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">Welcome, <b><?php echo htmlspecialchars($lecturer_name); ?>! </b> Manage
                 your content here.</p>
         </header>
 
-        <hr class="mb-8">
+        <hr class="mb-8 border-gray-300 dark:border-gray-700">
 
         <section id="actions"
-            class="mb-10 p-6 bg-purple-50 border-l-4 border-purple-500 rounded-lg shadow-md flex justify-between items-center">
-            <h2 class="text-xl font-semibold text-purple-700">Ready to create new content?</h2>
+            class="mb-10 p-6 bg-purple-50 dark:bg-purple-900 border-l-4 border-purple-500 dark:border-purple-400 rounded-lg shadow-md flex justify-between items-center transition-colors duration-200">
+            <h2 class="text-xl font-semibold text-purple-700 dark:text-purple-200">Ready to create new content?</h2>
             <a href="add_course_form.php"
                 class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
                 <i class="fas fa-plus-circle mr-2"></i> Register New Course
@@ -53,14 +55,14 @@ $result = mysqli_query($conn, $sql_courses);
         </section>
 
         <section id="courses-taught">
-            <h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-chalkboard-teacher mr-2"></i> My
+            <h2 class="text-2xl font-semibold mb-4 flex items-center text-gray-800 dark:text-white"><i class="fas fa-chalkboard-teacher mr-2"></i> My
                 Registered Courses</h2>
 
             <?php if (mysqli_num_rows($result) > 0): ?>
             <div class="overflow-x-auto">
-                <table class="min-w-full bg-white shadow-md rounded-lg">
+                <table class="min-w-full bg-white dark:bg-gray-800 shadow-md rounded-lg transition-colors duration-200">
                     <thead>
-                        <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                        <tr class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 uppercase text-sm leading-normal">
                             <th class="py-3 px-6 text-left">Course Title</th>
                             <th class="py-3 px-6 text-left">Level</th>
                             <th class="py-3 px-6 text-center">Fee</th>
@@ -68,9 +70,9 @@ $result = mysqli_query($conn, $sql_courses);
                             <th class="py-3 px-6 text-center">Enrollments</th>
                         </tr>
                     </thead>
-                    <tbody class="text-gray-600 text-sm font-light">
+                    <tbody class="text-gray-600 dark:text-gray-400 text-sm font-light">
                         <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <tr class="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200">
                             <td class="py-3 px-6 text-left whitespace-nowrap font-medium">
                                 <?php echo htmlspecialchars($row['course_title']); ?>
                             </td>
@@ -99,7 +101,7 @@ $result = mysqli_query($conn, $sql_courses);
                 </table>
             </div>
             <?php else: ?>
-            <div class="p-4 bg-yellow-50 border-l-4 border-yellow-500 text-yellow-700">
+            <div class="p-4 bg-yellow-50 dark:bg-yellow-900 border-l-4 border-yellow-500 dark:border-yellow-400 text-yellow-700 dark:text-yellow-200 transition-colors duration-200">
                 <p class="font-bold">No Courses Found!</p>
                 <p>You have not registered any courses yet. Click the <b>Register New Course</b> button above to get
                     started.</p>
@@ -108,11 +110,11 @@ $result = mysqli_query($conn, $sql_courses);
         </section><br><br>
 
         <section id="account-actions">
-            <h2 class="text-2xl font-semibold mb-4 flex items-center"><i class="fas fa-user-cog mr-2"></i> Account
+            <h2 class="text-2xl font-semibold mb-4 flex items-center text-gray-800 dark:text-white"><i class="fas fa-user-cog mr-2"></i> Account
                 Actions</h2>
             <div class="flex space-x-4">
                 <a href="edit_profile.php"
-                    class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition duration-200">Edit
+                    class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-bold py-2 px-4 rounded transition duration-200">Edit
                     Profile</a>
             </div>
         </section><br><br>

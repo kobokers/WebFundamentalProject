@@ -32,8 +32,8 @@ $result = mysqli_query($conn, $catalog_query);
 <body>
     <div class="container mx-auto p-8 max-w-6xl">
         <header class="mb-8 text-center">
-            <h1 class="text-4xl font-extrabold text-teal-700">Course Catalog</h1>
-            <p class="text-lg text-gray-600">Browse and enroll in our available courses.</p>
+            <h1 class="text-4xl font-extrabold text-teal-700 dark:text-teal-300">Course Catalog</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">Browse and enroll in our available courses.</p>
         </header>
 
         <section id="course-list">
@@ -46,10 +46,10 @@ $result = mysqli_query($conn, $catalog_query);
                         $is_pending = ($row['payment_status'] === 'pending');
                     ?>
                     
-                    <div class="bg-white border border-gray-200 rounded-xl shadow-lg hover:shadow-xl transition flex flex-col justify-between">
+                    <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg hover:shadow-xl transition flex flex-col justify-between transition-colors duration-200">
                         <div class="p-5">
-                            <h3 class="text-xl font-bold text-gray-800 mb-2"><?php echo htmlspecialchars($row['course_title']); ?></h3>
-                            <p class="text-sm text-gray-500 mb-3">Lecturer: <?php echo htmlspecialchars($row['lecturer_name']); ?></p>
+                            <h3 class="text-xl font-bold text-gray-800 dark:text-white mb-2"><?php echo htmlspecialchars($row['course_title']); ?></h3>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">Lecturer: <?php echo htmlspecialchars($row['lecturer_name']); ?></p>
                             
                             <div class="flex justify-between text-sm mb-4">
                                 <span class="text-indigo-600 font-semibold"><?php echo htmlspecialchars($row['level']); ?></span>
@@ -58,16 +58,16 @@ $result = mysqli_query($conn, $catalog_query);
                                 </span>
                             </div>
 
-                            <p class="text-gray-600 text-sm italic mb-4"><?php echo htmlspecialchars($row['description']); ?></p>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm italic mb-4"><?php echo htmlspecialchars($row['description']); ?></p>
                         </div>
 
-                        <div class="p-5 pt-0 border-t border-gray-100">
+                        <div class="p-5 pt-0 border-t border-gray-100 dark:border-gray-700">
                             <?php if ($user_role === 'guest'): ?>
                                 <a href="./login.php" class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg text-center block hover:bg-blue-600">
                                     Login to Enroll
                                 </a>
                             <?php elseif ($user_role !== 'student'): ?>
-                                <button disabled class="w-full bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-lg">
+                                <button disabled class="w-full bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 font-bold py-2 px-4 rounded-lg">
                                     Accessing as Lecturer/Admin
                                 </button>
                             <?php elseif ($is_paid): ?>
@@ -90,11 +90,19 @@ $result = mysqli_query($conn, $catalog_query);
         </section>
         <?php if ($user_role === 'student'): ?>
             <div class="mt-8 text-center">
-             <a href="./dashboard.php" class="text-gray-500 hover:text-gray-700 font-medium">← Go to Dashboard</a>
+             <a href="./dashboard.php" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium">← Go to Dashboard</a>
             </div>
+        <?php elseif ($user_role === 'lecturer'): ?>
+            <div class="mt-8 text-center">
+             <a href="../lecturer/dashboard.php" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium">← Go to Dashboard</a>
+            </div>
+        <?php elseif ($user_role === 'admin'): ?>
+            <div class="mt-8 text-center">
+             <a href="../admin/dashboard.php" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium">← Go to Dashboard</a>
+            </div>       
         <?php else: ?>
             <div class="mt-8 text-center">
-             <a href="./index.php" class="text-gray-500 hover:text-gray-700 font-medium">← Go back</a>
+             <a href="../index.php" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium">← Go back</a>
             </div>   
         <?php endif; ?>
     </div>
