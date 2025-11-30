@@ -49,28 +49,64 @@ if (isset($_GET['status'])) {
     }
 }
 
-// --- Fetch Students ---
+// --- Pagination and Search for Students ---
+$students_per_page = 10;
+$student_page = isset($_GET['student_page']) ? (int)$_GET['student_page'] : 1;
+$student_page = max(1, $student_page); // Ensure page is at least 1
+$student_search = isset($_GET['student_search']) ? trim($_GET['student_search']) : '';
+$student_offset = ($student_page - 1) * $students_per_page;
+
+// Build student query with search
+$student_where = "role = 'student'";
+if (!empty($student_search)) {
+    $student_search_safe = $conn->real_escape_string($student_search);
+    $student_where .= " AND name LIKE '%{$student_search_safe}%'";
+}
+
+// Get total count for pagination
+$count_sql = "SELECT COUNT(*) as total FROM users WHERE {$student_where}";
+$count_result = $conn->query($count_sql);
+$total_students = $count_result->fetch_assoc()['total'];
+$total_student_pages = ceil($total_students / $students_per_page);
+
+// Fetch students for current page
 $users = [];
-$sql = "SELECT id, name, email, role, status FROM users WHERE role = 'student' ORDER BY name ASC";
+$sql = "SELECT id, name, email, role, status FROM users WHERE {$student_where} ORDER BY name ASC LIMIT {$students_per_page} OFFSET {$student_offset}";
 $result = $conn->query($sql);
 if ($result && $result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
         $users[] = $row;
     }
-} else {
-    error_log(message: "No student users found.");
 }
 
-// --- Fetch Lecturers ---
+// --- Pagination and Search for Lecturers ---
+$lecturers_per_page = 10;
+$lecturer_page = isset($_GET['lecturer_page']) ? (int)$_GET['lecturer_page'] : 1;
+$lecturer_page = max(1, $lecturer_page); // Ensure page is at least 1
+$lecturer_search = isset($_GET['lecturer_search']) ? trim($_GET['lecturer_search']) : '';
+$lecturer_offset = ($lecturer_page - 1) * $lecturers_per_page;
+
+// Build lecturer query with search
+$lecturer_where = "role = 'lecturer'";
+if (!empty($lecturer_search)) {
+    $lecturer_search_safe = $conn->real_escape_string($lecturer_search);
+    $lecturer_where .= " AND name LIKE '%{$lecturer_search_safe}%'";
+}
+
+// Get total count for pagination
+$count_sql_lect = "SELECT COUNT(*) as total FROM users WHERE {$lecturer_where}";
+$count_result_lect = $conn->query($count_sql_lect);
+$total_lecturers = $count_result_lect->fetch_assoc()['total'];
+$total_lecturer_pages = ceil($total_lecturers / $lecturers_per_page);
+
+// Fetch lecturers for current page
 $users_lect = [];
-$sql_state = "SELECT id, name, email, role, status FROM users WHERE role = 'lecturer' ORDER BY name ASC";
+$sql_state = "SELECT id, name, email, role, status FROM users WHERE {$lecturer_where} ORDER BY name ASC LIMIT {$lecturers_per_page} OFFSET {$lecturer_offset}";
 $result_state = $conn->query($sql_state);
 if ($result_state && $result_state->num_rows > 0) {
     while ($row = $result_state->fetch_assoc()) {
         $users_lect[] = $row;
     }
-} else {
-    error_log(message: "No lecturer users found.");
 }
 ?>
 
@@ -82,6 +118,21 @@ if ($result_state && $result_state->num_rows > 0) {
         <section class="mb-12">
             <div class="max-w-6xl mx-auto">
                 <h2 class="text-2xl font-semibold mb-4 text-blue-700 dark:text-blue-400">Manage Students</h2>
+
+                <!-- Search Box for Students -->
+                <div class="mb-4">
+                    <form method="GET" action="" class="flex gap-2">
+                        <input type="text" 
+                               name="student_search" 
+                               value="<?= htmlspecialchars($student_search) ?>" 
+                               placeholder="Search by name..." 
+                               class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">Search</button>
+                        <?php if (!empty($student_search)): ?>
+                            <a href="?student_page=1" class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition">Clear</a>
+                        <?php endif; ?>
+                    </form>
+                </div>
 
                 <div class="overflow-x-auto shadow border-b border-gray-200 dark:border-gray-700 sm:rounded-lg">
                     <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -125,12 +176,51 @@ if ($result_state && $result_state->num_rows > 0) {
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Pagination for Students -->
+                <?php if ($total_student_pages > 1): ?>
+                    <div class="mt-4 flex justify-center items-center gap-2">
+                        <?php if ($student_page > 1): ?>
+                            <a href="?student_page=<?= $student_page - 1 ?><?= !empty($student_search) ? '&student_search=' . urlencode($student_search) : '' ?>" 
+                               class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition">Previous</a>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $total_student_pages; $i++): ?>
+                            <?php if ($i == $student_page): ?>
+                                <span class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold"><?= $i ?></span>
+                            <?php else: ?>
+                                <a href="?student_page=<?= $i ?><?= !empty($student_search) ? '&student_search=' . urlencode($student_search) : '' ?>" 
+                                   class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"><?= $i ?></a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+
+                        <?php if ($student_page < $total_student_pages): ?>
+                            <a href="?student_page=<?= $student_page + 1 ?><?= !empty($student_search) ? '&student_search=' . urlencode($student_search) : '' ?>" 
+                               class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition">Next</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </section>
 
         <section>
             <div class="max-w-6xl mx-auto">
                 <h2 class="text-2xl font-semibold mb-4 text-blue-700 dark:text-blue-400">Manage Lecturers</h2>
+
+                <!-- Search Box for Lecturers -->
+                <div class="mb-4">
+                    <form method="GET" action="" class="flex gap-2">
+                        <input type="text" 
+                               name="lecturer_search" 
+                               value="<?= htmlspecialchars($lecturer_search) ?>" 
+                               placeholder="Search by name..." 
+                               class="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition">Search</button>
+                        <?php if (!empty($lecturer_search)): ?>
+                            <a href="?lecturer_page=1" class="px-6 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition">Clear</a>
+                        <?php endif; ?>
+                    </form>
+                </div>
 
                 <div class="overflow-x-auto shadow border-b border-gray-200 dark:border-gray-700 sm:rounded-lg">
                     <table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -174,6 +264,30 @@ if ($result_state && $result_state->num_rows > 0) {
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Pagination for Lecturers -->
+                <?php if ($total_lecturer_pages > 1): ?>
+                    <div class="mt-4 flex justify-center items-center gap-2">
+                        <?php if ($lecturer_page > 1): ?>
+                            <a href="?lecturer_page=<?= $lecturer_page - 1 ?><?= !empty($lecturer_search) ? '&lecturer_search=' . urlencode($lecturer_search) : '' ?>" 
+                               class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition">Previous</a>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $total_lecturer_pages; $i++): ?>
+                            <?php if ($i == $lecturer_page): ?>
+                                <span class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold"><?= $i ?></span>
+                            <?php else: ?>
+                                <a href="?lecturer_page=<?= $i ?><?= !empty($lecturer_search) ? '&lecturer_search=' . urlencode($lecturer_search) : '' ?>" 
+                                   class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"><?= $i ?></a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+
+                        <?php if ($lecturer_page < $total_lecturer_pages): ?>
+                            <a href="?lecturer_page=<?= $lecturer_page + 1 ?><?= !empty($lecturer_search) ? '&lecturer_search=' . urlencode($lecturer_search) : '' ?>" 
+                               class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition">Next</a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </section>
     </main>

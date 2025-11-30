@@ -1,15 +1,7 @@
-</main>
-
-
-
-</main>
-
-
-
 <footer class="bg-slate-800 dark:bg-gray-900 text-white py-6 mt-auto transition-colors duration-200">
     <div class="container mx-auto px-4 text-center">
         <p>&copy; <?php echo date('Y'); ?> OLMS. All rights reserved.</p>
-        <p>Developed by <a href="https://github.com/kobokers" target="_blank" class="text-blue-500 hover:text-blue-600">Kobokers</a></p>
+        <p>Developed by <a href="https://github.com/kobokers" target="_blank" class="text-blue-500 hover:text-blue-600">ryzka ♡</a></p>
     </div>
 </footer>
 
