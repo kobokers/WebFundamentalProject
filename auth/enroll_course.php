@@ -18,7 +18,7 @@ if (!$course_id || !is_numeric($course_id)) {
     exit;
 }
 
-// --- 2. Check Course Fee and Existing Enrollment (INSECURE Query) ---
+// --- 2. Check Course Fee and Existing Enrollment ---
 $check_query = "SELECT fee, title 
                 FROM courses 
                 WHERE id = '$course_id'";
@@ -37,7 +37,7 @@ $course_title = $course_data['title'];
 // Determine initial payment status
 $initial_status = ($course_fee > 0) ? 'pending' : 'paid';
 
-// --- 3. Perform Enrollment INSERT (INSECURE Query) ---
+// --- 3. Perform Enrollment INSERT ---
 // Note: A unique index on (user_id, course_id) prevents duplicate enrollment.
 
 $enroll_query = "INSERT INTO enrollment (user_id, course_id, payment_status, enroll_date)
