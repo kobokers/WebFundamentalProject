@@ -53,11 +53,25 @@ include("../header.php");
                         </select>
                     </div>
                     <div>
-                        <label for="language" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Language:</label>
-                        <input type="text" id="language" name="language" value="English" required
-                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
-                            placeholder="e.g., English">
+                        <label for="category" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Category:</label>
+                        <select id="category" name="category" required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <option value="General">General</option>
+                            <option value="Programming">Programming</option>
+                            <option value="Design">Design</option>
+                            <option value="Business">Business</option>
+                            <option value="Language">Language</option>
+                            <option value="Science">Science</option>
+                            <option value="Mathematics">Mathematics</option>
+                        </select>
                     </div>
+                </div>
+
+                <div class="mb-5">
+                    <label for="language" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Language:</label>
+                    <input type="text" id="language" name="language" value="English" required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                        placeholder="e.g., English">
                 </div>
 
                 <div class="mb-5">

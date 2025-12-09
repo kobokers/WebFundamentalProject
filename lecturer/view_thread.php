@@ -10,6 +10,7 @@ if (!isset($_SESSION['user_id']) || ($_SESSION['user_role'] !== 'lecturer' && $_
 }
 
 $user_id = $_SESSION['user_id'];
+$user_role = $_SESSION['user_role'];
 $thread_id = isset($_GET['thread_id']) ? $_GET['thread_id'] : null;
 
 if (!$thread_id || !is_numeric($thread_id)) {
@@ -18,9 +19,10 @@ if (!$thread_id || !is_numeric($thread_id)) {
     exit;
 }
 
+// --- Handle Reply Submission ---
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reply_content'])) {
     
-    $content = $_POST['reply_content'];
+    $content = mysqli_real_escape_string($conn, $_POST['reply_content']);
 
     $insert_query = "INSERT INTO discussion_replies (thread_id, user_id, content, created_at) 
                      VALUES ('$thread_id', '$user_id', '$content', NOW())";
@@ -35,6 +37,29 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['reply_content'])) {
     exit;
 }
 
+// --- Handle Upvote Toggle ---
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['toggle_upvote'])) {
+    $reply_id = (int)$_POST['reply_id'];
+    
+    // Check if user already upvoted
+    $check_upvote = "SELECT id FROM discussion_upvotes WHERE reply_id = '$reply_id' AND user_id = '$user_id' LIMIT 1";
+    $check_result = mysqli_query($conn, $check_upvote);
+    
+    if (mysqli_num_rows($check_result) > 0) {
+        // Remove upvote
+        $remove_query = "DELETE FROM discussion_upvotes WHERE reply_id = '$reply_id' AND user_id = '$user_id'";
+        mysqli_query($conn, $remove_query);
+    } else {
+        // Add upvote
+        $add_query = "INSERT INTO discussion_upvotes (reply_id, user_id, created_at) VALUES ('$reply_id', '$user_id', NOW())";
+        mysqli_query($conn, $add_query);
+    }
+    
+    header("Location: view_thread.php?thread_id={$thread_id}");
+    exit;
+}
+
+// --- Fetch Thread Details ---
 $thread_query = "
     SELECT 
         t.title, t.content, t.created_at, t.course_id, 
@@ -57,9 +82,16 @@ if (mysqli_num_rows($thread_result) === 0) {
 }
 $thread = mysqli_fetch_assoc($thread_result);
 
+// --- Fetch Replies with Upvote Count and User's Upvote Status ---
 $replies_query = "
     SELECT 
-        r.content, r.created_at, u.name AS replier_name, u.role AS replier_role
+        r.id AS reply_id,
+        r.content, 
+        r.created_at, 
+        u.name AS replier_name, 
+        u.role AS replier_role,
+        (SELECT COUNT(*) FROM discussion_upvotes WHERE reply_id = r.id) AS upvote_count,
+        (SELECT COUNT(*) FROM discussion_upvotes WHERE reply_id = r.id AND user_id = '$user_id') AS user_upvoted
     FROM 
         discussion_replies r
     JOIN 
@@ -67,13 +99,12 @@ $replies_query = "
     WHERE 
         r.thread_id = '$thread_id'
     ORDER BY 
-        r.created_at ASC";
+        upvote_count DESC, r.created_at ASC";
 
 $replies_result = mysqli_query($conn, $replies_query);
 include("../header.php");
 ?>
 
-<body>
     <div class="container mx-auto p-8 max-w-5xl">
         <header class="mb-8">
             <h1 class="text-4xl font-extrabold text-purple-800 dark:text-purple-300"><?php echo htmlspecialchars($thread['title']); ?></h1>
@@ -96,9 +127,11 @@ include("../header.php");
         <section id="main-post" class="mb-8 p-6 bg-purple-50 dark:bg-purple-900 border-l-4 border-purple-500 dark:border-purple-400 rounded-lg shadow-xl transition-colors duration-200">
             <p class="text-sm text-gray-500 dark:text-gray-400 mb-3">
                 Posted by
-                <span
-                    class="font-semibold text-<?php echo ($thread['author_role'] == 'lecturer') ? 'red-600' : 'blue-600'; ?>">
+                <span class="font-semibold text-<?php echo ($thread['author_role'] == 'lecturer') ? 'red-600' : 'blue-600'; ?>">
                     <?php echo htmlspecialchars($thread['author_name']); ?>
+                    <?php if ($thread['author_role'] == 'lecturer'): ?>
+                        <span class="ml-1 px-1.5 py-0.5 text-xs bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 rounded">Instructor</span>
+                    <?php endif; ?>
                 </span>
                 on <?php echo date('M j, Y g:i A', strtotime($thread['created_at'])); ?>
             </p>
@@ -115,16 +148,36 @@ include("../header.php");
                 <?php if (mysqli_num_rows($replies_result) > 0): ?>
                 <?php while ($reply = mysqli_fetch_assoc($replies_result)): ?>
                 <div class="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-colors duration-200">
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                        Replied by
-                        <span
-                            class="font-semibold text-<?php echo ($reply['replier_role'] == 'lecturer') ? 'red-600' : 'blue-600'; ?>">
-                            <?php echo htmlspecialchars($reply['replier_name']); ?>
-                        </span>
-                        on <?php echo date('M j, Y g:i A', strtotime($reply['created_at'])); ?>
-                    </p>
-                    <div class="text-gray-700 dark:text-gray-300">
-                        <?php echo nl2br(htmlspecialchars($reply['content'])); ?>
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                Replied by
+                                <span class="font-semibold text-<?php echo ($reply['replier_role'] == 'lecturer') ? 'red-600' : 'blue-600'; ?>">
+                                    <?php echo htmlspecialchars($reply['replier_name']); ?>
+                                    <?php if ($reply['replier_role'] == 'lecturer'): ?>
+                                        <span class="ml-1 px-1.5 py-0.5 text-xs bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 rounded">Instructor</span>
+                                    <?php endif; ?>
+                                </span>
+                                on <?php echo date('M j, Y g:i A', strtotime($reply['created_at'])); ?>
+                            </p>
+                            <div class="text-gray-700 dark:text-gray-300">
+                                <?php echo nl2br(htmlspecialchars($reply['content'])); ?>
+                            </div>
+                        </div>
+                        
+                        <!-- Upvote Button -->
+                        <form method="POST" class="ml-4 flex-shrink-0">
+                            <input type="hidden" name="toggle_upvote" value="1">
+                            <input type="hidden" name="reply_id" value="<?php echo $reply['reply_id']; ?>">
+                            <button type="submit" 
+                                    class="flex flex-col items-center p-2 rounded-lg transition-all duration-200
+                                           <?php echo $reply['user_upvoted'] ? 'bg-green-100 dark:bg-green-900 text-green-600 dark:text-green-400' : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 hover:bg-green-50 dark:hover:bg-green-900/50 hover:text-green-600'; ?>">
+                                <svg class="w-5 h-5" fill="<?php echo $reply['user_upvoted'] ? 'currentColor' : 'none'; ?>" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"></path>
+                                </svg>
+                                <span class="text-sm font-semibold"><?php echo $reply['upvote_count']; ?></span>
+                            </button>
+                        </form>
                     </div>
                 </div>
                 <?php endwhile; ?>
@@ -154,5 +207,5 @@ include("../header.php");
         </section>
 
     </div>
-</body>
+</main>
 <?php include("../footer.php"); ?>

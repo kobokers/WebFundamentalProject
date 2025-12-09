@@ -35,5 +35,5 @@ include('header.php');
             <p class="text-center mt-2 text-gray-600 dark:text-gray-300 transition-colors duration-200">Add body information here</p>
             <p class="text-center mt-2 text-gray-600 dark:text-gray-300 transition-colors duration-200">add browse course here</p>
         </div>
-
+</main>
 <?php include('footer.php'); ?>

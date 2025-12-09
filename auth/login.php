@@ -81,6 +81,10 @@ include("../header.php");
             </button>
         </form>
 
+        <p class="mt-4 text-center text-sm">
+            <a href="forgot_password.php" class="text-indigo-600 hover:text-indigo-500 font-medium">Forgot your password?</a>
+        </p>
+
         <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             Don't have an account? 
             <a href="register.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Register here</a>

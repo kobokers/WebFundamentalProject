@@ -70,6 +70,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['complete_module_id']))
     exit;
 }
 
+// --- 3b. Handle Rating Submission ---
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_rating'])) {
+    $rating_value = (int)$_POST['rating'];
+    $review_text = mysqli_real_escape_string($conn, $_POST['review'] ?? '');
+    
+    // Validate rating
+    if ($rating_value < 1 || $rating_value > 5) {
+        $_SESSION['error'] = "Please select a rating between 1 and 5 stars.";
+    } else {
+        // Use INSERT ON DUPLICATE KEY UPDATE to handle both new and existing ratings
+        $rating_query = "INSERT INTO course_ratings (course_id, user_id, rating, review, created_at) 
+                         VALUES ('$course_id', '$user_id', '$rating_value', '$review_text', NOW())
+                         ON DUPLICATE KEY UPDATE rating = '$rating_value', review = '$review_text', created_at = NOW()";
+        
+        if (mysqli_query($conn, $rating_query)) {
+            $_SESSION['success'] = "Thank you for your rating!";
+        } else {
+            $_SESSION['error'] = "Failed to submit rating: " . mysqli_error($conn);
+        }
+    }
+    header("Location: course_view.php?id={$course_id}");
+    exit;
+}
+
 // --- 4. Fetch All Modules, Student Progress, and Materials ---
 $modules_progress_query = "
     SELECT 
@@ -139,17 +163,68 @@ $modules_list = array_values($modules_list_assoc);
 
 $progress_percentage = ($total_modules > 0) ? round(($completed_modules / $total_modules) * 100) : 0;
 
+// --- 5. Fetch User's Existing Rating (if any) ---
+$existing_rating = null;
+$existing_review = '';
+if ($user_role === 'student') {
+    $user_rating_query = "SELECT rating, review FROM course_ratings WHERE course_id = '$course_id' AND user_id = '$user_id' LIMIT 1";
+    $user_rating_result = mysqli_query($conn, $user_rating_query);
+    if (mysqli_num_rows($user_rating_result) > 0) {
+        $user_rating_data = mysqli_fetch_assoc($user_rating_result);
+        $existing_rating = $user_rating_data['rating'];
+        $existing_review = $user_rating_data['review'];
+    }
+}
+
+// --- 6. Fetch Course Average Rating ---
+$avg_rating_query = "SELECT AVG(rating) as avg_rating, COUNT(*) as rating_count FROM course_ratings WHERE course_id = '$course_id'";
+$avg_rating_result = mysqli_query($conn, $avg_rating_query);
+$avg_rating_data = mysqli_fetch_assoc($avg_rating_result);
+$avg_rating = round($avg_rating_data['avg_rating'], 1);
+$rating_count = $avg_rating_data['rating_count'];
+
 // NOW include header.php AFTER all redirects
 include("../header.php");
 ?>
 
 <div class="container mx-auto p-6 max-w-5xl">
+    <!-- Success/Error Messages -->
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded">
+            <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+        </div>
+    <?php endif; ?>
+    <?php if (isset($_SESSION['error'])): ?>
+        <div class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
+        </div>
+    <?php endif; ?>
+
     <!-- Course Header -->
     <div class="mb-8">
         <h1 class="text-3xl mb-3 font-bold text-gray-800 dark:text-gray-100"><?php echo $course_title; ?></h1>
         <a href="dashboard.php" class="text-sm text-blue-600 dark:text-blue-400 hover:underline mb-3 inline-block">
             ← Back to Dashboard
         </a>
+        
+        <!-- Course Rating Display -->
+        <div class="flex items-center mt-2 mb-4">
+            <div class="flex text-yellow-400">
+                <?php for ($i = 1; $i <= 5; $i++): ?>
+                    <?php if ($i <= floor($avg_rating)): ?>
+                        <svg class="w-5 h-5 fill-current" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                    <?php else: ?>
+                        <svg class="w-5 h-5 text-gray-300 dark:text-gray-600" fill="currentColor" viewBox="0 0 20 20"><path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/></svg>
+                    <?php endif; ?>
+                <?php endfor; ?>
+            </div>
+            <span class="ml-2 text-sm text-gray-600 dark:text-gray-400">
+                <?php echo $avg_rating > 0 ? $avg_rating . ' out of 5' : 'No ratings yet'; ?>
+                <?php if ($rating_count > 0): ?>
+                    <span class="text-gray-400">(<?php echo $rating_count; ?> rating<?php echo $rating_count > 1 ? 's' : ''; ?>)</span>
+                <?php endif; ?>
+            </span>
+        </div>
         
         <!-- Progress Bar -->
         <div class="mt-4">
@@ -210,11 +285,62 @@ include("../header.php");
             </div>
         <?php endforeach; ?>
     </div>
+
+    <!-- Rating Section (Students Only) -->
+    <?php if ($user_role === 'student'): ?>
+    <div class="mt-10 p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg transition-colors duration-200">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">
+            <i class="fas fa-star mr-2 text-yellow-400"></i>
+            <?php echo $existing_rating ? 'Update Your Rating' : 'Rate This Course'; ?>
+        </h2>
+        
+        <form method="POST" class="space-y-4">
+            <input type="hidden" name="submit_rating" value="1">
+            
+            <!-- Star Rating Input -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Your Rating</label>
+                <div class="flex space-x-1" id="star-rating">
+                    <?php for ($i = 1; $i <= 5; $i++): ?>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="rating" value="<?php echo $i; ?>" class="hidden peer" <?php echo ($existing_rating == $i) ? 'checked' : ''; ?>>
+                            <svg class="w-10 h-10 transition-colors duration-150 star-icon
+                                        <?php echo ($existing_rating && $i <= $existing_rating) ? 'text-yellow-400' : 'text-gray-300 dark:text-gray-600'; ?>
+                                        hover:text-yellow-400 peer-checked:text-yellow-400" 
+                                 fill="currentColor" viewBox="0 0 20 20" data-star="<?php echo $i; ?>">
+                                <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z"/>
+                            </svg>
+                        </label>
+                    <?php endfor; ?>
+                </div>
+            </div>
+            
+            <!-- Review Textarea -->
+            <div>
+                <label for="review" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Review (Optional)
+                </label>
+                <textarea name="review" id="review" rows="3" 
+                          class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+                          placeholder="Share your thoughts about this course..."><?php echo htmlspecialchars($existing_review); ?></textarea>
+            </div>
+            
+            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg transition duration-200 shadow">
+                <i class="fas fa-paper-plane mr-2"></i>
+                <?php echo $existing_rating ? 'Update Rating' : 'Submit Rating'; ?>
+            </button>
+        </form>
+    </div>
+    <?php endif; ?>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Module accordion toggle
         const moduleHeaders = document.querySelectorAll('.module-header');
+
+
+
 
         moduleHeaders.forEach(header => {
             header.addEventListener('click', function (e) {
@@ -234,7 +360,52 @@ include("../header.php");
                 icon.classList.toggle('rotate-180');
             });
         });
+
+        // Star rating hover effect
+        const starContainer = document.getElementById('star-rating');
+        if (starContainer) {
+            const stars = starContainer.querySelectorAll('.star-icon');
+            const radioInputs = starContainer.querySelectorAll('input[type="radio"]');
+            
+            stars.forEach((star, index) => {
+                star.addEventListener('mouseenter', () => {
+                    // Highlight all stars up to this one
+                    stars.forEach((s, i) => {
+                        if (i <= index) {
+                            s.classList.add('text-yellow-400');
+                            s.classList.remove('text-gray-300', 'dark:text-gray-600');
+                        } else {
+                            s.classList.remove('text-yellow-400');
+                            s.classList.add('text-gray-300', 'dark:text-gray-600');
+                        }
+                    });
+                });
+                
+                star.addEventListener('click', () => {
+                    // Check the corresponding radio
+                    radioInputs[index].checked = true;
+                });
+            });
+            
+            starContainer.addEventListener('mouseleave', () => {
+                // Reset to selected state
+                let selectedIndex = -1;
+                radioInputs.forEach((radio, i) => {
+                    if (radio.checked) selectedIndex = i;
+                });
+                
+                stars.forEach((s, i) => {
+                    if (i <= selectedIndex) {
+                        s.classList.add('text-yellow-400');
+                        s.classList.remove('text-gray-300', 'dark:text-gray-600');
+                    } else {
+                        s.classList.remove('text-yellow-400');
+                        s.classList.add('text-gray-300', 'dark:text-gray-600');
+                    }
+                });
+            });
+        }
     });
 </script>
-
+</main>
 <?php include("../footer.php"); ?>
