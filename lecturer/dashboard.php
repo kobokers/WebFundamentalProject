@@ -14,6 +14,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'lecturer') {
 $lecturer_id = $_SESSION['user_id'];
 $lecturer_name = $_SESSION['user_name'];
 
+// Fetch profile picture
+$profile_query = "SELECT profile_picture FROM users WHERE id = '$lecturer_id' LIMIT 1";
+$profile_result = mysqli_query($conn, $profile_query);
+$profile_data = mysqli_fetch_assoc($profile_result);
+$profile_picture = $profile_data['profile_picture'] ?? null;
+
 /* This query retrieves all courses linked to the current lecturer. */
 $sql_courses = "
   SELECT
@@ -37,10 +43,19 @@ include("../header.php");
 
 <body>
     <div class="container mx-auto p-8">
-        <header class="mb-8">
-            <h1 class="text-4xl font-extrabold text-purple-800 dark:text-purple-300">Lecturer Dashboard</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">Welcome, <b><?php echo htmlspecialchars($lecturer_name); ?>! </b> Manage
-                your content here.</p>
+        <header class="mb-8 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+            <?php if (!empty($profile_picture)): ?>
+                <img src="../uploads/avatars/<?php echo htmlspecialchars($profile_picture); ?>" 
+                     alt="Avatar" class="w-16 h-16 rounded-full object-cover border-4 border-purple-200 dark:border-purple-700 flex-shrink-0">
+            <?php else: ?>
+                <div class="w-16 h-16 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center border-4 border-purple-200 dark:border-purple-700 flex-shrink-0">
+                    <i class="fas fa-user text-2xl text-purple-400 dark:text-purple-500"></i>
+                </div>
+            <?php endif; ?>
+            <div>
+                <h1 class="text-2xl sm:text-4xl font-extrabold text-purple-800 dark:text-purple-300">Lecturer Dashboard</h1>
+                <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400">Welcome, <b><?php echo htmlspecialchars($lecturer_name); ?>!</b> Manage your content here.</p>
+            </div>
         </header>
 
         <hr class="mb-8 border-gray-300 dark:border-gray-700">
@@ -88,7 +103,7 @@ include("../header.php");
                                 <a href="module_setup.php?course_id=<?php echo $row['course_id']; ?>"
                                     class="text-blue-500 hover:text-blue-700 font-medium text-xs">Manage Modules</a>
                                 <a href="edit_course.php?course_id=<?php echo $row['course_id']; ?>"
-                                    class="text-gray-500 hover:text-gray-700 font-medium text-xs">Edit Details</a>
+                                    class="text-gray-500 hover:text-gray-700 font-medium text-xs dark:hover:text-white">Edit Details</a>
                             </td>
                             <td class="py-3 px-10 text-center">
                                 <a href="view_enrollment.php?course_id=<?php echo $row['course_id']; ?>"

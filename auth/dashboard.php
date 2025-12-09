@@ -52,18 +52,18 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
 
 <body>
     <div class="container mx-auto p-4">
-        <header class="mb-8 flex items-center gap-4">
+        <header class="mb-8 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
             <?php if (!empty($profile_picture)): ?>
                 <img src="../uploads/avatars/<?php echo htmlspecialchars($profile_picture); ?>" 
-                     alt="Avatar" class="w-16 h-16 rounded-full object-cover border-4 border-blue-200 dark:border-blue-700">
+                     alt="Avatar" class="w-16 h-16 rounded-full object-cover border-4 border-blue-200 dark:border-blue-700 flex-shrink-0">
             <?php else: ?>
-                <div class="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center border-4 border-blue-200 dark:border-blue-700">
+                <div class="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center border-4 border-blue-200 dark:border-blue-700 flex-shrink-0">
                     <i class="fas fa-user text-2xl text-blue-400 dark:text-blue-500"></i>
                 </div>
             <?php endif; ?>
             <div>
-                <h1 class="text-4xl font-extrabold text-blue-800 dark:text-blue-300">Hello, <?php echo htmlspecialchars($user_name); ?>!</h1>
-                <p class="text-lg text-gray-600 dark:text-gray-400">Your Student Dashboard</p>
+                <h1 class="text-2xl sm:text-4xl font-extrabold text-blue-800 dark:text-blue-300">Hello, <?php echo htmlspecialchars($user_name); ?>!</h1>
+                <p class="text-base sm:text-lg text-gray-600 dark:text-gray-400">Your Student Dashboard</p>
             </div>
         </header>
 

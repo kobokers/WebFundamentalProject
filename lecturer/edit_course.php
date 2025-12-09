@@ -24,13 +24,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_course'])) {
     // Collect and minimally escape input
     $title = mysqli_real_escape_string($conn, $_POST['title']);
     $level = mysqli_real_escape_string($conn, $_POST['level']);
+    $category = mysqli_real_escape_string($conn, $_POST['category']);
     $language = mysqli_real_escape_string($conn, $_POST['language']);
     $fee = (float)$_POST['fee'];
+    $duration = isset($_POST['duration']) && $_POST['duration'] !== '' ? (int)$_POST['duration'] : null;
     $description = mysqli_real_escape_string($conn, $_POST['description']);
 
     // It verifies that the course belongs to the logged-in lecturer before updating.
+    $duration_sql = $duration !== null ? $duration : 'NULL';
     $update_query = "UPDATE courses 
-                     SET title = '$title', level = '$level', language = '$language', fee = '$fee', description = '$description'
+                     SET title = '$title', level = '$level', category = '$category', language = '$language', fee = '$fee', duration = $duration_sql, description = '$description'
                      WHERE id = '$course_id' AND lecturer_id = '$lecturer_id'";
 
     if (mysqli_query($conn, $update_query)) {
@@ -44,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_course'])) {
 }
 
 // --- 3. Fetch Existing Course Data (for display in form) ---
-$fetch_query = "SELECT title, level, language, fee, description FROM courses 
+$fetch_query = "SELECT title, level, category, language, fee, duration, description FROM courses 
                 WHERE id = '$course_id' AND lecturer_id = '$lecturer_id'";
 
 $fetch_result = mysqli_query($conn, $fetch_query);
@@ -62,31 +65,32 @@ include("../header.php");
 ?>
 
 <body>
-    <div class="container mx-auto p-8 max-w-2xl">
-        <header class="mb-6 text-center">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Edit Course Details:
-                <?php echo htmlspecialchars($course_data['title']); ?></h1>
+    <div class="container mx-auto p-8">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-extrabold text-blue-800 dark:text-blue-300">Edit Course Details</h1>
+            <p class="text-lg text-gray-600 dark:text-gray-400">Update the details for: <?php echo htmlspecialchars($course_data['title']); ?></p>
         </header>
 
         <?php if (isset($_SESSION['success'])): ?>
-        <div class="p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded">
-            <?php echo $_SESSION['success'];
-                                                                                                unset($_SESSION['success']); ?></div>
+        <div class="max-w-xl mx-auto p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded">
+            <?php echo $_SESSION['success']; unset($_SESSION['success']); ?>
+        </div>
         <?php endif; ?>
         <?php if (isset($_SESSION['error'])): ?>
-        <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded"><?php echo $_SESSION['error'];
-                                                                                        unset($_SESSION['error']); ?>
+        <div class="max-w-xl mx-auto p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?>
         </div>
         <?php endif; ?>
 
-        <div class="p-8 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 transition-colors duration-200">
+        <div class="max-w-xl mx-auto mt-6 p-8 bg-white dark:bg-gray-800 rounded-xl shadow-2xl border border-gray-100 dark:border-gray-700 transition-colors duration-200">
             <form action="edit_course.php?course_id=<?php echo $course_id; ?>" method="POST">
 
                 <div class="mb-5">
                     <label for="title" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Course Title:</label>
                     <input type="text" id="title" name="title"
                         value="<?php echo htmlspecialchars($course_data['title']); ?>" required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white">
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white"
+                        placeholder="e.g., Advanced JavaScript Frameworks">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
@@ -104,23 +108,49 @@ include("../header.php");
                         </select>
                     </div>
                     <div>
-                        <label for="language" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Language:</label>
-                        <input type="text" id="language" name="language"
-                            value="<?php echo htmlspecialchars($course_data['language']); ?>" required
+                        <label for="category" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Category:</label>
+                        <select id="category" name="category" required
                             class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white">
+                            <?php
+                            $categories = ['General', 'Programming', 'Design', 'Business', 'Language', 'Science', 'Mathematics'];
+                            foreach ($categories as $cat) {
+                                $selected = (isset($course_data['category']) && $course_data['category'] == $cat) ? 'selected' : '';
+                                echo "<option value=\"{$cat}\" {$selected}>{$cat}</option>";
+                            }
+                            ?>
+                        </select>
                     </div>
+                </div>
+
+                <div class="mb-5">
+                    <label for="language" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Language:</label>
+                    <input type="text" id="language" name="language"
+                        value="<?php echo htmlspecialchars($course_data['language']); ?>" required
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                        placeholder="e.g., English">
                 </div>
 
                 <div class="mb-5">
                     <label for="description" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Course Description:</label>
                     <textarea id="description" name="description" rows="4" required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white"><?php echo htmlspecialchars($course_data['description']); ?></textarea>
+                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white"
+                        placeholder="Provide a brief overview of the course content and objectives."><?php echo htmlspecialchars($course_data['description']); ?></textarea>
                 </div>
 
-                <div class="mb-6">
-                    <label for="fee" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Course Fee ($):</label>
-                    <input type="number" id="fee" name="fee" step="0.01" min="0" value="<?php echo htmlspecialchars($course_data['fee']); ?>" required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                    <div>
+                        <label for="fee" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Course Fee ($):</label>
+                        <input type="number" id="fee" name="fee" step="0.01" min="0" value="<?php echo htmlspecialchars($course_data['fee']); ?>" required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Enter 0.00 for a free course.</p>
+                    </div>
+                    <div>
+                        <label for="duration" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Duration (hours):</label>
+                        <input type="number" id="duration" name="duration" min="1" value="<?php echo isset($course_data['duration']) ? htmlspecialchars($course_data['duration']) : ''; ?>"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white"
+                            placeholder="e.g., 10">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Estimated time to complete.</p>
+                    </div>
                 </div>
 
                 <button type="submit" name="update_course"
