@@ -153,6 +153,10 @@ include("../header.php");
                                     class="text-sm bg-green-600 text-white py-1 px-3 rounded hover:bg-green-700 transition">
                                     + Add Material
                                 </button>
+                                <a href="add_quiz.php?module_id=<?php echo $module_id; ?>"
+                                    class="text-sm bg-purple-600 text-white py-1 px-3 rounded hover:bg-purple-700 transition">
+                                    <i class="fas fa-question-circle mr-1"></i>Quiz
+                                </a>
                                 <a href="edit_module.php?module_id=<?php echo $module_id; ?>"
                                     class="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300" title="Edit Module"><i class="fas fa-edit"></i></a>
                                 <a href="delete_module.php?module_id=<?php echo $module_id; ?>&course_id=<?php echo $course_id; ?>"
@@ -241,7 +245,6 @@ include("../header.php");
             <a href="dashboard.php" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium">← Back to Dashboard</a>
         </div>
     </div>
-</body>
-
+</main>
 <?php mysqli_close($conn); ?>
 <?php include("../footer.php"); ?>

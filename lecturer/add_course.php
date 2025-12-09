@@ -19,11 +19,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $level = mysqli_real_escape_string($conn, $_POST['level']);
     $language = mysqli_real_escape_string($conn, $_POST['language']);
     $category = mysqli_real_escape_string($conn, $_POST['category'] ?? 'General');
+    $duration = !empty($_POST['duration']) ? (int)$_POST['duration'] : 'NULL';
     $fee = (float)$_POST['fee']; 
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     
-    $query = "INSERT INTO courses (title, level, language, fee, lecturer_id, description, category) 
-              VALUES ('$title', '$level', '$language', '$fee', '$lecturer_id', '$description', '$category')";
+    $query = "INSERT INTO courses (title, level, language, fee, lecturer_id, description, category, duration) 
+              VALUES ('$title', '$level', '$language', '$fee', '$lecturer_id', '$description', '$category', $duration)";
 
     $result = mysqli_query($conn, $query);
 

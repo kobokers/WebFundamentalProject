@@ -30,8 +30,8 @@ $course_title = mysqli_fetch_assoc($course_result)['title'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['new_topic_title']) && isset($_POST['new_topic_content'])) {
     
-    $title = $_POST['new_topic_title'];
-    $content = $_POST['new_topic_content'];
+    $title = mysqli_real_escape_string($conn, $_POST['new_topic_title']);
+    $content = mysqli_real_escape_string($conn, $_POST['new_topic_content']);
 
     $insert_query = "INSERT INTO discussion_threads (course_id, user_id, title, content, created_at) 
                      VALUES ('$course_id', '$user_id', '$title', '$content', NOW())";

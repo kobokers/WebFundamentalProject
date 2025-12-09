@@ -13,6 +13,12 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'student') {
 $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];
 
+// Fetch profile picture
+$profile_query = "SELECT profile_picture FROM users WHERE id = '$user_id' LIMIT 1";
+$profile_result = mysqli_query($conn, $profile_query);
+$profile_data = mysqli_fetch_assoc($profile_result);
+$profile_picture = $profile_data['profile_picture'] ?? null;
+
 // --- 2. SQL Query to Fetch Enrolled Courses and Progress  ---
 $sql_enrolled_courses = "
     SELECT 
@@ -46,9 +52,19 @@ $result = mysqli_query($conn, $sql_enrolled_courses);
 
 <body>
     <div class="container mx-auto p-4">
-        <header class="mb-8">
-            <h1 class="text-4xl font-extrabold text-blue-800 dark:text-blue-300">Hello, <?php echo htmlspecialchars($user_name); ?>!</h1>
-            <p class="text-lg text-gray-600 dark:text-gray-400">Your Student Dashboard</p>
+        <header class="mb-8 flex items-center gap-4">
+            <?php if (!empty($profile_picture)): ?>
+                <img src="../uploads/avatars/<?php echo htmlspecialchars($profile_picture); ?>" 
+                     alt="Avatar" class="w-16 h-16 rounded-full object-cover border-4 border-blue-200 dark:border-blue-700">
+            <?php else: ?>
+                <div class="w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center border-4 border-blue-200 dark:border-blue-700">
+                    <i class="fas fa-user text-2xl text-blue-400 dark:text-blue-500"></i>
+                </div>
+            <?php endif; ?>
+            <div>
+                <h1 class="text-4xl font-extrabold text-blue-800 dark:text-blue-300">Hello, <?php echo htmlspecialchars($user_name); ?>!</h1>
+                <p class="text-lg text-gray-600 dark:text-gray-400">Your Student Dashboard</p>
+            </div>
         </header>
 
         <hr class="mb-8 border-gray-300 dark:border-gray-700">

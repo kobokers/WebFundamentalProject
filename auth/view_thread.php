@@ -91,6 +91,7 @@ $replies_query = "
         r.created_at, 
         u.name AS replier_name, 
         u.role AS replier_role,
+        u.profile_picture AS replier_picture,
         (SELECT COUNT(*) FROM discussion_upvotes WHERE reply_id = r.id) AS upvote_count,
         (SELECT COUNT(*) FROM discussion_upvotes WHERE reply_id = r.id AND user_id = '$user_id') AS user_upvoted
     FROM 
@@ -152,20 +153,31 @@ include("../header.php");
                 <?php while ($reply = mysqli_fetch_assoc($replies_result)): ?>
                 <div class="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-colors duration-200">
                     <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                                Replied by
-                                <span
-                                    class="font-semibold text-<?php echo ($reply['replier_role'] == 'lecturer') ? 'red-600' : 'blue-600'; ?>">
-                                    <?php echo htmlspecialchars($reply['replier_name']); ?>
-                                    <?php if ($reply['replier_role'] == 'lecturer'): ?>
-                                        <span class="ml-1 px-1.5 py-0.5 text-xs bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 rounded">Instructor</span>
-                                    <?php endif; ?>
-                                </span>
-                                on <?php echo date('M j, Y g:i A', strtotime($reply['created_at'])); ?>
-                            </p>
-                            <div class="text-gray-700 dark:text-gray-300">
-                                <?php echo nl2br(htmlspecialchars($reply['content'])); ?>
+                        <div class="flex gap-3 flex-1">
+                            <!-- Avatar -->
+                            <?php if (!empty($reply['replier_picture'])): ?>
+                                <img src="../uploads/avatars/<?php echo htmlspecialchars($reply['replier_picture']); ?>" 
+                                     alt="Avatar" class="w-10 h-10 rounded-full object-cover flex-shrink-0">
+                            <?php else: ?>
+                                <div class="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-user text-gray-400 dark:text-gray-500"></i>
+                                </div>
+                            <?php endif; ?>
+                            
+                            <div class="flex-1">
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                                    <span
+                                        class="font-semibold text-<?php echo ($reply['replier_role'] == 'lecturer') ? 'red-600' : 'blue-600'; ?>">
+                                        <?php echo htmlspecialchars($reply['replier_name']); ?>
+                                        <?php if ($reply['replier_role'] == 'lecturer'): ?>
+                                            <span class="ml-1 px-1.5 py-0.5 text-xs bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 rounded">Instructor</span>
+                                        <?php endif; ?>
+                                    </span>
+                                    on <?php echo date('M j, Y g:i A', strtotime($reply['created_at'])); ?>
+                                </p>
+                                <div class="text-gray-700 dark:text-gray-300">
+                                    <?php echo nl2br(htmlspecialchars($reply['content'])); ?>
+                                </div>
                             </div>
                         </div>
                         

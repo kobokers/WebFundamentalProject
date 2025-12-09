@@ -1,7 +1,6 @@
 <?php
 session_start();
 include("../connection.php");
-include("../header.php");
 
 // --- Access Control ---
 if (!isset($_SESSION['user_id'])) {
@@ -20,7 +19,7 @@ $user_id = $_SESSION['user_id'];
 $user_id_safe = mysqli_real_escape_string($conn, $user_id);
 
 // --- 1. Fetch Current User Data (For display) ---
-$query = "SELECT name, email FROM users WHERE id='$user_id_safe' LIMIT 1";
+$query = "SELECT name, email, profile_picture FROM users WHERE id='$user_id_safe' LIMIT 1";
 $result = mysqli_query($conn, $query);
 $current_user = mysqli_fetch_assoc($result);
 
@@ -67,6 +66,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errors[] = "New Password and Confirm Password must match.";
         }
     }
+    
+    // --- Profile Picture Upload ---
+    if (isset($_FILES['profile_picture']) && $_FILES['profile_picture']['error'] === UPLOAD_ERR_OK) {
+        $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        $max_size = 2 * 1024 * 1024; // 2MB
+        
+        $file = $_FILES['profile_picture'];
+        
+        if (!in_array($file['type'], $allowed_types)) {
+            $errors[] = "Invalid image type. Only JPG, PNG, GIF, and WebP are allowed.";
+        } elseif ($file['size'] > $max_size) {
+            $errors[] = "Image size must be less than 2MB.";
+        } else {
+            // Generate unique filename
+            $ext = pathinfo($file['name'], PATHINFO_EXTENSION);
+            $new_filename = 'avatar_' . $user_id . '_' . time() . '.' . $ext;
+            $upload_path = '../uploads/avatars/' . $new_filename;
+            
+            if (move_uploaded_file($file['tmp_name'], $upload_path)) {
+                // Delete old avatar if exists
+                if (!empty($current_user['profile_picture'])) {
+                    $old_file = '../uploads/avatars/' . $current_user['profile_picture'];
+                    if (file_exists($old_file)) {
+                        unlink($old_file);
+                    }
+                }
+                $update_fields[] = "profile_picture='$new_filename'";
+            } else {
+                $errors[] = "Failed to upload image.";
+            }
+        }
+    }
 
     // Build the update query based on changes
     if (!empty($errors)) {
@@ -105,11 +136,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 // Re-fetch user data in case of GET request or display after error
-if (!isset($current_user) && mysqli_num_rows($result) > 0) {
-    mysqli_data_seek($result, 0);
-    $current_user = mysqli_fetch_assoc($result);
-}
+$query = "SELECT name, email, profile_picture FROM users WHERE id='$user_id_safe' LIMIT 1";
+$result = mysqli_query($conn, $query);
+$current_user = mysqli_fetch_assoc($result);
 
+// NOW include header AFTER processing
+include("../header.php");
 ?>
 <div class="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors duration-200" style="min-height: calc(100vh - 64px);">
     <div class="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl my-8 transition-colors duration-200">
@@ -129,7 +161,30 @@ if (!isset($current_user) && mysqli_num_rows($result) > 0) {
         }
         ?>
 
-        <form method="POST" action="profile_edit.php" class="space-y-5">
+        <form method="POST" action="profile_edit.php" enctype="multipart/form-data" class="space-y-5">
+            
+            <!-- Profile Picture Section -->
+            <div class="text-center">
+                <div class="relative inline-block">
+                    <?php if (!empty($current_user['profile_picture'])): ?>
+                        <img src="../uploads/avatars/<?php echo htmlspecialchars($current_user['profile_picture']); ?>" 
+                             alt="Profile Picture" 
+                             class="w-24 h-24 rounded-full object-cover border-4 border-indigo-200 dark:border-indigo-700 mx-auto">
+                    <?php else: ?>
+                        <div class="w-24 h-24 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mx-auto border-4 border-indigo-200 dark:border-indigo-700">
+                            <i class="fas fa-user text-4xl text-indigo-400 dark:text-indigo-500"></i>
+                        </div>
+                    <?php endif; ?>
+                </div>
+                <label class="block mt-3">
+                    <span class="text-sm text-indigo-600 dark:text-indigo-400 cursor-pointer hover:underline">
+                        <i class="fas fa-camera mr-1"></i> Change Photo
+                    </span>
+                    <input type="file" name="profile_picture" accept="image/*" class="hidden" 
+                           onchange="previewImage(this)">
+                </label>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Max 2MB (JPG, PNG, GIF, WebP)</p>
+            </div>
 
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name:</label>
@@ -172,4 +227,21 @@ if (!isset($current_user) && mysqli_num_rows($result) > 0) {
     </div>
 </div>
 
+<script>
+function previewImage(input) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const imgContainer = input.closest('label').previousElementSibling;
+            if (imgContainer.querySelector('img')) {
+                imgContainer.querySelector('img').src = e.target.result;
+            } else {
+                imgContainer.innerHTML = '<img src="' + e.target.result + '" alt="Preview" class="w-24 h-24 rounded-full object-cover border-4 border-indigo-200 dark:border-indigo-700 mx-auto">';
+            }
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+</script>
+</main>
 <?php include("../footer.php"); ?>

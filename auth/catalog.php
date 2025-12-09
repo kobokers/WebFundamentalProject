@@ -10,6 +10,7 @@ $user_role = isset($_SESSION['user_role']) ? $_SESSION['user_role'] : 'guest';
 $filter_level = isset($_GET['level']) ? mysqli_real_escape_string($conn, $_GET['level']) : '';
 $filter_instructor = isset($_GET['instructor']) ? mysqli_real_escape_string($conn, $_GET['instructor']) : '';
 $filter_category = isset($_GET['category']) ? mysqli_real_escape_string($conn, $_GET['category']) : '';
+$search_term = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
 
 // --- Build WHERE Clause ---
 $where_conditions = [];
@@ -21,6 +22,9 @@ if (!empty($filter_instructor)) {
 }
 if (!empty($filter_category)) {
     $where_conditions[] = "c.category = '$filter_category'";
+}
+if (!empty($search_term)) {
+    $where_conditions[] = "(c.title LIKE '%$search_term%' OR c.description LIKE '%$search_term%')";
 }
 
 $where_clause = '';
@@ -49,6 +53,7 @@ $catalog_query = "
         c.level,
         c.fee,
         c.category,
+        c.duration,
         u.name AS lecturer_name,
         u.id AS lecturer_id,
         e.payment_status,
@@ -81,6 +86,17 @@ $result = mysqli_query($conn, $catalog_query);
         <!-- Filter Section -->
         <section id="filters" class="mb-8">
             <form method="GET" class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 transition-colors duration-200">
+                <!-- Search Bar -->
+                <div class="mb-4">
+                    <div class="relative">
+                        <input type="text" name="search" id="search" 
+                               value="<?php echo htmlspecialchars($search_term); ?>" 
+                               placeholder="Search courses by title or description..."
+                               class="w-full px-4 py-3 pl-10 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-teal-500">
+                        <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </div>
+                
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                     <!-- Level Filter -->
                     <div>
@@ -132,7 +148,7 @@ $result = mysqli_query($conn, $catalog_query);
                         <button type="submit" class="flex-1 bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
                             <i class="fas fa-filter mr-1"></i> Filter
                         </button>
-                        <?php if (!empty($filter_level) || !empty($filter_instructor) || !empty($filter_category)): ?>
+                        <?php if (!empty($filter_level) || !empty($filter_instructor) || !empty($filter_category) || !empty($search_term)): ?>
                             <a href="catalog.php" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
                                 Clear
                             </a>
@@ -197,10 +213,13 @@ $result = mysqli_query($conn, $catalog_query);
 
                             <p class="text-gray-600 dark:text-gray-400 text-sm italic mb-3 line-clamp-2"><?php echo htmlspecialchars($row['description']); ?></p>
                             
-                            <!-- Module Count Preview -->
-                            <p class="text-xs text-gray-500 dark:text-gray-500">
-                                <i class="fas fa-book mr-1"></i> <?php echo $row['module_count']; ?> modules
-                            </p>
+                            <!-- Module Count & Duration Preview -->
+                            <div class="flex items-center gap-3 text-xs text-gray-500 dark:text-gray-500">
+                                <span><i class="fas fa-book mr-1"></i> <?php echo $row['module_count']; ?> modules</span>
+                                <?php if (!empty($row['duration'])): ?>
+                                <span><i class="fas fa-clock mr-1"></i> <?php echo $row['duration']; ?> hours</span>
+                                <?php endif; ?>
+                            </div>
                         </div>
 
                         <div class="p-5 pt-0 border-t border-gray-100 dark:border-gray-700 space-y-2">

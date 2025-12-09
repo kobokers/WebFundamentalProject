@@ -81,11 +81,19 @@ include("../header.php");
                         placeholder="Provide a brief overview of the course content and objectives."></textarea>
                 </div>
 
-                <div class="mb-6">
-                    <label for="fee" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Course Fee ($):</label>
-                    <input type="number" id="fee" name="fee" step="0.01" min="0" value="0.00" required
-                        class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white">
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Enter 0.00 for a free course.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                    <div>
+                        <label for="fee" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Course Fee ($):</label>
+                        <input type="number" id="fee" name="fee" step="0.01" min="0" value="0.00" required
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Enter 0.00 for a free course.</p>
+                    </div>
+                    <div>
+                        <label for="duration" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Duration (hours):</label>
+                        <input type="number" id="duration" name="duration" min="1" placeholder="e.g., 10"
+                            class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-lg dark:bg-gray-700 dark:text-white">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Estimated time to complete.</p>
+                    </div>
                 </div>
 
                 <button type="submit"
