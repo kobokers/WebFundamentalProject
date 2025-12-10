@@ -27,6 +27,23 @@ if (mysqli_num_rows($course_result) == 0) {
 }
 $course_title = mysqli_fetch_assoc($course_result)['title'];
 
+// Check if student has paid for this course
+$enroll_query = "SELECT payment_status FROM enrollment 
+                 WHERE user_id = '$user_id' AND course_id = '$course_id' LIMIT 1";
+$enroll_result = mysqli_query($conn, $enroll_query);
+
+if (mysqli_num_rows($enroll_result) == 0) {
+    $_SESSION['error'] = "You must be enrolled in this course to access discussions.";
+    header("Location: dashboard.php");
+    exit;
+}
+
+$enroll_data = mysqli_fetch_assoc($enroll_result);
+if ($enroll_data['payment_status'] !== 'paid') {
+    $_SESSION['error'] = "You must complete payment to access course discussions.";
+    header("Location: payment.php?course_id={$course_id}");
+    exit;
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['new_topic_title']) && isset($_POST['new_topic_content'])) {
     

@@ -156,6 +156,31 @@ if (!empty($module_ids)) {
             $modules_list_assoc[$m_id]['materials'][] = $material;
         }
     }
+    
+    // 4. Fetch quizzes for these modules and user's best attempt
+    $quizzes_query = "
+        SELECT 
+            q.id as quiz_id,
+            q.module_id,
+            q.title as quiz_title,
+            q.passing_score,
+            (SELECT COUNT(*) FROM quiz_questions WHERE quiz_id = q.id) as question_count,
+            (SELECT MAX(score) FROM quiz_attempts WHERE quiz_id = q.id AND user_id = '$user_id') as best_score,
+            (SELECT MAX(passed) FROM quiz_attempts WHERE quiz_id = q.id AND user_id = '$user_id') as has_passed
+        FROM 
+            quizzes q
+        WHERE 
+            q.module_id IN ($module_ids_str)";
+    
+    $quizzes_result = mysqli_query($conn, $quizzes_query);
+    
+    // Add quiz info to each module
+    while ($quiz = mysqli_fetch_assoc($quizzes_result)) {
+        $m_id = $quiz['module_id'];
+        if (isset($modules_list_assoc[$m_id])) {
+            $modules_list_assoc[$m_id]['quiz'] = $quiz;
+        }
+    }
 }
 
 // Re-index $modules_list numerically for the final 'foreach' loop
@@ -270,6 +295,36 @@ include("../header.php");
                         </ul>
                     <?php else: ?>
                         <p class="text-gray-500 dark:text-gray-400 italic">No materials in this module yet.</p>
+                    <?php endif; ?>
+
+                    <!-- Quiz Section -->
+                    <?php if (isset($module['quiz'])): ?>
+                        <div class="mt-4 p-4 bg-purple-50 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-700 rounded-lg">
+                            <div class="flex items-center justify-between flex-wrap gap-3">
+                                <div>
+                                    <h4 class="font-semibold text-purple-800 dark:text-purple-300">
+                                        <i class="fas fa-clipboard-check mr-2"></i><?php echo htmlspecialchars($module['quiz']['quiz_title']); ?>
+                                    </h4>
+                                    <p class="text-sm text-purple-600 dark:text-purple-400 mt-1">
+                                        <?php echo $module['quiz']['question_count']; ?> Questions • Passing Score: <?php echo $module['quiz']['passing_score']; ?>%
+                                    </p>
+                                    <?php if ($module['quiz']['best_score'] !== null): ?>
+                                        <p class="text-sm mt-1 <?php echo $module['quiz']['has_passed'] ? 'text-green-600 dark:text-green-400' : 'text-orange-600 dark:text-orange-400'; ?>">
+                                            <?php if ($module['quiz']['has_passed']): ?>
+                                                <i class="fas fa-check-circle mr-1"></i>Passed! Best Score: <?php echo $module['quiz']['best_score']; ?>%
+                                            <?php else: ?>
+                                                <i class="fas fa-clock mr-1"></i>Best Score: <?php echo $module['quiz']['best_score']; ?>% (Not Passed Yet)
+                                            <?php endif; ?>
+                                        </p>
+                                    <?php endif; ?>
+                                </div>
+                                <a href="take_quiz.php?quiz_id=<?php echo $module['quiz']['quiz_id']; ?>" 
+                                   class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg font-semibold transition text-sm shadow">
+                                    <i class="fas fa-play mr-2"></i>
+                                    <?php echo ($module['quiz']['best_score'] !== null) ? 'Retake Quiz' : 'Take Quiz'; ?>
+                                </a>
+                            </div>
+                        </div>
                     <?php endif; ?>
 
                     <!-- Mark Complete Button -->

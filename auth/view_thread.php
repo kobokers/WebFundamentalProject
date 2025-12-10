@@ -83,6 +83,24 @@ if (mysqli_num_rows($thread_result) === 0) {
 }
 $thread = mysqli_fetch_assoc($thread_result);
 
+// Check if student has paid for this course
+$enroll_query = "SELECT payment_status FROM enrollment 
+                 WHERE user_id = '$user_id' AND course_id = '{$thread['course_id']}' LIMIT 1";
+$enroll_result = mysqli_query($conn, $enroll_query);
+
+if (mysqli_num_rows($enroll_result) == 0) {
+    $_SESSION['error'] = "You must be enrolled in this course to access discussions.";
+    header("Location: dashboard.php");
+    exit;
+}
+
+$enroll_data = mysqli_fetch_assoc($enroll_result);
+if ($enroll_data['payment_status'] !== 'paid') {
+    $_SESSION['error'] = "You must complete payment to access course discussions.";
+    header("Location: payment.php?course_id={$thread['course_id']}");
+    exit;
+}
+
 // --- Fetch Replies with Upvote Count and User's Upvote Status ---
 $replies_query = "
     SELECT 
