@@ -1,12 +1,12 @@
 <?php
 session_start();
-include("../header.php");
 include("../connection.php"); 
+include("../header.php");
 
 // --- 1. Authentication and Authorization ---
 if (!isset($_SESSION['user_id']) || !in_array($_SESSION['user_role'], ['student', 'lecturer'])) {
     $_SESSION['error'] = "Access denied.";
-    header("Location: ../auth/login.php");
+    echo "<script>window.location.href = '../auth/login.php';</script>";
     exit;
 }
 
@@ -16,12 +16,12 @@ $material_id = isset($_GET['material_id']) ? (int)$_GET['material_id'] : null;
 
 if (!$material_id) {
     $_SESSION['error'] = "Invalid material selected.";
-    header("Location: dashboard.php");
+    echo "<script>window.location.href = 'dashboard.php';</script>";
     exit;
 }
 
 // --- 2. Fetch Material Details and Course/Module IDs ---
-// Join materials -> modules -> courses to get all necessary info for security checks
+// Join materials -> modules -> courses
 $fetch_query = "
     SELECT 
         T1.title AS material_title, T1.content_type, T1.content_url,
@@ -40,7 +40,7 @@ $material_result = mysqli_query($conn, $fetch_query);
 
 if (mysqli_num_rows($material_result) == 0) {
     $_SESSION['error'] = "Material not found.";
-    header("Location: dashboard.php");
+    echo "<script>window.location.href = 'dashboard.php';</script>";
     exit;
 }
 
@@ -69,22 +69,22 @@ if (!$is_lecturer) {
     // DENY ACCESS if student hasn't paid AND is not the lecturer
     if (!$has_paid) {
         $_SESSION['error'] = "You must complete payment to access this material.";
-        header("Location: payment.php?course_id={$course_id}");
+        echo "<script>window.location.href = 'payment.php?course_id={$course_id}';</script>";
         exit;
     }
 }
 
 // --- 4. Determine Content Display ---
-
 $display_content = '';
+$icon_type = 'fa-file-alt'; // Default icon
 $link_text = 'Access Content';
 
 switch ($content_type) {
     case 'video':
+        $icon_type = 'fa-play-circle';
         $link_text = 'Watch Video Lesson';
         // Basic check for YouTube URL format (for embedding)
         if (strpos($content_url, 'youtube.com') !== false || strpos($content_url, 'youtu.be') !== false) {
-            // Simple logic to extract video ID for embedding
             $video_id = '';
             if (preg_match('/v=([a-zA-Z0-9_-]+)/', $content_url, $matches)) {
                 $video_id = $matches[1];
@@ -94,76 +94,107 @@ switch ($content_type) {
 
             if ($video_id) {
                  // Use iframe to embed YouTube video
-                $display_content = '<iframe width="100%" height="450" 
-                    src="https://www.youtube.com/embed/'.$video_id.'?rel=0" 
-                    frameborder="0" allowfullscreen class="rounded-lg shadow-xl"></iframe>';
-                $link_text = 'Open in New Tab (if embedded fails)';
-                
+                $display_content = '<div class="aspect-w-16 aspect-h-9 w-full">
+                    <iframe src="https://www.youtube.com/embed/'.$video_id.'?rel=0" 
+                    frameborder="0" allowfullscreen class="w-full h-[500px] rounded-2xl shadow-lg border border-gray-200 dark:border-gray-700"></iframe>
+                </div>';
+                $link_text = 'Open in YouTube';
             }
+        } else {
+             $display_content = '<div class="bg-gray-100 dark:bg-gray-800 rounded-2xl p-12 text-center border border-gray-200 dark:border-gray-700">
+                <i class="fas fa-video text-6xl text-gray-400 dark:text-gray-600 mb-4"></i>
+                <p class="text-gray-600 dark:text-gray-400 text-lg">This video cannot be embedded. Please click the button below to watch it.</p>
+            </div>';
         }
         break;
         
     case 'reading':
-        $link_text = 'View Reading/Document (Opens in New Tab)';
-        $display_content = '<p class="text-gray-700 dark:text-gray-300">This is a reading assignment. Click the link below to access the document (e.g., PDF or article).</p>';
+        $icon_type = 'fa-book-reader';
+        $link_text = 'View Document';
+        $display_content = '<div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-12 text-center border border-gray-200 dark:border-gray-700">
+            <i class="fas fa-file-pdf text-6xl text-red-500 mb-4 opacity-80"></i>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Reading Assignment</h3>
+            <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto">This reading material is hosted externally. Click the button below to open the document.</p>
+        </div>';
         break;
 
     case 'quiz':
-        $link_text = 'Start Quiz/Assessment';
-        $display_content = '<p class="text-gray-700 dark:text-gray-300">This link will take you to the external quiz system or the designated quiz page.</p>';
+        $icon_type = 'fa-tasks';
+        $link_text = 'Start Quiz';
+        $display_content = '<div class="bg-purple-50 dark:bg-purple-900/20 rounded-2xl p-12 text-center border border-purple-100 dark:border-purple-800/50">
+            <i class="fas fa-clipboard-check text-6xl text-purple-500 mb-4 opacity-80"></i>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Quiz Assessment</h3>
+            <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto">Ready to test your knowledge? Click the button below to start the assessment.</p>
+        </div>';
         break;
 
     case 'link':
-        $link_text = 'Go to External Link';
-        $display_content = '<p class="text-gray-700 dark:text-gray-300">This is an external resource link.</p>';
+        $icon_type = 'fa-link';
+        $link_text = 'Visit Link';
+        $display_content = '<div class="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-12 text-center border border-blue-100 dark:border-blue-800/50">
+            <i class="fas fa-globe text-6xl text-blue-500 mb-4 opacity-80"></i>
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">External Resource</h3>
+            <p class="text-gray-600 dark:text-gray-400 max-w-md mx-auto">This resource is located on an external website. Click below to visit.</p>
+        </div>';
         break;
 }
 
-// Fallback for types that don't embed or if embedding failed
+// Fallback
 if ($display_content == '') {
-    $display_content = '<p class="text-gray-700 dark:text-gray-300">Click the link below to access the content.</p>';
+    $display_content = '<div class="bg-gray-50 dark:bg-gray-800 rounded-2xl p-12 text-center">
+            <i class="fas fa-external-link-alt text-6xl text-gray-400 mb-4"></i>
+            <p class="text-gray-600 dark:text-gray-400">Click the link below to access this content.</p>
+        </div>';
 }
-
 ?>
 
-<body>
-    <div class="container mx-auto p-8 max-w-4xl">
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <!-- Header/Breadcrumb -->
+    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-[72px] z-40">
+        <div class="container mx-auto px-4 lg:px-8 py-4">
+            <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
+                <a href="course_view.php?id=<?php echo $course_id; ?>" class="hover:text-blue-600 transition-colors">
+                    <i class="fas fa-arrow-left mr-1"></i> Back to Course
+                </a>
+                <span class="text-gray-300 dark:text-gray-600">|</span>
+                <span class="text-gray-900 dark:text-white font-medium"><?php echo $material['module_title']; ?></span>
+            </div>
+            <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <i class="fas <?php echo $icon_type; ?> text-blue-600 dark:text-blue-400"></i>
+                <?php echo htmlspecialchars($material['material_title']); ?>
+            </h1>
+        </div>
+    </div>
 
-        <header class="mb-8 border-b dark:border-gray-700 pb-4">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100"><?php echo htmlspecialchars($material['material_title']); ?></h1>
-            <p class="text-md text-gray-600 dark:text-gray-400">
-                Course: <b><?php echo htmlspecialchars($material['course_title']); ?></b> | 
-                Module <?php echo $material['module_order']; ?>: <b><?php echo $material['module_title']; ?></b>
-            </p>
-            <a href="course_view.php?id=<?php echo $course_id; ?>" class="text-sm text-blue-600 dark:text-blue-400 hover:underline mt-2 inline-block">
-                ← Back to Course Curriculum
-            </a>
-        </header>
-
-        <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl">
-            <h2 class="text-2xl font-semibold mb-4 text-indigo-700 dark:text-indigo-400">
-                Content Type: <?php echo ucfirst($content_type); ?>
-            </h2>
-
-            <?php echo $display_content; ?>
+    <!-- Main Content -->
+    <div class="container mx-auto px-4 lg:px-8 py-8">
+        <div class="max-w-5xl mx-auto">
             
-            <div class="mt-8 pt-4 border-t-2 border-dashed border-gray-200 dark:border-gray-700">
-                <p class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">Direct Link Access:</p>
+            <!-- Content Area -->
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 overflow-hidden mb-8">
+                <div class="p-1">
+                    <?php echo $display_content; ?>
+                </div>
+            </div>
+
+            <!-- Access Button Area -->
+            <div class="flex items-center justify-between flex-wrap gap-4 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700">
+                <div>
+                    <h3 class="font-bold text-gray-900 dark:text-white mb-1">Source URL</h3>
+                    <code class="text-sm text-blue-600 dark:text-blue-400 break-all bg-blue-50 dark:bg-blue-900/20 px-2 py-1 rounded"><?php echo $content_url; ?></code>
+                </div>
                 
                 <a href="<?php echo $content_url; ?>" target="_blank"
-                    class="inline-flex items-center bg-green-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-700 transition shadow-lg">
-                    <i class="fas fa-play-circle mr-2"></i> 
+                   class="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md transform hover:-translate-y-0.5">
                     <?php echo $link_text; ?>
+                    <i class="fas fa-external-link-alt"></i>
                 </a>
-
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-3">
-                    URL: <code><?php echo $content_url; ?></code>
-                </p>
             </div>
-        </section>
-
+        </div>
     </div>
-</body>
+</div>
 
-<?php mysqli_close($conn); ?>
-<?php include("../footer.php"); ?>
+<?php 
+mysqli_close($conn);
+include("../footer.php"); 
+?>

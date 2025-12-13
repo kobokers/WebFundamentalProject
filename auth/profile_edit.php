@@ -10,8 +10,8 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'student') {
-    $_SESSION['error'] = "Access denied. Only students can edit profiles.";
-    header("Location: login.php");
+    $_SESSION['error'] = "Access denied. Only students can edit profiles here.";
+    header("Location: ../index.php"); // or lecturer/edit_profile.php if you have one
     exit;
 }
 
@@ -35,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $update_fields = [];
     $errors = [];
 
-    // Validation checks for Name and Email
+    // Validation checks
     if (empty($username)) {
         $errors[] = "Username is required.";
     }
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Validation checks for Password (ONLY required if a new password is provided)
+    // Validation checks for Password
     if (!empty($password) || !empty($confirm_password)) {
         if (empty($password)) {
             $errors[] = "New Password is required if Confirm Password is set.";
@@ -123,8 +123,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $update_query = "UPDATE users SET $update_set_clause WHERE id='$user_id_safe' LIMIT 1";
 
             if (mysqli_query($conn, $update_query)) {
-                // Update session variables if email or name changed
-                $_SESSION['username'] = $username;
+                // Update session variables if name changed
+                $_SESSION['user_name'] = $username;
+                
+                if (isset($new_filename)) {
+                    $_SESSION['user_profile_picture'] = $new_filename;
+                }
 
                 $_SESSION['success'] = "Profile updated successfully!";
                 header("Location: profile_edit.php");
@@ -140,90 +144,129 @@ $query = "SELECT name, email, profile_picture FROM users WHERE id='$user_id_safe
 $result = mysqli_query($conn, $query);
 $current_user = mysqli_fetch_assoc($result);
 
-// NOW include header AFTER processing
 include("../header.php");
 ?>
-<div class="flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors duration-200" style="min-height: calc(100vh - 64px);">
-    <div class="w-full max-w-md bg-white dark:bg-gray-800 p-8 rounded-lg shadow-xl my-8 transition-colors duration-200">
-        <h2 class="text-3xl font-extrabold text-gray-900 dark:text-white mb-6 text-center border-b dark:border-gray-700 pb-3">
-            Edit Your Profile
-        </h2>
 
-        <?php
-        // Display success/error messages
-        if (isset($_SESSION['success'])) {
-            echo '<p class="p-3 mb-4 text-sm text-green-700 bg-green-100 rounded-lg">' . $_SESSION['success'] . '</p>';
-            unset($_SESSION['success']);
-        }
-        if (isset($_SESSION['error'])) {
-            echo '<p class="p-3 mb-4 text-sm text-red-700 bg-red-100 rounded-lg">' . $_SESSION['error'] . '</p>';
-            unset($_SESSION['error']);
-        }
-        ?>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <!-- Header -->
+    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4 lg:px-8 py-6">
+            <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                <a href="dashboard.php" class="hover:text-coursera-blue transition-colors">Dashboard</a>
+                <i class="fas fa-chevron-right text-xs"></i>
+                <span class="text-gray-900 dark:text-white">Edit Profile</span>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <i class="fas fa-user-cog text-coursera-blue"></i>
+                Profile Settings
+            </h1>
+        </div>
+    </div>
 
-        <form method="POST" action="profile_edit.php" enctype="multipart/form-data" class="space-y-5">
-            
-            <!-- Profile Picture Section -->
-            <div class="text-center">
-                <div class="relative inline-block">
-                    <?php if (!empty($current_user['profile_picture'])): ?>
-                        <img src="../uploads/avatars/<?php echo htmlspecialchars($current_user['profile_picture']); ?>" 
-                             alt="Profile Picture" 
-                             class="w-24 h-24 rounded-full object-cover border-4 border-indigo-200 dark:border-indigo-700 mx-auto">
-                    <?php else: ?>
-                        <div class="w-24 h-24 rounded-full bg-indigo-100 dark:bg-indigo-900 flex items-center justify-center mx-auto border-4 border-indigo-200 dark:border-indigo-700">
-                            <i class="fas fa-user text-4xl text-indigo-400 dark:text-indigo-500"></i>
-                        </div>
-                    <?php endif; ?>
+    <div class="container mx-auto px-4 lg:px-8 py-8">
+        <div class="max-w-2xl mx-auto">
+            <?php if (isset($_SESSION['success'])): ?>
+                <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-xl flex items-center gap-3">
+                    <i class="fas fa-check-circle text-green-500"></i>
+                    <span class="text-green-700 dark:text-green-300"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></span>
                 </div>
-                <label class="block mt-3">
-                    <span class="text-sm text-indigo-600 dark:text-indigo-400 cursor-pointer hover:underline">
-                        <i class="fas fa-camera mr-1"></i> Change Photo
-                    </span>
-                    <input type="file" name="profile_picture" accept="image/*" class="hidden" 
-                           onchange="previewImage(this)">
-                </label>
-                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Max 2MB (JPG, PNG, GIF, WebP)</p>
+            <?php endif; ?>
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl flex items-center gap-3">
+                    <i class="fas fa-exclamation-circle text-red-500"></i>
+                    <span class="text-red-700 dark:text-red-300"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></span>
+                </div>
+            <?php endif; ?>
+
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-8">
+                <form method="POST" action="profile_edit.php" enctype="multipart/form-data" class="space-y-8">
+                    
+                    <!-- Profile Picture -->
+                    <div class="flex flex-col items-center">
+                        <div class="relative group">
+                            <?php if (!empty($current_user['profile_picture'])): ?>
+                                <img src="../uploads/avatars/<?php echo htmlspecialchars($current_user['profile_picture']); ?>" 
+                                     alt="Profile Picture" id="preview-img"
+                                     class="w-32 h-32 rounded-full object-cover border-4 border-coursera-blue/20 shadow-lg transition-transform duration-300 group-hover:scale-105">
+                            <?php else: ?>
+                                <div id="preview-placeholder" class="w-32 h-32 rounded-full bg-coursera-blue-light dark:bg-blue-900/30 flex items-center justify-center border-4 border-coursera-blue/20 shadow-lg">
+                                    <i class="fas fa-user text-5xl text-coursera-blue dark:text-blue-300"></i>
+                                </div>
+                                <img src="" alt="Profile Picture" id="preview-img" class="hidden w-32 h-32 rounded-full object-cover border-4 border-coursera-blue/20 shadow-lg">
+                            <?php endif; ?>
+                            
+                            <label class="absolute bottom-0 right-0 w-10 h-10 bg-coursera-blue hover:bg-coursera-blue-dark text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer transition-colors border-2 border-white dark:border-gray-800">
+                                <i class="fas fa-camera"></i>
+                                <input type="file" name="profile_picture" accept="image/*" class="hidden" onchange="previewImage(this)">
+                            </label>
+                        </div>
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-3">Allowed: JPG, PNG, GIF, WebP (Max 2MB)</p>
+                    </div>
+
+                    <!-- Personal Info -->
+                    <div class="space-y-6 border-t border-gray-100 dark:border-gray-700 pt-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Personal Information</h3>
+                        
+                        <div>
+                            <label for="username" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Full Name</label>
+                            <div class="relative">
+                                <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" id="username" name="username"
+                                    value="<?php echo htmlspecialchars($current_user['name'] ?? ''); ?>" required
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
+                            <div class="relative">
+                                <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="email" id="email" name="email"
+                                    value="<?php echo htmlspecialchars($current_user['email'] ?? ''); ?>" required
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security -->
+                    <div class="space-y-6 border-t border-gray-100 dark:border-gray-700 pt-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Security</h3>
+                        
+                        <div class="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl mb-4">
+                            <p class="text-sm text-blue-700 dark:text-blue-300 flex items-start gap-2">
+                                <i class="fas fa-info-circle mt-0.5"></i>
+                                Leave the password fields blank if you don't want to change your password.
+                            </p>
+                        </div>
+                        
+                        <div>
+                            <label for="password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">New Password</label>
+                            <div class="relative">
+                                <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="password" id="password" name="password" placeholder="••••••••"
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="confirm_password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Confirm New Password</label>
+                            <div class="relative">
+                                <i class="fas fa-check-double absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••"
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 flex items-center justify-end gap-4">
+                        <a href="dashboard.php" class="px-6 py-3 text-gray-600 dark:text-gray-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors">Cancel</a>
+                        <button type="submit" class="bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold py-3 px-8 rounded-xl transition-all shadow-md flex items-center gap-2">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
             </div>
-
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Name:</label>
-                <input type="text" id="username" name="username"
-                    value="<?php echo htmlspecialchars($current_user['name'] ?? ''); ?>" required
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-            </div>
-
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email:</label>
-                <input type="email" id="email" name="email"
-                    value="<?php echo htmlspecialchars($current_user['email'] ?? ''); ?>" required
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-            </div>
-
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">New Password (Leave blank to keep
-                    current):</label>
-                <input type="password" id="password" name="password" placeholder="Enter new password"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-            </div>
-
-            <div>
-                <label for="confirm_password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm New
-                    Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" placeholder="Re-enter new password"
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
-            </div>
-
-            <div>
-                <input type="submit" value="Update Profile"
-                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out mt-6 cursor-pointer">
-            </div>
-        </form>
-
-        <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-            <a href="./dashboard.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Back to Dashboard</a>
-        </p>
-
+        </div>
     </div>
 </div>
 
@@ -232,16 +275,16 @@ function previewImage(input) {
     if (input.files && input.files[0]) {
         const reader = new FileReader();
         reader.onload = function(e) {
-            const imgContainer = input.closest('label').previousElementSibling;
-            if (imgContainer.querySelector('img')) {
-                imgContainer.querySelector('img').src = e.target.result;
-            } else {
-                imgContainer.innerHTML = '<img src="' + e.target.result + '" alt="Preview" class="w-24 h-24 rounded-full object-cover border-4 border-indigo-200 dark:border-indigo-700 mx-auto">';
-            }
+            const previewImg = document.getElementById('preview-img');
+            const placeholder = document.getElementById('preview-placeholder');
+            
+            previewImg.src = e.target.result;
+            previewImg.classList.remove('hidden');
+            if (placeholder) placeholder.classList.add('hidden');
         }
         reader.readAsDataURL(input.files[0]);
     }
 }
 </script>
-</main>
+
 <?php include("../footer.php"); ?>

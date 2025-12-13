@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_role'] = $user['role'];
+            $_SESSION['user_profile_picture'] = $user['profile_picture'];
 
             if ($user['role'] == 'admin') {
                 header("Location: ../admin/dashboard.php");
@@ -47,48 +48,162 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 include("../header.php");
 ?>
 
-<div class="flex w-full items-center justify-center p-4 bg-gray-100 dark:bg-gray-900 transition-colors duration-200" style="min-height: calc(100vh - 64px);">
-    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-md transition-colors duration-200">
-        <h2 class="text-3xl font-extrabold mb-6 text-gray-900 dark:text-white text-center border-b dark:border-gray-700 pb-3">Welcome Back</h2>
-
-        <?php if (isset($_SESSION['error'])): ?>
-            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <span class="block sm:inline"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></span>
+<div class="min-h-[calc(100vh-80px)] flex">
+    <!-- Left Side - Illustration/Brand -->
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-coursera-blue to-blue-700 relative overflow-hidden">
+        <!-- Decorative Elements -->
+        <div class="absolute top-0 left-0 w-full h-full opacity-10">
+            <div class="absolute top-20 left-20 w-64 h-64 bg-white rounded-full"></div>
+            <div class="absolute bottom-32 right-20 w-96 h-96 bg-white rounded-full"></div>
+            <div class="absolute top-1/2 left-1/3 w-48 h-48 bg-white rounded-full"></div>
+        </div>
+        
+        <div class="relative z-10 flex flex-col justify-center px-16 text-white">
+            <div class="mb-8">
+                <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mb-6">
+                    <i class="fas fa-graduation-cap text-3xl"></i>
+                </div>
+                <h1 class="text-4xl font-bold mb-4">Welcome back to OLMS</h1>
+                <p class="text-xl text-blue-100 leading-relaxed">
+                    Continue your learning journey and unlock new skills with our comprehensive courses.
+                </p>
             </div>
-        <?php endif; ?>
-
-        <?php if (isset($_SESSION['success'])): ?>
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <span class="block sm:inline"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></span>
+            
+            <!-- Features List -->
+            <div class="space-y-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check text-sm"></i>
+                    </div>
+                    <span class="text-blue-100">Access 100+ professional courses</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check text-sm"></i>
+                    </div>
+                    <span class="text-blue-100">Learn from industry experts</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-check text-sm"></i>
+                    </div>
+                    <span class="text-blue-100">Earn certificates upon completion</span>
+                </div>
             </div>
-        <?php endif; ?>
-
-        <form action="login.php" method="POST" class="space-y-6">
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Email Address</label>
-                <input type="email" name="email" id="email" required 
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+        </div>
+    </div>
+    
+    <!-- Right Side - Login Form -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-8 bg-gray-50 dark:bg-gray-900">
+        <div class="w-full max-w-md">
+            <!-- Mobile Logo -->
+            <div class="lg:hidden flex items-center justify-center gap-2 mb-8">
+                <div class="w-10 h-10 bg-coursera-blue rounded-lg flex items-center justify-center">
+                    <i class="fas fa-graduation-cap text-white text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold text-gray-900 dark:text-white">OLMS</span>
             </div>
+            
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700">
+                <div class="text-center mb-8">
+                    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">Sign in to your account</h2>
+                    <p class="text-gray-500 dark:text-gray-400">Enter your credentials to continue</p>
+                </div>
 
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
-                <input type="password" name="password" id="password" required 
-                    class="mt-1 block w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 dark:bg-gray-700 dark:text-white">
+                <?php if (isset($_SESSION['error'])): ?>
+                    <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl flex items-start gap-3">
+                        <i class="fas fa-exclamation-circle text-red-500 mt-0.5"></i>
+                        <span class="text-red-700 dark:text-red-300 text-sm"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (isset($_SESSION['success'])): ?>
+                    <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-xl flex items-start gap-3">
+                        <i class="fas fa-check-circle text-green-500 mt-0.5"></i>
+                        <span class="text-green-700 dark:text-green-300 text-sm"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></span>
+                    </div>
+                <?php endif; ?>
+
+                <form action="login.php" method="POST" class="space-y-5">
+                    <div>
+                        <label for="email" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            Email Address
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-envelope text-gray-400"></i>
+                            </div>
+                            <input type="email" name="email" id="email" required 
+                                placeholder="you@example.com"
+                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue dark:focus:border-coursera-blue transition-colors">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                                <i class="fas fa-lock text-gray-400"></i>
+                            </div>
+                            <input type="password" name="password" id="password" required 
+                                placeholder="••••••••"
+                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue dark:focus:border-coursera-blue transition-colors">
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-coursera-blue focus:ring-coursera-blue">
+                            <span class="text-sm text-gray-600 dark:text-gray-400">Remember me</span>
+                        </label>
+                        <a href="forgot_password.php" class="text-sm font-medium text-coursera-blue hover:text-coursera-blue-dark transition-colors">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <button type="submit" 
+                        class="w-full bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5">
+                        Sign In
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="relative my-8">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
+                    </div>
+                    <div class="relative flex justify-center text-sm">
+                        <span class="px-4 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">or continue with</span>
+                    </div>
+                </div>
+
+                <!-- Social Login Buttons (Visual Only) -->
+                <div class="grid grid-cols-2 gap-4">
+                    <button type="button" class="flex items-center justify-center gap-2 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Google</span>
+                    </button>
+                    <button type="button" class="flex items-center justify-center gap-2 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <i class="fab fa-github text-xl text-gray-900 dark:text-white"></i>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">GitHub</span>
+                    </button>
+                </div>
+
+                <p class="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
+                    Don't have an account? 
+                    <a href="register.php" class="font-semibold text-coursera-blue hover:text-coursera-blue-dark transition-colors">
+                        Sign up for free
+                    </a>
+                </p>
             </div>
-
-            <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-md text-base font-semibold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
-                Sign In
-            </button>
-        </form>
-
-        <p class="mt-4 text-center text-sm">
-            <a href="forgot_password.php" class="text-indigo-600 hover:text-indigo-500 font-medium">Forgot your password?</a>
-        </p>
-
-        <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
-            Don't have an account? 
-            <a href="register.php" class="font-semibold text-indigo-600 hover:text-indigo-500">Register here</a>
-        </p>
+        </div>
     </div>
 </div>
 
