@@ -202,7 +202,7 @@ include("../header.php");
         <div class="container mx-auto px-4 lg:px-8 py-8">
             <!-- Breadcrumb -->
             <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
-                <a href="dashboard.php" class="hover:text-coursera-blue transition-colors">My Learning</a>
+                <a href="dashboard.php" class="hover:text-brand-blue transition-colors">My Learning</a>
                 <i class="fas fa-chevron-right text-xs"></i>
                 <span class="text-gray-900 dark:text-white"><?php echo $course_title; ?></span>
             </div>
@@ -227,7 +227,7 @@ include("../header.php");
                     <!-- Meta Info -->
                     <div class="flex flex-wrap items-center gap-4 text-sm mb-4">
                         <?php if (!empty($course_category)): ?>
-                        <span class="bg-coursera-blue-light dark:bg-blue-900/30 text-coursera-blue dark:text-blue-300 px-3 py-1 rounded-full font-medium">
+                        <span class="bg-brand-blue-light dark:bg-blue-900/30 text-brand-blue dark:text-blue-300 px-3 py-1 rounded-full font-medium">
                             <?php echo $course_category; ?>
                         </span>
                         <?php endif; ?>
@@ -279,12 +279,12 @@ include("../header.php");
                 <!-- Progress Card -->
                 <div class="lg:w-80 bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-6">
                     <div class="text-center mb-4">
-                        <div class="text-4xl font-bold text-coursera-blue mb-1"><?php echo $progress_percentage; ?>%</div>
+                        <div class="text-4xl font-bold text-brand-blue mb-1"><?php echo $progress_percentage; ?>%</div>
                         <div class="text-gray-500 dark:text-gray-400">Course Progress</div>
                     </div>
                     
                     <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-3 mb-4 overflow-hidden">
-                        <div class="h-3 rounded-full transition-all duration-500 <?php echo ($progress_percentage == 100) ? 'bg-green-500' : 'bg-coursera-blue'; ?>" 
+                        <div class="h-3 rounded-full transition-all duration-500 <?php echo ($progress_percentage == 100) ? 'bg-green-500' : 'bg-brand-blue'; ?>" 
                              style="width: <?php echo $progress_percentage; ?>%"></div>
                     </div>
                     
@@ -311,7 +311,7 @@ include("../header.php");
     <!-- Course Content -->
     <div class="container mx-auto px-4 lg:px-8 py-8">
         <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-3">
-            <i class="fas fa-list-ul text-coursera-blue"></i>
+            <i class="fas fa-list-ul text-brand-blue"></i>
             Course Content
         </h2>
         
@@ -371,19 +371,19 @@ include("../header.php");
                                             }
                                         ?>
                                         <a href="view_material.php?material_id=<?php echo $material['id']; ?>" 
-                                           class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-coursera-blue-light dark:hover:bg-blue-900/30 transition-all group">
+                                           class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-xl hover:bg-brand-blue-light dark:hover:bg-blue-900/30 transition-all group">
                                             <div class="w-10 h-10 <?php echo $icon_bg; ?> rounded-lg flex items-center justify-center flex-shrink-0">
                                                 <i class="fas <?php echo $icon; ?> <?php echo $icon_color; ?>"></i>
                                             </div>
                                             <div class="flex-1">
-                                                <span class="font-medium text-gray-900 dark:text-white group-hover:text-coursera-blue transition-colors">
+                                                <span class="font-medium text-gray-900 dark:text-white group-hover:text-brand-blue transition-colors">
                                                     <?php echo htmlspecialchars($material['title']); ?>
                                                 </span>
                                                 <span class="text-xs text-gray-500 dark:text-gray-400 ml-2 uppercase">
                                                     <?php echo $material['content_type']; ?>
                                                 </span>
                                             </div>
-                                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-coursera-blue transition-colors"></i>
+                                            <i class="fas fa-arrow-right text-gray-400 group-hover:text-brand-blue transition-colors"></i>
                                         </a>
                                     <?php endforeach; ?>
                                 </div>
@@ -430,7 +430,7 @@ include("../header.php");
                             <?php if (!$is_completed): ?>
                                 <form method="POST" class="mt-4">
                                     <input type="hidden" name="complete_module_id" value="<?php echo $module['module_id']; ?>">
-                                    <button type="submit" class="w-full sm:w-auto bg-coursera-blue hover:bg-coursera-blue-dark text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md flex items-center justify-center gap-2">
+                                    <button type="submit" class="w-full sm:w-auto bg-brand-blue hover:bg-brand-blue-dark text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-md flex items-center justify-center gap-2">
                                         <i class="fas fa-check"></i> Mark as Complete
                                     </button>
                                 </form>
@@ -476,7 +476,7 @@ include("../header.php");
                         Review (Optional)
                     </label>
                     <textarea name="review" id="review" rows="4" 
-                              class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors resize-none"
+                              class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue transition-colors resize-none"
                               placeholder="Share your experience with this course..."><?php echo htmlspecialchars($existing_review); ?></textarea>
                 </div>
                 

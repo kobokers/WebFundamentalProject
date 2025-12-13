@@ -152,12 +152,12 @@ include("../header.php");
     <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div class="container mx-auto px-4 lg:px-8 py-6">
             <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-                <a href="dashboard.php" class="hover:text-coursera-blue transition-colors">Dashboard</a>
+                <a href="dashboard.php" class="hover:text-brand-blue transition-colors">Dashboard</a>
                 <i class="fas fa-chevron-right text-xs"></i>
                 <span class="text-gray-900 dark:text-white">Edit Profile</span>
             </div>
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                <i class="fas fa-user-cog text-coursera-blue"></i>
+                <i class="fas fa-user-cog text-brand-blue"></i>
                 Profile Settings
             </h1>
         </div>
@@ -187,15 +187,15 @@ include("../header.php");
                             <?php if (!empty($current_user['profile_picture'])): ?>
                                 <img src="../uploads/avatars/<?php echo htmlspecialchars($current_user['profile_picture']); ?>" 
                                      alt="Profile Picture" id="preview-img"
-                                     class="w-32 h-32 rounded-full object-cover border-4 border-coursera-blue/20 shadow-lg transition-transform duration-300 group-hover:scale-105">
+                                     class="w-32 h-32 rounded-full object-cover border-4 border-brand-blue/20 shadow-lg transition-transform duration-300 group-hover:scale-105">
                             <?php else: ?>
-                                <div id="preview-placeholder" class="w-32 h-32 rounded-full bg-coursera-blue-light dark:bg-blue-900/30 flex items-center justify-center border-4 border-coursera-blue/20 shadow-lg">
-                                    <i class="fas fa-user text-5xl text-coursera-blue dark:text-blue-300"></i>
+                                <div id="preview-placeholder" class="w-32 h-32 rounded-full bg-brand-blue-light dark:bg-blue-900/30 flex items-center justify-center border-4 border-brand-blue/20 shadow-lg">
+                                    <i class="fas fa-user text-5xl text-brand-blue dark:text-blue-300"></i>
                                 </div>
-                                <img src="" alt="Profile Picture" id="preview-img" class="hidden w-32 h-32 rounded-full object-cover border-4 border-coursera-blue/20 shadow-lg">
+                                <img src="" alt="Profile Picture" id="preview-img" class="hidden w-32 h-32 rounded-full object-cover border-4 border-brand-blue/20 shadow-lg">
                             <?php endif; ?>
                             
-                            <label class="absolute bottom-0 right-0 w-10 h-10 bg-coursera-blue hover:bg-coursera-blue-dark text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer transition-colors border-2 border-white dark:border-gray-800">
+                            <label class="absolute bottom-0 right-0 w-10 h-10 bg-brand-blue hover:bg-brand-blue-dark text-white rounded-full flex items-center justify-center shadow-lg cursor-pointer transition-colors border-2 border-white dark:border-gray-800">
                                 <i class="fas fa-camera"></i>
                                 <input type="file" name="profile_picture" accept="image/*" class="hidden" onchange="previewImage(this)">
                             </label>
@@ -213,7 +213,7 @@ include("../header.php");
                                 <i class="fas fa-user absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                 <input type="text" id="username" name="username"
                                     value="<?php echo htmlspecialchars($current_user['name'] ?? ''); ?>" required
-                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue transition-colors">
                             </div>
                         </div>
 
@@ -223,7 +223,7 @@ include("../header.php");
                                 <i class="fas fa-envelope absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                 <input type="email" id="email" name="email"
                                     value="<?php echo htmlspecialchars($current_user['email'] ?? ''); ?>" required
-                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue transition-colors">
                             </div>
                         </div>
                     </div>
@@ -244,7 +244,7 @@ include("../header.php");
                             <div class="relative">
                                 <i class="fas fa-lock absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                 <input type="password" id="password" name="password" placeholder="••••••••"
-                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue transition-colors">
                             </div>
                         </div>
 
@@ -253,14 +253,14 @@ include("../header.php");
                             <div class="relative">
                                 <i class="fas fa-check-double absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                                 <input type="password" id="confirm_password" name="confirm_password" placeholder="••••••••"
-                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                                    class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue transition-colors">
                             </div>
                         </div>
                     </div>
 
                     <div class="pt-4 flex items-center justify-end gap-4">
                         <a href="dashboard.php" class="px-6 py-3 text-gray-600 dark:text-gray-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 rounded-xl transition-colors">Cancel</a>
-                        <button type="submit" class="bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold py-3 px-8 rounded-xl transition-all shadow-md flex items-center gap-2">
+                        <button type="submit" class="bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold py-3 px-8 rounded-xl transition-all shadow-md flex items-center gap-2">
                             <i class="fas fa-save"></i> Save Changes
                         </button>
                     </div>

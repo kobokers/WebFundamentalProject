@@ -7,7 +7,7 @@
             <!-- Brand Column -->
             <div class="lg:col-span-1">
                 <a href="<?php echo BASE_URL; ?>index.php" class="flex items-center gap-2 mb-4">
-                    <div class="w-9 h-9 bg-coursera-blue rounded-lg flex items-center justify-center">
+                    <div class="w-9 h-9 bg-brand-blue rounded-lg flex items-center justify-center">
                         <i class="fas fa-graduation-cap text-white text-lg"></i>
                     </div>
                     <span class="text-xl font-bold text-gray-900 dark:text-white">OLMS</span>
@@ -17,16 +17,16 @@
                 </p>
                 <!-- Social Links -->
                 <div class="flex gap-3">
-                    <a href="#" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-coursera-blue hover:text-white transition-all">
+                    <a href="#" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-brand-blue hover:text-white transition-all">
                         <i class="fab fa-facebook-f text-sm"></i>
                     </a>
-                    <a href="#" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-coursera-blue hover:text-white transition-all">
+                    <a href="#" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-brand-blue hover:text-white transition-all">
                         <i class="fab fa-twitter text-sm"></i>
                     </a>
-                    <a href="#" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-coursera-blue hover:text-white transition-all">
+                    <a href="#" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-brand-blue hover:text-white transition-all">
                         <i class="fab fa-linkedin-in text-sm"></i>
                     </a>
-                    <a href="https://github.com/kobokers" target="_blank" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-coursera-blue hover:text-white transition-all">
+                    <a href="https://github.com/kobokers" target="_blank" class="w-9 h-9 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-brand-blue hover:text-white transition-all">
                         <i class="fab fa-github text-sm"></i>
                     </a>
                 </div>
@@ -37,17 +37,17 @@
                 <h4 class="font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h4>
                 <ul class="space-y-3">
                     <li>
-                        <a href="<?php echo BASE_URL; ?>auth/catalog.php" class="text-gray-600 dark:text-gray-400 hover:text-coursera-blue dark:hover:text-coursera-blue text-sm transition-colors">
+                        <a href="<?php echo BASE_URL; ?>auth/catalog.php" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Browse Courses
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo BASE_URL; ?>auth/login.php" class="text-gray-600 dark:text-gray-400 hover:text-coursera-blue dark:hover:text-coursera-blue text-sm transition-colors">
+                        <a href="<?php echo BASE_URL; ?>auth/login.php" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Sign In
                         </a>
                     </li>
                     <li>
-                        <a href="<?php echo BASE_URL; ?>auth/register.php" class="text-gray-600 dark:text-gray-400 hover:text-coursera-blue dark:hover:text-coursera-blue text-sm transition-colors">
+                        <a href="<?php echo BASE_URL; ?>auth/register.php" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Create Account
                         </a>
                     </li>
@@ -59,17 +59,17 @@
                 <h4 class="font-semibold text-gray-900 dark:text-white mb-4">Support</h4>
                 <ul class="space-y-3">
                     <li>
-                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-coursera-blue dark:hover:text-coursera-blue text-sm transition-colors">
+                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Help Center
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-coursera-blue dark:hover:text-coursera-blue text-sm transition-colors">
+                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Contact Us
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-coursera-blue dark:hover:text-coursera-blue text-sm transition-colors">
+                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             FAQs
                         </a>
                     </li>
@@ -81,17 +81,17 @@
                 <h4 class="font-semibold text-gray-900 dark:text-white mb-4">Legal</h4>
                 <ul class="space-y-3">
                     <li>
-                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-coursera-blue dark:hover:text-coursera-blue text-sm transition-colors">
+                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Terms of Service
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-coursera-blue dark:hover:text-coursera-blue text-sm transition-colors">
+                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Privacy Policy
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-coursera-blue dark:hover:text-coursera-blue text-sm transition-colors">
+                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Cookie Policy
                         </a>
                     </li>
@@ -109,7 +109,7 @@
                 </p>
                 <p class="text-gray-400 dark:text-gray-500 text-sm">
                     Developed with <span class="text-red-500">♥</span> by 
-                    <a href="https://github.com/kobokers" target="_blank" class="text-coursera-blue hover:underline">ryzka</a>
+                    <a href="https://github.com/kobokers" target="_blank" class="text-brand-blue hover:underline">ryzka</a>
                 </p>
             </div>
         </div>

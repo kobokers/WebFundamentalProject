@@ -92,7 +92,7 @@ include("../header.php");
 
 <div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
     <!-- Hero Section -->
-    <div class="bg-gradient-to-r from-coursera-blue to-blue-600 dark:from-gray-800 dark:to-gray-900">
+    <div class="bg-gradient-to-r from-brand-blue to-blue-600 dark:from-gray-800 dark:to-gray-900">
         <div class="container mx-auto px-4 lg:px-8 py-12">
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <!-- Welcome Message -->
@@ -117,7 +117,7 @@ include("../header.php");
                         <i class="fas fa-compass"></i>
                         <span class="hidden sm:inline">Explore Courses</span>
                     </a>
-                    <a href="profile_edit.php" class="bg-white text-coursera-blue hover:bg-blue-50 font-semibold px-5 py-2.5 rounded-xl transition-all flex items-center gap-2 shadow-lg">
+                    <a href="profile_edit.php" class="bg-white text-brand-blue hover:bg-blue-50 font-semibold px-5 py-2.5 rounded-xl transition-all flex items-center gap-2 shadow-lg">
                         <i class="fas fa-user-cog"></i>
                         <span class="hidden sm:inline">Edit Profile</span>
                     </a>
@@ -132,7 +132,7 @@ include("../header.php");
             <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-100 dark:border-gray-700">
                 <div class="flex items-center gap-4">
                     <div class="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-book text-2xl text-coursera-blue"></i>
+                        <i class="fas fa-book text-2xl text-brand-blue"></i>
                     </div>
                     <div>
                         <div class="text-3xl font-bold text-gray-900 dark:text-white"><?php echo $total_courses; ?></div>
@@ -168,11 +168,11 @@ include("../header.php");
         <section class="mb-10">
             <div class="flex items-center justify-between mb-6">
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
-                    <i class="fas fa-book-open text-coursera-blue"></i>
+                    <i class="fas fa-book-open text-brand-blue"></i>
                     My Learning
                 </h2>
                 <?php if ($total_courses > 0): ?>
-                <a href="catalog.php" class="text-coursera-blue hover:text-coursera-blue-dark font-medium text-sm flex items-center gap-1 transition-colors">
+                <a href="catalog.php" class="text-brand-blue hover:text-brand-blue-dark font-medium text-sm flex items-center gap-1 transition-colors">
                     Browse more courses <i class="fas fa-arrow-right text-xs"></i>
                 </a>
                 <?php endif; ?>
@@ -189,13 +189,13 @@ include("../header.php");
                         <!-- course card -->
                         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
                             <!-- Course Thumbnail Area -->
-                            <div class="h-36 bg-gradient-to-br from-coursera-blue-light to-blue-100 dark:from-gray-700 dark:to-gray-600 relative flex items-center justify-center overflow-hidden">
+                            <div class="h-36 bg-gradient-to-br from-brand-blue-light to-blue-100 dark:from-gray-700 dark:to-gray-600 relative flex items-center justify-center overflow-hidden">
                                 <?php if (!empty($row['course_image'])): ?>
                                     <img src="../uploads/courses/<?php echo htmlspecialchars($row['course_image']); ?>" 
                                          alt="<?php echo htmlspecialchars($row['course_title']); ?>"
                                          class="w-full h-full object-cover">
                                 <?php else: ?>
-                                    <i class="fas fa-book-open text-5xl text-coursera-blue/30 dark:text-white/20"></i>
+                                    <i class="fas fa-book-open text-5xl text-brand-blue/30 dark:text-white/20"></i>
                                 <?php endif; ?>
                                 
                                 <?php if (!empty($row['category'])): ?>
@@ -225,12 +225,12 @@ include("../header.php");
                                 <div class="mb-4 mt-auto">
                                     <div class="flex justify-between items-center mb-2">
                                         <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Progress</span>
-                                        <span class="text-sm font-bold <?php echo $is_complete ? 'text-green-600' : 'text-coursera-blue'; ?>">
+                                        <span class="text-sm font-bold <?php echo $is_complete ? 'text-green-600' : 'text-brand-blue'; ?>">
                                             <?php echo $progress; ?>%
                                         </span>
                                     </div>
                                     <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 overflow-hidden">
-                                        <div class="h-2.5 rounded-full transition-all duration-500 <?php echo $is_complete ? 'bg-green-500' : 'bg-coursera-blue'; ?>" 
+                                        <div class="h-2.5 rounded-full transition-all duration-500 <?php echo $is_complete ? 'bg-green-500' : 'bg-brand-blue'; ?>" 
                                              style="width: <?php echo $progress; ?>%"></div>
                                     </div>
                                 </div>
@@ -255,7 +255,7 @@ include("../header.php");
                                     </a>
                                 <?php elseif ($is_paid): ?>
                                     <a href="course_view.php?id=<?php echo $row['course_id']; ?>" 
-                                       class="w-full bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold py-3 rounded-xl text-center flex items-center justify-center gap-2 transition-all shadow-md">
+                                       class="w-full bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold py-3 rounded-xl text-center flex items-center justify-center gap-2 transition-all shadow-md">
                                         <i class="fas fa-play"></i> Continue Course
                                     </a>
                                 <?php else: ?>
@@ -290,7 +290,7 @@ include("../header.php");
                     <p class="text-gray-500 dark:text-gray-400 mb-6 max-w-md mx-auto">
                         You haven't enrolled in any courses yet. Start your learning journey by exploring our catalog.
                     </p>
-                    <a href="catalog.php" class="inline-flex items-center gap-2 bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-lg">
+                    <a href="catalog.php" class="inline-flex items-center gap-2 bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold px-6 py-3 rounded-xl transition-all shadow-lg">
                         <i class="fas fa-compass"></i> Explore Courses
                     </a>
                 </div>

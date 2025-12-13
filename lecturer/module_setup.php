@@ -95,7 +95,7 @@ include("../header.php");
     <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
         <div class="container mx-auto px-4 lg:px-8 py-6">
             <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
-                <a href="dashboard.php" class="hover:text-coursera-blue transition-colors">Dashboard</a>
+                <a href="dashboard.php" class="hover:text-brand-blue transition-colors">Dashboard</a>
                 <i class="fas fa-chevron-right text-xs"></i>
                 <span class="text-gray-900 dark:text-white"><?php echo $course_title; ?></span>
             </div>

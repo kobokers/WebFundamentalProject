@@ -90,7 +90,7 @@ include("../header.php");
         <div class="w-full max-w-md">
             <!-- Mobile Logo -->
             <div class="lg:hidden flex items-center justify-center gap-2 mb-8">
-                <div class="w-10 h-10 bg-coursera-blue rounded-lg flex items-center justify-center">
+                <div class="w-10 h-10 bg-brand-blue rounded-lg flex items-center justify-center">
                     <i class="fas fa-graduation-cap text-white text-xl"></i>
                 </div>
                 <span class="text-2xl font-bold text-gray-900 dark:text-white">OLMS</span>
@@ -117,9 +117,9 @@ include("../header.php");
                             <label class="cursor-pointer">
                                 <input type="radio" name="role" value="student" class="sr-only peer" checked>
                                 <div class="p-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-center 
-                                            peer-checked:border-coursera-blue peer-checked:bg-coursera-blue-light dark:peer-checked:bg-blue-900/30 
+                                            peer-checked:border-brand-blue peer-checked:bg-brand-blue-light dark:peer-checked:bg-blue-900/30 
                                             hover:border-gray-300 dark:hover:border-gray-500 transition-all">
-                                    <i class="fas fa-user-graduate text-2xl text-coursera-blue mb-2"></i>
+                                    <i class="fas fa-user-graduate text-2xl text-brand-blue mb-2"></i>
                                     <div class="font-semibold text-gray-900 dark:text-white text-sm">Learn</div>
                                     <div class="text-xs text-gray-500 dark:text-gray-400">As a Student</div>
                                 </div>
@@ -127,9 +127,9 @@ include("../header.php");
                             <label class="cursor-pointer">
                                 <input type="radio" name="role" value="lecturer" class="sr-only peer">
                                 <div class="p-4 border-2 border-gray-200 dark:border-gray-600 rounded-xl text-center 
-                                            peer-checked:border-coursera-blue peer-checked:bg-coursera-blue-light dark:peer-checked:bg-blue-900/30 
+                                            peer-checked:border-brand-blue peer-checked:bg-brand-blue-light dark:peer-checked:bg-blue-900/30 
                                             hover:border-gray-300 dark:hover:border-gray-500 transition-all">
-                                    <i class="fas fa-chalkboard-teacher text-2xl text-coursera-blue mb-2"></i>
+                                    <i class="fas fa-chalkboard-teacher text-2xl text-brand-blue mb-2"></i>
                                     <div class="font-semibold text-gray-900 dark:text-white text-sm">Teach</div>
                                     <div class="text-xs text-gray-500 dark:text-gray-400">As a Lecturer</div>
                                 </div>
@@ -147,7 +147,7 @@ include("../header.php");
                             </div>
                             <input type="text" name="username" id="username" required 
                                 placeholder="John Doe"
-                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue dark:focus:border-coursera-blue transition-colors">
+                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue dark:focus:border-brand-blue transition-colors">
                         </div>
                     </div>
 
@@ -161,7 +161,7 @@ include("../header.php");
                             </div>
                             <input type="email" name="email" id="email" required 
                                 placeholder="you@example.com"
-                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue dark:focus:border-coursera-blue transition-colors">
+                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue dark:focus:border-brand-blue transition-colors">
                         </div>
                     </div>
 
@@ -175,7 +175,7 @@ include("../header.php");
                             </div>
                             <input type="password" name="password" id="password" required 
                                 placeholder="Create a strong password"
-                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue dark:focus:border-coursera-blue transition-colors">
+                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue dark:focus:border-brand-blue transition-colors">
                         </div>
                         <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
                             <i class="fas fa-info-circle mr-1"></i>Use 8+ characters with letters and numbers
@@ -185,15 +185,15 @@ include("../header.php");
                     <!-- Terms -->
                     <div class="flex items-start gap-3">
                         <input type="checkbox" id="terms" required 
-                            class="mt-1 w-4 h-4 rounded border-gray-300 text-coursera-blue focus:ring-coursera-blue">
+                            class="mt-1 w-4 h-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue">
                         <label for="terms" class="text-sm text-gray-600 dark:text-gray-400">
-                            I agree to the <a href="#" class="text-coursera-blue hover:underline">Terms of Service</a> 
-                            and <a href="#" class="text-coursera-blue hover:underline">Privacy Policy</a>
+                            I agree to the <a href="#" class="text-brand-blue hover:underline">Terms of Service</a> 
+                            and <a href="#" class="text-brand-blue hover:underline">Privacy Policy</a>
                         </label>
                     </div>
 
                     <button type="submit" 
-                        class="w-full bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5">
+                        class="w-full bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5">
                         Create Account
                     </button>
                 </form>
@@ -227,7 +227,7 @@ include("../header.php");
 
                 <p class="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
                     Already have an account? 
-                    <a href="login.php" class="font-semibold text-coursera-blue hover:text-coursera-blue-dark transition-colors">
+                    <a href="login.php" class="font-semibold text-brand-blue hover:text-brand-blue-dark transition-colors">
                         Sign in
                     </a>
                 </p>

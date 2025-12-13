@@ -98,7 +98,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_quiz'])) {
 <!-- Custom Style for Radio Selection -->
 <style>
     .quiz-radio:checked + div {
-        border-color: #0056D2; /* Coursera Blue */
+        border-color: #0056D2; /* Brand Blue */
         background-color: #EFF6FF; /* Blue-50 */
     }
     .dark .quiz-radio:checked + div {
@@ -121,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_quiz'])) {
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-1">
-                        <a href="course_view.php?id=<?php echo $quiz['course_id']; ?>" class="hover:text-coursera-blue transition-colors">
+                        <a href="course_view.php?id=<?php echo $quiz['course_id']; ?>" class="hover:text-brand-blue transition-colors">
                             <i class="fas fa-arrow-left mr-1"></i> <?php echo htmlspecialchars($quiz['course_title']); ?>
                         </a>
                         <span>|</span>
@@ -192,7 +192,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_quiz'])) {
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <?php if (!$passed): ?>
                     <a href="take_quiz.php?quiz_id=<?php echo $quiz_id; ?>" 
-                       class="inline-flex items-center justify-center gap-2 bg-coursera-blue hover:bg-coursera-blue-dark text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md">
+                       class="inline-flex items-center justify-center gap-2 bg-brand-blue hover:bg-brand-blue-dark text-white font-bold py-3 px-8 rounded-xl transition-all shadow-md">
                         <i class="fas fa-redo"></i> Retake Quiz
                     </a>
                     <?php endif; ?>
@@ -231,7 +231,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_quiz'])) {
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                         <div class="p-6 border-b border-gray-100 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white flex items-start gap-3">
-                                <span class="flex-shrink-0 w-8 h-8 bg-coursera-blue text-white rounded-lg flex items-center justify-center text-sm font-bold mt-1">
+                                <span class="flex-shrink-0 w-8 h-8 bg-brand-blue text-white rounded-lg flex items-center justify-center text-sm font-bold mt-1">
                                     <?php echo $index + 1; ?>
                                 </span>
                                 <span class="mt-1.5"><?php echo htmlspecialchars($q['question']); ?></span>

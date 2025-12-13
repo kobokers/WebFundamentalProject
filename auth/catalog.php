@@ -81,7 +81,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
 
 <div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
     <!-- Hero Banner -->
-    <div class="bg-gradient-to-r from-coursera-blue via-blue-600 to-blue-700 dark:from-gray-800 dark:via-gray-800 dark:to-gray-900">
+    <div class="bg-gradient-to-r from-brand-blue via-blue-600 to-blue-700 dark:from-gray-800 dark:via-gray-800 dark:to-gray-900">
         <div class="container mx-auto px-4 lg:px-8 py-16">
             <div class="max-w-3xl mx-auto text-center">
                 <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Explore Our Courses</h1>
@@ -97,7 +97,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                                placeholder="Search for courses, topics, or instructors..."
                                class="w-full px-6 py-4 pl-14 rounded-2xl text-gray-900 dark:text-white bg-white dark:bg-gray-800 border-0 shadow-xl focus:outline-none focus:ring-4 focus:ring-white/30 text-lg">
                         <i class="fas fa-search absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl"></i>
-                        <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold px-6 py-2.5 rounded-xl transition-all">
+                        <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold px-6 py-2.5 rounded-xl transition-all">
                             Search
                         </button>
                     </div>
@@ -124,7 +124,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                 <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-6 sticky top-24">
                     <div class="flex items-center justify-between mb-6">
                         <h3 class="font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                            <i class="fas fa-filter text-coursera-blue"></i>
+                            <i class="fas fa-filter text-brand-blue"></i>
                             Filters
                         </h3>
                         <?php if ($has_filters): ?>
@@ -144,7 +144,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                         <div class="mb-6">
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Level</label>
                             <select name="level" onchange="document.getElementById('filterForm').submit()"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                                    class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue transition-colors">
                                 <option value="">All Levels</option>
                                 <?php 
                                 mysqli_data_seek($levels_result, 0);
@@ -161,7 +161,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                         <div class="mb-6">
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Category</label>
                             <select name="category" onchange="document.getElementById('filterForm').submit()"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                                    class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue transition-colors">
                                 <option value="">All Categories</option>
                                 <?php 
                                 mysqli_data_seek($categories_result, 0);
@@ -178,7 +178,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                         <div class="mb-6">
                             <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">Instructor</label>
                             <select name="instructor" onchange="document.getElementById('filterForm').submit()"
-                                    class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue transition-colors">
+                                    class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue transition-colors">
                                 <option value="">All Instructors</option>
                                 <?php 
                                 mysqli_data_seek($instructors_result, 0);
@@ -202,7 +202,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                         <span class="text-gray-600 dark:text-gray-400">
                             Showing <span class="font-semibold text-gray-900 dark:text-white"><?php echo $total_courses; ?></span> courses
                             <?php if ($has_filters): ?>
-                                <span class="text-coursera-blue">(filtered)</span>
+                                <span class="text-brand-blue">(filtered)</span>
                             <?php endif; ?>
                         </span>
                     </div>
@@ -229,8 +229,8 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                         ?>
                             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col group">
                                 <!-- Course Thumbnail -->
-                                <div class="h-40 bg-gradient-to-br from-coursera-blue-light to-blue-100 dark:from-gray-700 dark:to-gray-600 relative flex items-center justify-center overflow-hidden">
-                                    <i class="fas fa-book-open text-6xl text-coursera-blue/20 dark:text-white/10 group-hover:scale-110 transition-transform duration-300"></i>
+                                <div class="h-40 bg-gradient-to-br from-brand-blue-light to-blue-100 dark:from-gray-700 dark:to-gray-600 relative flex items-center justify-center overflow-hidden">
+                                    <i class="fas fa-book-open text-6xl text-brand-blue/20 dark:text-white/10 group-hover:scale-110 transition-transform duration-300"></i>
                                     
                                     <?php if (!empty($row['category'])): ?>
                                     <span class="absolute top-3 left-3 bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">
@@ -247,7 +247,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                                 
                                 <!-- Course Info -->
                                 <div class="p-5 flex-1 flex flex-col">
-                                    <h3 class="font-bold text-gray-900 dark:text-white text-lg mb-2 line-clamp-2 group-hover:text-coursera-blue transition-colors">
+                                    <h3 class="font-bold text-gray-900 dark:text-white text-lg mb-2 line-clamp-2 group-hover:text-brand-blue transition-colors">
                                         <?php echo htmlspecialchars($row['course_title']); ?>
                                     </h3>
                                     
@@ -309,14 +309,14 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                                         
                                         <!-- Preview Button -->
                                         <button onclick="openPreview(<?php echo $row['course_id']; ?>, '<?php echo htmlspecialchars(addslashes($row['course_title'])); ?>')" 
-                                                class="text-coursera-blue hover:text-coursera-blue-dark font-medium text-sm flex items-center gap-1 transition-colors">
+                                                class="text-brand-blue hover:text-brand-blue-dark font-medium text-sm flex items-center gap-1 transition-colors">
                                             <i class="fas fa-eye"></i> Preview
                                         </button>
                                     </div>
                                     
                                     <!-- Action Button -->
                                     <?php if ($user_role === 'guest'): ?>
-                                        <a href="./login.php" class="w-full bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold py-3 rounded-xl text-center flex items-center justify-center gap-2 transition-all shadow-md">
+                                        <a href="./login.php" class="w-full bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold py-3 rounded-xl text-center flex items-center justify-center gap-2 transition-all shadow-md">
                                             <i class="fas fa-sign-in-alt"></i> Login to Enroll
                                         </a>
                                     <?php elseif ($user_role !== 'student'): ?>
@@ -335,7 +335,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                                         </a>
                                     <?php else: ?>
                                         <a href="./enroll_course.php?course_id=<?php echo $row['course_id']; ?>" 
-                                           class="w-full bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold py-3 rounded-xl text-center flex items-center justify-center gap-2 transition-all shadow-md">
+                                           class="w-full bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold py-3 rounded-xl text-center flex items-center justify-center gap-2 transition-all shadow-md">
                                             <i class="fas fa-plus-circle"></i> Enroll Now
                                         </a>
                                     <?php endif; ?>
@@ -353,7 +353,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                         <p class="text-gray-500 dark:text-gray-400 mb-6">
                             Try adjusting your filters or search terms to find more courses.
                         </p>
-                        <a href="catalog.php" class="inline-flex items-center gap-2 bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold px-6 py-3 rounded-xl transition-all">
+                        <a href="catalog.php" class="inline-flex items-center gap-2 bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold px-6 py-3 rounded-xl transition-all">
                             <i class="fas fa-times"></i> Clear Filters
                         </a>
                     </div>
@@ -364,15 +364,15 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
         <!-- Back to Dashboard Links -->
         <div class="mt-10 text-center">
             <?php if ($user_role === 'student'): ?>
-                <a href="./dashboard.php" class="text-gray-500 hover:text-coursera-blue dark:text-gray-400 font-medium inline-flex items-center gap-2 transition-colors">
+                <a href="./dashboard.php" class="text-gray-500 hover:text-brand-blue dark:text-gray-400 font-medium inline-flex items-center gap-2 transition-colors">
                     <i class="fas fa-arrow-left"></i> Back to My Learning
                 </a>
             <?php elseif ($user_role === 'lecturer'): ?>
-                <a href="../lecturer/dashboard.php" class="text-gray-500 hover:text-coursera-blue dark:text-gray-400 font-medium inline-flex items-center gap-2 transition-colors">
+                <a href="../lecturer/dashboard.php" class="text-gray-500 hover:text-brand-blue dark:text-gray-400 font-medium inline-flex items-center gap-2 transition-colors">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
             <?php elseif ($user_role === 'admin'): ?>
-                <a href="../admin/dashboard.php" class="text-gray-500 hover:text-coursera-blue dark:text-gray-400 font-medium inline-flex items-center gap-2 transition-colors">
+                <a href="../admin/dashboard.php" class="text-gray-500 hover:text-brand-blue dark:text-gray-400 font-medium inline-flex items-center gap-2 transition-colors">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>       
             <?php endif; ?>
@@ -391,7 +391,7 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
         </div>
         <div id="previewContent" class="p-6 overflow-y-auto text-gray-600 dark:text-gray-300">
             <div class="flex items-center justify-center py-12">
-                <i class="fas fa-spinner fa-spin text-2xl text-coursera-blue"></i>
+                <i class="fas fa-spinner fa-spin text-2xl text-brand-blue"></i>
             </div>
         </div>
     </div>

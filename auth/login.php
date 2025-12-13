@@ -50,7 +50,7 @@ include("../header.php");
 
 <div class="min-h-[calc(100vh-80px)] flex">
     <!-- Left Side - Illustration/Brand -->
-    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-coursera-blue to-blue-700 relative overflow-hidden">
+    <div class="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-brand-blue to-blue-700 relative overflow-hidden">
         <!-- Decorative Elements -->
         <div class="absolute top-0 left-0 w-full h-full opacity-10">
             <div class="absolute top-20 left-20 w-64 h-64 bg-white rounded-full"></div>
@@ -98,7 +98,7 @@ include("../header.php");
         <div class="w-full max-w-md">
             <!-- Mobile Logo -->
             <div class="lg:hidden flex items-center justify-center gap-2 mb-8">
-                <div class="w-10 h-10 bg-coursera-blue rounded-lg flex items-center justify-center">
+                <div class="w-10 h-10 bg-brand-blue rounded-lg flex items-center justify-center">
                     <i class="fas fa-graduation-cap text-white text-xl"></i>
                 </div>
                 <span class="text-2xl font-bold text-gray-900 dark:text-white">OLMS</span>
@@ -135,7 +135,7 @@ include("../header.php");
                             </div>
                             <input type="email" name="email" id="email" required 
                                 placeholder="you@example.com"
-                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue dark:focus:border-coursera-blue transition-colors">
+                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue dark:focus:border-brand-blue transition-colors">
                         </div>
                     </div>
 
@@ -149,22 +149,22 @@ include("../header.php");
                             </div>
                             <input type="password" name="password" id="password" required 
                                 placeholder="••••••••"
-                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-coursera-blue dark:focus:border-coursera-blue transition-colors">
+                                class="w-full pl-11 pr-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-brand-blue dark:focus:border-brand-blue transition-colors">
                         </div>
                     </div>
 
                     <div class="flex items-center justify-between">
                         <label class="flex items-center gap-2 cursor-pointer">
-                            <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-coursera-blue focus:ring-coursera-blue">
+                            <input type="checkbox" class="w-4 h-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue">
                             <span class="text-sm text-gray-600 dark:text-gray-400">Remember me</span>
                         </label>
-                        <a href="forgot_password.php" class="text-sm font-medium text-coursera-blue hover:text-coursera-blue-dark transition-colors">
+                        <a href="forgot_password.php" class="text-sm font-medium text-brand-blue hover:text-brand-blue-dark transition-colors">
                             Forgot password?
                         </a>
                     </div>
 
                     <button type="submit" 
-                        class="w-full bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5">
+                        class="w-full bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold py-3.5 rounded-xl transition-all shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 hover:-translate-y-0.5">
                         Sign In
                     </button>
                 </form>
@@ -198,7 +198,7 @@ include("../header.php");
 
                 <p class="mt-8 text-center text-sm text-gray-600 dark:text-gray-400">
                     Don't have an account? 
-                    <a href="register.php" class="font-semibold text-coursera-blue hover:text-coursera-blue-dark transition-colors">
+                    <a href="register.php" class="font-semibold text-brand-blue hover:text-brand-blue-dark transition-colors">
                         Sign up for free
                     </a>
                 </p>

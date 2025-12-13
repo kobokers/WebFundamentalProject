@@ -54,7 +54,7 @@ if ($isLoggedIn) {
                         'inter': ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        'coursera': {
+                        'brand': {
                             'blue': '#0056D2',
                             'blue-dark': '#003E99',
                             'blue-light': '#E8F0FE',
@@ -66,8 +66,8 @@ if ($isLoggedIn) {
         }
     </script>
     
-    <!-- Coursera Custom Styles -->
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/coursera-style.css">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>css/styles.css">
     
     <script>
         // Check for saved user preference, if any, on load of the website
@@ -88,7 +88,7 @@ if ($isLoggedIn) {
                 <div class="flex items-center gap-8">
                     <!-- Logo -->
                     <a href="<?php echo BASE_URL; ?>index.php" class="flex items-center gap-2 group flex-shrink-0">
-                        <div class="w-9 h-9 bg-coursera-blue rounded-lg flex items-center justify-center group-hover:bg-coursera-blue-dark transition-colors">
+                        <div class="w-9 h-9 bg-brand-blue rounded-lg flex items-center justify-center group-hover:bg-brand-blue-dark transition-colors">
                             <i class="fas fa-graduation-cap text-white text-lg"></i>
                         </div>
                         <span class="text-xl font-bold text-gray-900 dark:text-white">OLMS</span>
@@ -104,27 +104,27 @@ if ($isLoggedIn) {
                         </a>
 
                         <a href="<?php echo BASE_URL; ?>index.php" 
-                           class="text-gray-600 dark:text-gray-300 hover:text-coursera-blue dark:hover:text-coursera-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                           class="text-gray-600 dark:text-gray-300 hover:text-brand-blue dark:hover:text-brand-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
                             Home
                         </a>
 
                         <?php if($isLoggedIn && $_SESSION['user_role'] === 'student'): ?>
                         <a href="<?php echo BASE_URL; ?>auth/dashboard.php" 
-                           class="text-gray-600 dark:text-gray-300 hover:text-coursera-blue dark:hover:text-coursera-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                           class="text-gray-600 dark:text-gray-300 hover:text-brand-blue dark:hover:text-brand-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
                             My Learning
                         </a>
                         <?php endif; ?>
                         
                          <?php if($isLoggedIn && $_SESSION['user_role'] === 'lecturer'): ?>
                         <a href="<?php echo BASE_URL; ?>lecturer/dashboard.php" 
-                           class="text-gray-600 dark:text-gray-300 hover:text-coursera-blue dark:hover:text-coursera-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                           class="text-gray-600 dark:text-gray-300 hover:text-brand-blue dark:hover:text-brand-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
                             Instructor Dashboard
                         </a>
                         <?php endif; ?>
                         
                          <?php if($isLoggedIn && $_SESSION['user_role'] === 'admin'): ?>
                         <a href="<?php echo BASE_URL; ?>admin/dashboard.php" 
-                           class="text-gray-600 dark:text-gray-300 hover:text-coursera-blue dark:hover:text-coursera-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                           class="text-gray-600 dark:text-gray-300 hover:text-brand-blue dark:hover:text-brand-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
                             Admin Panel
                         </a>
                         <?php endif; ?>
@@ -152,7 +152,7 @@ if ($isLoggedIn) {
                                      <img src="<?php echo BASE_URL; ?>./uploads/avatars/<?php echo htmlspecialchars($_SESSION['user_profile_picture']); ?>" 
                                           alt="Profile" class="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-gray-600">
                                 <?php else: ?>
-                                    <div class="w-8 h-8 bg-coursera-blue rounded-full flex items-center justify-center">
+                                    <div class="w-8 h-8 bg-brand-blue rounded-full flex items-center justify-center">
                                         <span class="text-white text-sm font-semibold"><?php echo strtoupper(substr($_SESSION['user_name'], 0, 1)); ?></span>
                                     </div>
                                 <?php endif; ?>
@@ -233,7 +233,7 @@ if ($isLoggedIn) {
                         
                         <?php if($_SESSION['user_role'] === 'student'): ?>
                         <a href="<?php echo BASE_URL; ?>auth/dashboard.php" 
-                           class="block text-coursera-blue dark:text-blue-400 font-semibold px-4 py-3 rounded-lg bg-coursera-blue-light dark:bg-blue-900/30 transition-all">
+                           class="block text-brand-blue dark:text-blue-400 font-semibold px-4 py-3 rounded-lg bg-brand-blue-light dark:bg-blue-900/30 transition-all">
                             <i class="fas fa-book-open w-6 text-center mr-2"></i>My Learning
                         </a>
                         <?php endif; ?>
@@ -285,7 +285,7 @@ if ($isLoggedIn) {
                                 Log In
                             </a>
                             <a href="<?php echo BASE_URL; ?>auth/register.php" 
-                               class="w-full text-center bg-coursera-blue hover:bg-coursera-blue-dark text-white font-semibold py-3 rounded-lg transition-all">
+                               class="w-full text-center bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold py-3 rounded-lg transition-all">
                                 Join for Free
                             </a>
                         </div>

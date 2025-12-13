@@ -104,8 +104,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         
                         <div class="space-y-4">
                             <!-- Card Option (Selected) -->
-                            <div class="border-2 border-coursera-blue bg-blue-50 dark:bg-blue-900/30 dark:border-blue-500 rounded-xl p-4 relative cursor-pointer">
-                                <div class="absolute top-4 right-4 text-coursera-blue dark:text-blue-400">
+                            <div class="border-2 border-brand-blue bg-blue-50 dark:bg-blue-900/30 dark:border-blue-500 rounded-xl p-4 relative cursor-pointer">
+                                <div class="absolute top-4 right-4 text-brand-blue dark:text-blue-400">
                                     <i class="fas fa-check-circle text-xl"></i>
                                 </div>
                                 <div class="flex items-center gap-4 mb-2">

@@ -1,22 +1,13 @@
-/* ============================================
-   COURSERA-STYLE DESIGN SYSTEM
-   Custom CSS for OLMS Redesign
-   ============================================ */
-
-/* Google Fonts - Inter */
+/* Main Stylesheet */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-/* ============================================
-   CSS CUSTOM PROPERTIES (Variables)
-   ============================================ */
 :root {
-    /* Primary Colors - Coursera Blue */
-    --coursera-blue: #0056D2;
-    --coursera-blue-dark: #003E99;
-    --coursera-blue-light: #E8F0FE;
-    --coursera-blue-hover: #0047B3;
-    
-    /* Accent Colors */
+    /* Colors */
+    --brand-blue: #0056D2;
+    --brand-blue-dark: #003E99;
+    --brand-blue-light: #E8F0FE;
+    --brand-blue-hover: #0047B3;
+
     --success-green: #1E7F47;
     --success-green-light: #D4EDDA;
     --warning-amber: #E8A317;
@@ -24,8 +15,8 @@
     --error-red: #C41A1A;
     --error-red-light: #F8D7DA;
     --purple-accent: #7C3AED;
-    
-    /* Neutral Colors */
+
+    /* Theme Colors */
     --text-primary: #1F1F1F;
     --text-secondary: #5E5E5E;
     --text-muted: #8C8C8C;
@@ -34,32 +25,29 @@
     --bg-light: #F5F5F5;
     --bg-white: #FFFFFF;
     --bg-dark: #1F1F1F;
-    
-    /* Shadows */
+
+    /* Styling Variables */
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
     --shadow-card-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
-    
-    /* Border Radius */
+
     --radius-sm: 4px;
     --radius-md: 8px;
     --radius-lg: 12px;
     --radius-xl: 16px;
     --radius-full: 9999px;
-    
-    /* Transitions */
+
     --transition-fast: 150ms ease;
     --transition-base: 200ms ease;
     --transition-slow: 300ms ease;
-    
-    /* Font */
+
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* Dark Mode Variables */
+/* Dark Mode Overrides */
 .dark {
     --text-primary: #FFFFFF;
     --text-secondary: #A0A0A0;
@@ -72,43 +60,33 @@
     --shadow-card-hover: 0 8px 25px rgba(0, 0, 0, 0.4);
 }
 
-/* ============================================
-   BASE STYLES
-   ============================================ */
 body {
     font-family: var(--font-family);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* ============================================
-   COMPONENT STYLES
-   ============================================ */
-
-/* --- Cards --- */
-.coursera-card {
+/* Cards */
+.brand-card,
+.brand-card-static {
     background: var(--bg-white);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-card);
     border: 1px solid var(--border-light);
+}
+
+.brand-card {
     transition: box-shadow var(--transition-base), transform var(--transition-base);
 }
 
-.coursera-card:hover {
+.brand-card:hover {
     box-shadow: var(--shadow-card-hover);
     transform: translateY(-2px);
 }
 
-.coursera-card-static {
-    background: var(--bg-white);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-card);
-    border: 1px solid var(--border-light);
-}
-
-/* --- Buttons --- */
-.btn-coursera-primary {
-    background-color: var(--coursera-blue);
+/* Buttons */
+.btn-brand-primary {
+    background-color: var(--brand-blue);
     color: white;
     font-weight: 600;
     padding: 12px 24px;
@@ -122,23 +100,23 @@ body {
     gap: 8px;
 }
 
-.btn-coursera-primary:hover {
-    background-color: var(--coursera-blue-dark);
+.btn-brand-primary:hover {
+    background-color: var(--brand-blue-dark);
     transform: translateY(-1px);
     box-shadow: var(--shadow-md);
 }
 
-.btn-coursera-primary:active {
+.btn-brand-primary:active {
     transform: translateY(0);
 }
 
-.btn-coursera-secondary {
+.btn-brand-secondary {
     background-color: transparent;
-    color: var(--coursera-blue);
+    color: var(--brand-blue);
     font-weight: 600;
     padding: 12px 24px;
     border-radius: var(--radius-md);
-    border: 2px solid var(--coursera-blue);
+    border: 2px solid var(--brand-blue);
     cursor: pointer;
     transition: all var(--transition-fast);
     display: inline-flex;
@@ -147,11 +125,11 @@ body {
     gap: 8px;
 }
 
-.btn-coursera-secondary:hover {
-    background-color: var(--coursera-blue-light);
+.btn-brand-secondary:hover {
+    background-color: var(--brand-blue-light);
 }
 
-.btn-coursera-ghost {
+.btn-brand-ghost {
     background-color: transparent;
     color: var(--text-secondary);
     font-weight: 500;
@@ -162,12 +140,12 @@ body {
     transition: all var(--transition-fast);
 }
 
-.btn-coursera-ghost:hover {
+.btn-brand-ghost:hover {
     background-color: var(--bg-light);
     color: var(--text-primary);
 }
 
-.btn-coursera-success {
+.btn-brand-success {
     background-color: var(--success-green);
     color: white;
     font-weight: 600;
@@ -178,30 +156,30 @@ body {
     transition: all var(--transition-fast);
 }
 
-.btn-coursera-success:hover {
+.btn-brand-success:hover {
     filter: brightness(1.1);
 }
 
-/* --- Progress Bars --- */
-.progress-coursera {
+/* Progress Bars */
+.progress-brand {
     background-color: var(--border-light);
     border-radius: var(--radius-full);
     height: 8px;
     overflow: hidden;
 }
 
-.progress-coursera-bar {
-    background: linear-gradient(90deg, var(--coursera-blue), #0078FF);
+.progress-brand-bar {
+    background: linear-gradient(90deg, var(--brand-blue), #0078FF);
     height: 100%;
     border-radius: var(--radius-full);
     transition: width var(--transition-slow);
 }
 
-.progress-coursera-success .progress-coursera-bar {
+.progress-brand-success .progress-brand-bar {
     background: linear-gradient(90deg, var(--success-green), #28A745);
 }
 
-/* --- Progress Ring --- */
+/* Progress Ring */
 .progress-ring {
     transform: rotate(-90deg);
 }
@@ -211,8 +189,8 @@ body {
     stroke-linecap: round;
 }
 
-/* --- Badges --- */
-.badge-coursera {
+/* Badges */
+.badge-brand {
     display: inline-flex;
     align-items: center;
     padding: 4px 12px;
@@ -239,8 +217,8 @@ body {
 }
 
 .badge-blue {
-    background-color: var(--coursera-blue-light);
-    color: var(--coursera-blue);
+    background-color: var(--brand-blue-light);
+    color: var(--brand-blue);
 }
 
 .badge-success {
@@ -248,7 +226,6 @@ body {
     color: var(--success-green);
 }
 
-/* Dark mode badges */
 .dark .badge-beginner {
     background-color: rgba(22, 101, 52, 0.3);
     color: #86EFAC;
@@ -269,8 +246,8 @@ body {
     color: #93C5FD;
 }
 
-/* --- Input Fields --- */
-.input-coursera {
+/* Forms */
+.input-brand {
     width: 100%;
     padding: 14px 16px;
     border: 2px solid var(--border-light);
@@ -282,17 +259,35 @@ body {
     color: var(--text-primary);
 }
 
-.input-coursera:focus {
+.input-brand:focus {
     outline: none;
-    border-color: var(--coursera-blue);
+    border-color: var(--brand-blue);
     box-shadow: 0 0 0 3px rgba(0, 86, 210, 0.15);
 }
 
-.input-coursera::placeholder {
+.input-brand::placeholder {
     color: var(--text-muted);
 }
 
-/* --- Course Cards --- */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-helper {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+/* Course Cards */
 .course-card {
     background: var(--bg-white);
     border-radius: var(--radius-lg);
@@ -311,7 +306,7 @@ body {
 
 .course-card-thumbnail {
     height: 160px;
-    background: linear-gradient(135deg, var(--coursera-blue-light), #EEF2FF);
+    background: linear-gradient(135deg, var(--brand-blue-light), #EEF2FF);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -340,7 +335,7 @@ body {
     background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* --- Star Ratings --- */
+/* Ratings */
 .star-rating {
     display: flex;
     gap: 2px;
@@ -363,7 +358,7 @@ body {
     color: #4B5563;
 }
 
-/* --- Module Accordion --- */
+/* Modules */
 .module-accordion {
     border: 1px solid var(--border-light);
     border-radius: var(--radius-lg);
@@ -413,7 +408,6 @@ body {
     transform: rotate(180deg);
 }
 
-/* --- Material List Item --- */
 .material-item {
     display: flex;
     align-items: center;
@@ -426,7 +420,7 @@ body {
 }
 
 .material-item:hover {
-    background-color: var(--coursera-blue-light);
+    background-color: var(--brand-blue-light);
 }
 
 .dark .material-item:hover {
@@ -437,11 +431,11 @@ body {
     width: 40px;
     height: 40px;
     border-radius: var(--radius-md);
-    background-color: var(--coursera-blue-light);
+    background-color: var(--brand-blue-light);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--coursera-blue);
+    color: var(--brand-blue);
     flex-shrink: 0;
 }
 
@@ -450,7 +444,7 @@ body {
     color: #93C5FD;
 }
 
-/* --- Stats Cards --- */
+/* Stats & Empty States */
 .stat-card {
     background: var(--bg-white);
     border-radius: var(--radius-lg);
@@ -462,7 +456,7 @@ body {
 .stat-card-value {
     font-size: 36px;
     font-weight: 700;
-    color: var(--coursera-blue);
+    color: var(--brand-blue);
     line-height: 1;
     margin-bottom: 8px;
 }
@@ -473,7 +467,6 @@ body {
     font-weight: 500;
 }
 
-/* --- Empty State --- */
 .empty-state {
     text-align: center;
     padding: 60px 20px;
@@ -493,14 +486,13 @@ body {
     color: var(--text-muted);
 }
 
-/* ============================================
-   ANIMATIONS
-   ============================================ */
+/* Utils & Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -512,6 +504,7 @@ body {
         opacity: 0;
         transform: translateX(-20px);
     }
+
     to {
         opacity: 1;
         transform: translateX(0);
@@ -519,9 +512,12 @@ body {
 }
 
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.5;
     }
@@ -531,6 +527,7 @@ body {
     0% {
         background-position: -200% 0;
     }
+
     100% {
         background-position: 200% 0;
     }
@@ -548,7 +545,6 @@ body {
     animation: pulse 2s infinite;
 }
 
-/* Loading skeleton */
 .skeleton {
     background: linear-gradient(90deg, var(--bg-light) 25%, var(--border-light) 50%, var(--bg-light) 75%);
     background-size: 200% 100%;
@@ -556,44 +552,38 @@ body {
     border-radius: var(--radius-md);
 }
 
-/* ============================================
-   UTILITY CLASSES
-   ============================================ */
-.text-coursera-blue {
-    color: var(--coursera-blue);
+.text-brand-blue {
+    color: var(--brand-blue);
 }
 
-.bg-coursera-blue {
-    background-color: var(--coursera-blue);
+.bg-brand-blue {
+    background-color: var(--brand-blue);
 }
 
-.bg-coursera-light {
-    background-color: var(--coursera-blue-light);
+.bg-brand-light {
+    background-color: var(--brand-blue-light);
 }
 
-.border-coursera {
-    border-color: var(--coursera-blue);
+.border-brand {
+    border-color: var(--brand-blue);
 }
 
-.shadow-coursera {
+.shadow-brand {
     box-shadow: var(--shadow-card);
 }
 
-/* ============================================
-   NAVBAR STYLES
-   ============================================ */
-.navbar-coursera {
+.navbar-brand {
     background-color: var(--bg-white);
     border-bottom: 1px solid var(--border-light);
     box-shadow: var(--shadow-sm);
 }
 
-.dark .navbar-coursera {
+.dark .navbar-brand {
     background-color: var(--bg-white);
     border-bottom-color: var(--border-light);
 }
 
-.navbar-coursera-link {
+.navbar-brand-link {
     color: var(--text-secondary);
     font-weight: 500;
     padding: 8px 16px;
@@ -601,46 +591,23 @@ body {
     transition: all var(--transition-fast);
 }
 
-.navbar-coursera-link:hover {
-    color: var(--coursera-blue);
+.navbar-brand-link:hover {
+    color: var(--brand-blue);
     background-color: var(--bg-light);
 }
 
-/* ============================================
-   FORM STYLES
-   ============================================ */
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-label {
-    display: block;
-    font-weight: 600;
-    color: var(--text-primary);
-    margin-bottom: 8px;
-    font-size: 14px;
-}
-
-.form-helper {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-top: 6px;
-}
-
-/* ============================================
-   RESPONSIVE HELPERS
-   ============================================ */
 @media (max-width: 768px) {
-    .btn-coursera-primary,
-    .btn-coursera-secondary {
+
+    .btn-brand-primary,
+    .btn-brand-secondary {
         padding: 10px 20px;
         font-size: 14px;
     }
-    
+
     .course-card-thumbnail {
         height: 120px;
     }
-    
+
     .stat-card-value {
         font-size: 28px;
     }
