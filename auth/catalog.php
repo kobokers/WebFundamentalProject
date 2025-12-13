@@ -54,6 +54,7 @@ $catalog_query = "
         c.fee,
         c.category,
         c.duration,
+        c.course_image,
         u.name AS lecturer_name,
         u.id AS lecturer_id,
         e.payment_status,
@@ -230,16 +231,22 @@ $has_filters = !empty($filter_level) || !empty($filter_instructor) || !empty($fi
                             <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col group">
                                 <!-- Course Thumbnail -->
                                 <div class="h-40 bg-gradient-to-br from-brand-blue-light to-blue-100 dark:from-gray-700 dark:to-gray-600 relative flex items-center justify-center overflow-hidden">
-                                    <i class="fas fa-book-open text-6xl text-brand-blue/20 dark:text-white/10 group-hover:scale-110 transition-transform duration-300"></i>
+                                    <?php if (!empty($row['course_image'])): ?>
+                                        <img src="../uploads/courses/<?php echo htmlspecialchars($row['course_image']); ?>" 
+                                             alt="<?php echo htmlspecialchars($row['course_title']); ?>"
+                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                    <?php else: ?>
+                                        <i class="fas fa-book-open text-6xl text-brand-blue/20 dark:text-white/10 group-hover:scale-110 transition-transform duration-300"></i>
+                                    <?php endif; ?>
                                     
                                     <?php if (!empty($row['category'])): ?>
-                                    <span class="absolute top-3 left-3 bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full">
+                                    <span class="absolute top-3 left-3 bg-white/90 dark:bg-gray-800/90 text-gray-700 dark:text-gray-300 text-xs font-medium px-3 py-1 rounded-full shadow-sm z-10">
                                         <?php echo htmlspecialchars($row['category']); ?>
                                     </span>
                                     <?php endif; ?>
                                     
                                     <?php if ($row['fee'] == 0): ?>
-                                    <span class="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                    <span class="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm z-10">
                                         FREE
                                     </span>
                                     <?php endif; ?>
