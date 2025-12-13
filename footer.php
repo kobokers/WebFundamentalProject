@@ -109,7 +109,7 @@
                 </p>
                 <p class="text-gray-400 dark:text-gray-500 text-sm">
                     Developed with <span class="text-red-500">♥</span> by 
-                    <a href="https://github.com/kobokers" target="_blank" class="text-brand-blue hover:underline">ryzka</a>
+                    <a href="https://github.com/kobokers" target="_blank" class="text-brand-blue hover:underline">onyx</a>
                 </p>
             </div>
         </div>
@@ -166,7 +166,7 @@ var themeToggleLightIconMobile = document.getElementById('theme-toggle-light-ico
 var themeToggleDarkIconMobileGuest = document.getElementById('theme-toggle-dark-icon-mobile-guest');
 var themeToggleLightIconMobileGuest = document.getElementById('theme-toggle-light-icon-mobile-guest');
 
-// Change the icons inside the button based on previous settings
+// Update toggle icons
 function updateThemeIcons() {
     const isDark = localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
     

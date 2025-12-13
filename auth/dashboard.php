@@ -3,7 +3,7 @@ session_start();
 
 include("../connection.php");
 
-// --- 1. Authentication Check ---
+// Authentication Check
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'student') {
     header("Location: ../auth/login.php");
     exit;
@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'student') {
 $user_id = $_SESSION['user_id'];
 $user_name = $_SESSION['user_name'];
 
-// --- Handle Enrollment Cancellation ---
+// Handle Enrollment Cancellation
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cancel_enrollment'])) {
     $c_id = mysqli_real_escape_string($conn, $_POST['course_id']);
     
@@ -35,7 +35,7 @@ $profile_result = mysqli_query($conn, $profile_query);
 $profile_data = mysqli_fetch_assoc($profile_result);
 $profile_picture = $profile_data['profile_picture'] ?? null;
 
-// --- 2. SQL Query to Fetch Enrolled Courses and Progress  ---
+// Fetch enrolled courses and progress
 $sql_enrolled_courses = "
     SELECT 
         c.id AS course_id,

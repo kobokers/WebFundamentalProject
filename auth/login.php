@@ -2,7 +2,7 @@
 session_start();
 include("../connection.php");
 
-// Process login BEFORE including header
+// Handle login processing
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = mysqli_real_escape_string($conn, $_POST['email']);
     $password = $_POST['password'];
@@ -12,18 +12,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $user = mysqli_fetch_assoc($result);
 
     if ($user && password_verify($password, $user['password'])) {
-        // Trim and normalize status
         $user_status = trim(strtolower($user['status']));
         
-        // Check if account is pending approval
         if ($user_status === 'pending') {
             $_SESSION['error'] = "Your account is pending approval. Please wait for admin activation.";
         }
-        // Check if account is active
         elseif ($user_status !== 'active') {
             $_SESSION['error'] = "Your account is inactive. Please contact admin for assistance.";
         }
-        // Account is active, proceed with login
         else {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
@@ -44,7 +40,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// NOW include header after all redirects are done
 include("../header.php");
 ?>
 

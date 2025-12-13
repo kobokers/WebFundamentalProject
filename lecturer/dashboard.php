@@ -2,7 +2,7 @@
 session_start();
 include("../connection.php");
 
-// --- 1. Authentication and Authorization Check ---
+// Authentication and Authorization Check
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'lecturer') {
   $_SESSION['error'] = "Access denied. Please log in as a lecturer.";
   header("Location: ../auth/login.php");

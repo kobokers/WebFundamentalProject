@@ -2,32 +2,29 @@
 session_start();
 include("../connection.php");
 
-// Process registration BEFORE including header
+// Handle registration
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Escape all user inputs before use
     $username = mysqli_real_escape_string($conn, $_POST['username'] ?? '');
     $email = mysqli_real_escape_string($conn, $_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $role = mysqli_real_escape_string($conn, $_POST['role'] ?? 'student');
 
-    // validation
+    // Basic validation
     if (empty($username) || empty($email) || empty($password)) {
         $_SESSION['error'] = "All fields are required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['error'] = "Invalid email format.";
     } else {
-        // --- 1. Check if email already exists ---
+        // Check availability
         $check_query = "SELECT id FROM users WHERE email='$email' LIMIT 1";
         $check_result = mysqli_query($conn, $check_query);
 
         if (mysqli_num_rows($check_result) > 0) {
             $_SESSION['error'] = "Email already registered.";
         } else {
-            // --- 2. Hash the password ---
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             $status = 'pending';
             
-            // --- 3. Insert new user ---
             $insert_query = "INSERT INTO users (name, email, password, role, status) 
                              VALUES ('$username', '$email', '$hashed_password', '$role', '$status')";
                              
@@ -42,7 +39,6 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// NOW include header after all redirects are done
 include("../header.php");
 ?>
 
