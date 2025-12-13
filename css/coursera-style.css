@@ -1,0 +1,647 @@
+/* ============================================
+   COURSERA-STYLE DESIGN SYSTEM
+   Custom CSS for OLMS Redesign
+   ============================================ */
+
+/* Google Fonts - Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (Variables)
+   ============================================ */
+:root {
+    /* Primary Colors - Coursera Blue */
+    --coursera-blue: #0056D2;
+    --coursera-blue-dark: #003E99;
+    --coursera-blue-light: #E8F0FE;
+    --coursera-blue-hover: #0047B3;
+    
+    /* Accent Colors */
+    --success-green: #1E7F47;
+    --success-green-light: #D4EDDA;
+    --warning-amber: #E8A317;
+    --warning-amber-light: #FFF3CD;
+    --error-red: #C41A1A;
+    --error-red-light: #F8D7DA;
+    --purple-accent: #7C3AED;
+    
+    /* Neutral Colors */
+    --text-primary: #1F1F1F;
+    --text-secondary: #5E5E5E;
+    --text-muted: #8C8C8C;
+    --border-light: #E5E5E5;
+    --border-medium: #D1D1D1;
+    --bg-light: #F5F5F5;
+    --bg-white: #FFFFFF;
+    --bg-dark: #1F1F1F;
+    
+    /* Shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-card-hover: 0 8px 25px rgba(0, 0, 0, 0.15);
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+    
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 200ms ease;
+    --transition-slow: 300ms ease;
+    
+    /* Font */
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Dark Mode Variables */
+.dark {
+    --text-primary: #FFFFFF;
+    --text-secondary: #A0A0A0;
+    --text-muted: #6B6B6B;
+    --border-light: #374151;
+    --border-medium: #4B5563;
+    --bg-light: #111827;
+    --bg-white: #1F2937;
+    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.3);
+    --shadow-card-hover: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+body {
+    font-family: var(--font-family);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   COMPONENT STYLES
+   ============================================ */
+
+/* --- Cards --- */
+.coursera-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-light);
+    transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.coursera-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-2px);
+}
+
+.coursera-card-static {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-light);
+}
+
+/* --- Buttons --- */
+.btn-coursera-primary {
+    background-color: var(--coursera-blue);
+    color: white;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-coursera-primary:hover {
+    background-color: var(--coursera-blue-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.btn-coursera-primary:active {
+    transform: translateY(0);
+}
+
+.btn-coursera-secondary {
+    background-color: transparent;
+    color: var(--coursera-blue);
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--coursera-blue);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-coursera-secondary:hover {
+    background-color: var(--coursera-blue-light);
+}
+
+.btn-coursera-ghost {
+    background-color: transparent;
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-coursera-ghost:hover {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+}
+
+.btn-coursera-success {
+    background-color: var(--success-green);
+    color: white;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: var(--radius-md);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-coursera-success:hover {
+    filter: brightness(1.1);
+}
+
+/* --- Progress Bars --- */
+.progress-coursera {
+    background-color: var(--border-light);
+    border-radius: var(--radius-full);
+    height: 8px;
+    overflow: hidden;
+}
+
+.progress-coursera-bar {
+    background: linear-gradient(90deg, var(--coursera-blue), #0078FF);
+    height: 100%;
+    border-radius: var(--radius-full);
+    transition: width var(--transition-slow);
+}
+
+.progress-coursera-success .progress-coursera-bar {
+    background: linear-gradient(90deg, var(--success-green), #28A745);
+}
+
+/* --- Progress Ring --- */
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset var(--transition-slow);
+    stroke-linecap: round;
+}
+
+/* --- Badges --- */
+.badge-coursera {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.badge-beginner {
+    background-color: #DCFCE7;
+    color: #166534;
+}
+
+.badge-intermediate {
+    background-color: #FEF3C7;
+    color: #92400E;
+}
+
+.badge-advanced {
+    background-color: #FEE2E2;
+    color: #991B1B;
+}
+
+.badge-blue {
+    background-color: var(--coursera-blue-light);
+    color: var(--coursera-blue);
+}
+
+.badge-success {
+    background-color: var(--success-green-light);
+    color: var(--success-green);
+}
+
+/* Dark mode badges */
+.dark .badge-beginner {
+    background-color: rgba(22, 101, 52, 0.3);
+    color: #86EFAC;
+}
+
+.dark .badge-intermediate {
+    background-color: rgba(146, 64, 14, 0.3);
+    color: #FCD34D;
+}
+
+.dark .badge-advanced {
+    background-color: rgba(153, 27, 27, 0.3);
+    color: #FCA5A5;
+}
+
+.dark .badge-blue {
+    background-color: rgba(0, 86, 210, 0.3);
+    color: #93C5FD;
+}
+
+/* --- Input Fields --- */
+.input-coursera {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border-light);
+    border-radius: var(--radius-md);
+    font-size: 16px;
+    font-family: var(--font-family);
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+    background-color: var(--bg-white);
+    color: var(--text-primary);
+}
+
+.input-coursera:focus {
+    outline: none;
+    border-color: var(--coursera-blue);
+    box-shadow: 0 0 0 3px rgba(0, 86, 210, 0.15);
+}
+
+.input-coursera::placeholder {
+    color: var(--text-muted);
+}
+
+/* --- Course Cards --- */
+.course-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-light);
+    transition: all var(--transition-base);
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card:hover {
+    box-shadow: var(--shadow-card-hover);
+    transform: translateY(-4px);
+}
+
+.course-card-thumbnail {
+    height: 160px;
+    background: linear-gradient(135deg, var(--coursera-blue-light), #EEF2FF);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.dark .course-card-thumbnail {
+    background: linear-gradient(135deg, #1E3A5F, #2D3748);
+}
+
+.course-card-body {
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-card-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--border-light);
+    background-color: var(--bg-light);
+}
+
+.dark .course-card-footer {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+/* --- Star Ratings --- */
+.star-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.star-rating svg {
+    width: 16px;
+    height: 16px;
+}
+
+.star-filled {
+    color: #F59E0B;
+}
+
+.star-empty {
+    color: #D1D5DB;
+}
+
+.dark .star-empty {
+    color: #4B5563;
+}
+
+/* --- Module Accordion --- */
+.module-accordion {
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.module-accordion-header {
+    background-color: var(--bg-light);
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color var(--transition-fast);
+}
+
+.module-accordion-header:hover {
+    background-color: var(--border-light);
+}
+
+.dark .module-accordion-header {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dark .module-accordion-header:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.module-accordion-content {
+    padding: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-slow), padding var(--transition-slow);
+}
+
+.module-accordion-content.open {
+    padding: 16px 20px;
+    max-height: 2000px;
+}
+
+.module-accordion-chevron {
+    transition: transform var(--transition-base);
+}
+
+.module-accordion-chevron.open {
+    transform: rotate(180deg);
+}
+
+/* --- Material List Item --- */
+.material-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    border-radius: var(--radius-md);
+    margin-bottom: 8px;
+    background-color: var(--bg-light);
+    transition: all var(--transition-fast);
+    gap: 12px;
+}
+
+.material-item:hover {
+    background-color: var(--coursera-blue-light);
+}
+
+.dark .material-item:hover {
+    background-color: rgba(0, 86, 210, 0.2);
+}
+
+.material-item-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-md);
+    background-color: var(--coursera-blue-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--coursera-blue);
+    flex-shrink: 0;
+}
+
+.dark .material-item-icon {
+    background-color: rgba(0, 86, 210, 0.3);
+    color: #93C5FD;
+}
+
+/* --- Stats Cards --- */
+.stat-card {
+    background: var(--bg-white);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    border: 1px solid var(--border-light);
+    text-align: center;
+}
+
+.stat-card-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--coursera-blue);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.stat-card-label {
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* --- Empty State --- */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 24px;
+    background-color: var(--bg-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: var(--text-muted);
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out;
+}
+
+.animate-slide-in {
+    animation: slideIn 0.3s ease-out;
+}
+
+.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Loading skeleton */
+.skeleton {
+    background: linear-gradient(90deg, var(--bg-light) 25%, var(--border-light) 50%, var(--bg-light) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: var(--radius-md);
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+.text-coursera-blue {
+    color: var(--coursera-blue);
+}
+
+.bg-coursera-blue {
+    background-color: var(--coursera-blue);
+}
+
+.bg-coursera-light {
+    background-color: var(--coursera-blue-light);
+}
+
+.border-coursera {
+    border-color: var(--coursera-blue);
+}
+
+.shadow-coursera {
+    box-shadow: var(--shadow-card);
+}
+
+/* ============================================
+   NAVBAR STYLES
+   ============================================ */
+.navbar-coursera {
+    background-color: var(--bg-white);
+    border-bottom: 1px solid var(--border-light);
+    box-shadow: var(--shadow-sm);
+}
+
+.dark .navbar-coursera {
+    background-color: var(--bg-white);
+    border-bottom-color: var(--border-light);
+}
+
+.navbar-coursera-link {
+    color: var(--text-secondary);
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+}
+
+.navbar-coursera-link:hover {
+    color: var(--coursera-blue);
+    background-color: var(--bg-light);
+}
+
+/* ============================================
+   FORM STYLES
+   ============================================ */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-helper {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+}
+
+/* ============================================
+   RESPONSIVE HELPERS
+   ============================================ */
+@media (max-width: 768px) {
+    .btn-coursera-primary,
+    .btn-coursera-secondary {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .course-card-thumbnail {
+        height: 120px;
+    }
+    
+    .stat-card-value {
+        font-size: 28px;
+    }
+}
