@@ -33,7 +33,6 @@ $course = mysqli_fetch_assoc($verify_result);
 $course_title = htmlspecialchars($course['title']);
 
 // --- 3. Handle Form Submission (Add New Module) ---
-// Note: Material submission is moved to material_handler.php
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['module_title'])) {
     
     $module_title = mysqli_real_escape_string($conn, $_POST['module_title']);
@@ -43,8 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['module_title'])) {
                      VALUES ('$course_id', '$module_title', '$module_order')";
 
     if (mysqli_query($conn, $insert_query)) {
-        $_SESSION['success'] = "Module '{$module_title}' added successfully.";
-        // Redirect to clear POST data
+        $_SESSION['success'] = "Module added successfully.";
         header("Location: module_setup.php?course_id={$course_id}");
         exit;
     } else {
@@ -56,12 +54,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['module_title'])) {
 $modules_query = "SELECT id, title, module_order FROM modules WHERE course_id = '$course_id' ORDER BY module_order ASC";
 $modules_result = mysqli_query($conn, $modules_query);
 
-// --- 5. Fetch Learning Materials and Organize by Module ID (NEW) ---
+// --- 5. Fetch Learning Materials and Organize by Module ID ---
 $materials_by_module = [];
+$quizzes_by_module = [];
+
 if (mysqli_num_rows($modules_result) > 0) {
-    // Collect all module IDs for an efficient single query
     $module_ids = [];
-    $temp_modules_result = mysqli_query($conn, $modules_query); // Re-run query to process list again
+    $temp_modules_result = mysqli_query($conn, $modules_query);
     while ($m = mysqli_fetch_assoc($temp_modules_result)) {
         $module_ids[] = $m['id'];
     }
@@ -69,182 +68,266 @@ if (mysqli_num_rows($modules_result) > 0) {
     if (!empty($module_ids)) {
         $module_ids_str = implode(',', $module_ids);
         
-        $materials_query = "
-            SELECT 
-                id, module_id, title, content_type, material_order
-            FROM 
-                learning_materials
-            WHERE 
-                module_id IN ($module_ids_str)
-            ORDER BY 
-                module_id, material_order ASC";
-
+        // Fetch materials
+        $materials_query = "SELECT id, module_id, title, content_type, material_order
+                           FROM learning_materials WHERE module_id IN ($module_ids_str) ORDER BY module_id, material_order ASC";
         $materials_result = mysqli_query($conn, $materials_query);
-
-        // Organize materials by module_id for easy display
         while ($material = mysqli_fetch_assoc($materials_result)) {
             $materials_by_module[$material['module_id']][] = $material;
         }
-        // Reset pointer for main modules loop
+        
+        // Fetch quizzes
+        $quizzes_query = "SELECT id, module_id, title FROM quizzes WHERE module_id IN ($module_ids_str)";
+        $quizzes_result = mysqli_query($conn, $quizzes_query);
+        while ($quiz = mysqli_fetch_assoc($quizzes_result)) {
+            $quizzes_by_module[$quiz['module_id']] = $quiz;
+        }
+        
         mysqli_data_seek($modules_result, 0); 
     }
 }
 
-// NOW include header after all redirects
 include("../header.php");
 ?>
 
-<body>
-    <div class="container mx-auto p-8">
-        <header class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Module Management: <?php echo $course_title; ?></h1>
-            <p class="text-md text-gray-600 dark:text-gray-400">Define the lessons and structure of your course, including learning materials.</p>
-        </header>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <!-- Header -->
+    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4 lg:px-8 py-6">
+            <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                <a href="dashboard.php" class="hover:text-coursera-blue transition-colors">Dashboard</a>
+                <i class="fas fa-chevron-right text-xs"></i>
+                <span class="text-gray-900 dark:text-white"><?php echo $course_title; ?></span>
+            </div>
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                        <i class="fas fa-cubes text-purple-600"></i>
+                        Module Management
+                    </h1>
+                    <p class="text-gray-500 dark:text-gray-400 mt-1">Define the structure and content of your course</p>
+                </div>
+                <a href="edit_course.php?course_id=<?php echo $course_id; ?>" 
+                   class="inline-flex items-center gap-2 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 font-medium px-4 py-2 rounded-xl transition-all">
+                    <i class="fas fa-edit"></i> Edit Course Details
+                </a>
+            </div>
+        </div>
+    </div>
 
+    <div class="container mx-auto px-4 lg:px-8 py-8">
         <?php if (isset($_SESSION['success'])): ?>
-        <div class="p-3 mb-4 bg-green-100 border border-green-400 text-green-700 rounded">
-            <?php echo $_SESSION['success']; unset($_SESSION['success']); ?></div>
+            <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-xl flex items-center gap-3">
+                <i class="fas fa-check-circle text-green-500"></i>
+                <span class="text-green-700 dark:text-green-300"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></span>
+            </div>
         <?php endif; ?>
         <?php if (isset($_SESSION['error'])): ?>
-        <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
-            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
+            <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl flex items-center gap-3">
+                <i class="fas fa-exclamation-circle text-red-500"></i>
+                <span class="text-red-700 dark:text-red-300"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></span>
+            </div>
         <?php endif; ?>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-            <div class="md:col-span-1 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl h-fit transition-colors duration-200">
-                <h2 class="text-xl font-semibold mb-4 text-blue-600 dark:text-blue-400">Add New Module</h2>
-                <form action="module_setup.php?course_id=<?php echo $course_id; ?>" method="POST">
-
-                    <div class="mb-4">
-                        <label for="module_title" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Module Title:</label>
-                        <input type="text" id="module_title" name="module_title" required
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-                    </div>
-
-                    <div class="mb-6">
-                        <label for="module_order" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Order/Sequence (e.g.,
-                            1, 2, 3):</label>
-                        <input type="number" id="module_order" name="module_order" min="1" required
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-                    </div>
-
-                    <button type="submit"
-                        class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">
-                        Save Module
-                    </button>
-                </form>
-            </div>
-
-            <div class="md:col-span-2">
-                <h2 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white">Existing Course Structure</h2>
-                <?php if (mysqli_num_rows($modules_result) > 0): ?>
-                <ul class="space-y-6">
-                    <?php while ($row = mysqli_fetch_assoc($modules_result)): 
-                        $module_id = $row['id']; 
-                    ?>
-                    <li class="p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-md transition-colors duration-200">
-                        <div class="flex justify-between items-center mb-3">
-                            <h3 class="text-xl font-bold text-gray-800 dark:text-white">
-                                <?php echo $row['module_order']; ?>. <?php echo htmlspecialchars($row['title']); ?>
-                            </h3>
-                            <div class="space-x-2 flex items-center">
-                                <button onclick="document.getElementById('material_form_<?php echo $module_id; ?>').classList.toggle('hidden')" 
-                                    class="text-sm bg-green-600 text-white py-1 px-3 rounded hover:bg-green-700 transition">
-                                    + Add Material
-                                </button>
-                                <a href="add_quiz.php?module_id=<?php echo $module_id; ?>"
-                                    class="text-sm bg-purple-600 text-white py-1 px-3 rounded hover:bg-purple-700 transition">
-                                    <i class="fas fa-question-circle mr-1"></i>Quiz
-                                </a>
-                                <a href="edit_module.php?module_id=<?php echo $module_id; ?>"
-                                    class="text-sm text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300" title="Edit Module"><i class="fas fa-edit"></i></a>
-                                <a href="delete_module.php?module_id=<?php echo $module_id; ?>&course_id=<?php echo $course_id; ?>"
-                                    class="text-sm text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300" title="Delete Module"
-                                    onclick="return confirm('Are you sure you want to delete this module and ALL its materials?');"><i
-                                        class="fas fa-trash"></i></a>
-                            </div>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Add Module Form -->
+            <div class="lg:col-span-1">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-6 sticky top-24">
+                    <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                        <i class="fas fa-plus-circle text-purple-600"></i>
+                        Add New Module
+                    </h2>
+                    
+                    <form action="module_setup.php?course_id=<?php echo $course_id; ?>" method="POST" class="space-y-4">
+                        <div>
+                            <label for="module_title" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Module Title</label>
+                            <input type="text" id="module_title" name="module_title" required
+                                   placeholder="e.g., Introduction to Python"
+                                   class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors">
                         </div>
 
-                        <ul class="ml-4 border-l-2 border-gray-200 dark:border-gray-700 pl-4 space-y-2">
-                            <?php 
-                            // Display the materials associated with this module
-                            if (isset($materials_by_module[$module_id])):
-                                foreach ($materials_by_module[$module_id] as $material):
-                            ?>
-                            <li class="flex justify-between items-center text-gray-700 dark:text-gray-300 text-base py-1">
-                                <span class="font-normal">
-                                    <span class="font-mono text-sm mr-2">[<?php echo strtoupper(substr($material['content_type'], 0, 1)); ?>]</span> 
-                                    <?php echo $material['material_order']; ?>. 
-                                    <?php echo htmlspecialchars($material['title']); ?>
-                                </span>
-                                <div class="space-x-2">
-                                    <a href="edit_material.php?material_id=<?php echo $material['id']; ?>"
-                                        class="text-xs text-purple-400 hover:text-purple-600 dark:hover:text-purple-300">Edit</a>
-                                    <a href="delete_material.php?material_id=<?php echo $material['id']; ?>&course_id=<?php echo $course_id; ?>"
-                                        class="text-xs text-red-400 hover:text-red-600 dark:hover:text-red-300"
-                                        onclick="return confirm('Delete this material?');">Delete</a>
-                                </div>
-                            </li>
-                            <?php 
-                                endforeach;
-                            else:
-                            ?>
-                            <li class="text-sm text-gray-500 dark:text-gray-400 py-1">No materials in this module yet.</li>
-                            <?php endif; ?>
-                        </ul>
-                        
-                        <div id="material_form_<?php echo $module_id; ?>" class="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hidden transition-colors duration-200">
-                            <h4 class="font-semibold mb-3 border-b dark:border-gray-600 pb-1 text-md text-indigo-700 dark:text-indigo-300">Add Material to Module <?php echo $row['module_order']; ?></h4>
-                            <form action="material_handler.php" method="POST">
-                                <input type="hidden" name="module_id" value="<?php echo $module_id; ?>">
-                                <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
+                        <div>
+                            <label for="module_order" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Order/Sequence</label>
+                            <input type="number" id="module_order" name="module_order" min="1" required
+                                   placeholder="1"
+                                   class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors">
+                        </div>
 
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="mb-2 col-span-2">
-                                        <label class="block text-xs font-semibold mb-1 dark:text-gray-300">Material Title:</label>
-                                        <input type="text" name="material_title" required class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm dark:bg-gray-600 dark:text-white">
+                        <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                            <i class="fas fa-plus"></i> Add Module
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Modules List -->
+            <div class="lg:col-span-2">
+                <h2 class="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                    <i class="fas fa-list-ol text-purple-600"></i>
+                    Course Modules
+                    <span class="text-sm font-normal text-gray-500 dark:text-gray-400">(<?php echo mysqli_num_rows($modules_result); ?>)</span>
+                </h2>
+                
+                <?php if (mysqli_num_rows($modules_result) > 0): ?>
+                    <div class="space-y-4">
+                        <?php while ($row = mysqli_fetch_assoc($modules_result)): 
+                            $module_id = $row['id'];
+                            $has_quiz = isset($quizzes_by_module[$module_id]);
+                            $material_count = isset($materials_by_module[$module_id]) ? count($materials_by_module[$module_id]) : 0;
+                        ?>
+                            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 overflow-hidden">
+                                <!-- Module Header -->
+                                <div class="p-5 flex flex-wrap items-center justify-between gap-4">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center text-purple-600 dark:text-purple-400 font-bold text-lg">
+                                            <?php echo $row['module_order']; ?>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-gray-900 dark:text-white text-lg">
+                                                <?php echo htmlspecialchars($row['title']); ?>
+                                            </h3>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                                <?php echo $material_count; ?> materials
+                                                <?php if ($has_quiz): ?>
+                                                    • <span class="text-purple-600 dark:text-purple-400">Quiz included</span>
+                                                <?php endif; ?>
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div class="mb-2">
-                                        <label class="block text-xs font-semibold mb-1 dark:text-gray-300">Type:</label>
-                                        <select name="content_type" required class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm dark:bg-gray-600 dark:text-white">
-                                            <option value="reading">Reading</option>
-                                            <option value="video">Video</option>
-                                            <option value="quiz">Quiz</option>
-                                            <option value="link">External Link</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-2">
-                                        <label class="block text-xs font-semibold mb-1 dark:text-gray-300">Order:</label>
-                                        <input type="number" name="material_order" min="1" required class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm dark:bg-gray-600 dark:text-white">
+                                    
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="toggleMaterialForm('<?php echo $module_id; ?>')" 
+                                                class="bg-green-100 dark:bg-green-900/30 hover:bg-green-200 dark:hover:bg-green-900/50 text-green-700 dark:text-green-400 font-medium px-3 py-2 rounded-lg transition-all text-sm flex items-center gap-1">
+                                            <i class="fas fa-plus"></i> Material
+                                        </button>
+                                        <a href="add_quiz.php?module_id=<?php echo $module_id; ?>"
+                                           class="bg-purple-100 dark:bg-purple-900/30 hover:bg-purple-200 dark:hover:bg-purple-900/50 text-purple-700 dark:text-purple-400 font-medium px-3 py-2 rounded-lg transition-all text-sm flex items-center gap-1">
+                                            <i class="fas fa-question-circle"></i> Quiz
+                                        </a>
+                                        <a href="edit_module.php?module_id=<?php echo $module_id; ?>"
+                                           class="p-2 text-gray-500 hover:text-purple-600 dark:text-gray-400 dark:hover:text-purple-400 transition-colors" title="Edit Module">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="delete_module.php?module_id=<?php echo $module_id; ?>&course_id=<?php echo $course_id; ?>"
+                                           class="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-400 transition-colors" title="Delete Module"
+                                           onclick="return confirm('Are you sure you want to delete this module and ALL its materials?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
                                     </div>
                                 </div>
                                 
-                                <div class="mb-4 mt-2">
-                                    <label class="block text-xs font-semibold mb-1 dark:text-gray-300">URL/Content (Video link, file path, etc.):</label>
-                                    <input type="text" name="content_url" class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md text-sm dark:bg-gray-600 dark:text-white">
+                                <!-- Materials List -->
+                                <?php if (isset($materials_by_module[$module_id]) && count($materials_by_module[$module_id]) > 0): ?>
+                                    <div class="border-t border-gray-100 dark:border-gray-700 px-5 py-3 bg-gray-50 dark:bg-gray-700/30">
+                                        <div class="space-y-2">
+                                            <?php foreach ($materials_by_module[$module_id] as $material): 
+                                                $icon = 'fa-file-alt text-blue-500';
+                                                if ($material['content_type'] === 'video') $icon = 'fa-play-circle text-red-500';
+                                                elseif ($material['content_type'] === 'link') $icon = 'fa-link text-green-500';
+                                            ?>
+                                                <div class="flex items-center justify-between py-2 px-3 bg-white dark:bg-gray-800 rounded-lg">
+                                                    <div class="flex items-center gap-3">
+                                                        <i class="fas <?php echo $icon; ?>"></i>
+                                                        <span class="text-gray-700 dark:text-gray-300 text-sm"><?php echo htmlspecialchars($material['title']); ?></span>
+                                                        <span class="text-xs text-gray-400 uppercase"><?php echo $material['content_type']; ?></span>
+                                                    </div>
+                                                    <div class="flex items-center gap-2">
+                                                        <a href="edit_material.php?material_id=<?php echo $material['id']; ?>" class="text-xs text-purple-600 hover:text-purple-800 dark:text-purple-400">Edit</a>
+                                                        <a href="delete_material.php?material_id=<?php echo $material['id']; ?>&course_id=<?php echo $course_id; ?>" 
+                                                           class="text-xs text-red-500 hover:text-red-700" onclick="return confirm('Delete this material?');">Delete</a>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <!-- Quiz Info -->
+                                <?php if ($has_quiz): ?>
+                                    <div class="border-t border-gray-100 dark:border-gray-700 px-5 py-3 bg-purple-50 dark:bg-purple-900/20">
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center gap-3">
+                                                <i class="fas fa-clipboard-check text-purple-600 dark:text-purple-400"></i>
+                                                <span class="text-purple-700 dark:text-purple-300 font-medium"><?php echo htmlspecialchars($quizzes_by_module[$module_id]['title']); ?></span>
+                                            </div>
+                                            <a href="edit_quiz.php?quiz_id=<?php echo $quizzes_by_module[$module_id]['id']; ?>" 
+                                               class="text-xs text-purple-600 hover:text-purple-800 dark:text-purple-400 font-medium">Edit Quiz</a>
+                                        </div>
+                                    </div>
+                                <?php endif; ?>
+                                
+                                <!-- Add Material Form (Hidden) -->
+                                <div id="material_form_<?php echo $module_id; ?>" class="hidden border-t border-gray-100 dark:border-gray-700 p-5 bg-gray-50 dark:bg-gray-700/30">
+                                    <h4 class="font-semibold text-gray-900 dark:text-white mb-4">Add Material to this Module</h4>
+                                    <form action="material_handler.php" method="POST" class="space-y-4">
+                                        <input type="hidden" name="module_id" value="<?php echo $module_id; ?>">
+                                        <input type="hidden" name="course_id" value="<?php echo $course_id; ?>">
+
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            <div>
+                                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Title</label>
+                                                <input type="text" name="material_title" required 
+                                                       class="w-full px-3 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500">
+                                            </div>
+                                            <div class="grid grid-cols-2 gap-2">
+                                                <div>
+                                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Type</label>
+                                                    <select name="content_type" required class="w-full px-3 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                                        <option value="reading">Reading</option>
+                                                        <option value="video">Video</option>
+                                                        <option value="link">Link</option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Order</label>
+                                                    <input type="number" name="material_order" min="1" required 
+                                                           class="w-full px-3 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div>
+                                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">URL/Content</label>
+                                            <input type="text" name="content_url" placeholder="https://..."
+                                                   class="w-full px-3 py-2 border-2 border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white">
+                                        </div>
+
+                                        <button type="submit" class="bg-purple-600 hover:bg-purple-700 text-white font-medium py-2 px-4 rounded-lg transition-all">
+                                            Save Material
+                                        </button>
+                                    </form>
                                 </div>
-
-                                <button type="submit" class="bg-indigo-600 text-white text-sm py-1 px-3 rounded hover:bg-indigo-700 transition">Save Material</button>
-                            </form>
-                        </div>
-
-                    </li>
-                    <?php endwhile; ?>
-                </ul>
+                            </div>
+                        <?php endwhile; ?>
+                    </div>
                 <?php else: ?>
-                <div class="p-4 bg-yellow-50 dark:bg-yellow-900 border-l-4 border-yellow-500 dark:border-yellow-400 text-yellow-700 dark:text-yellow-200 rounded-lg transition-colors duration-200">
-                    No modules defined yet. Start adding the first one!
-                </div>
+                    <div class="bg-white dark:bg-gray-800 rounded-2xl p-12 text-center border border-gray-100 dark:border-gray-700">
+                        <div class="w-20 h-20 bg-amber-100 dark:bg-amber-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-cube text-3xl text-amber-500"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-2">No Modules Yet</h3>
+                        <p class="text-gray-500 dark:text-gray-400">Start by adding your first module using the form on the left.</p>
+                    </div>
                 <?php endif; ?>
             </div>
-
         </div>
 
-        <div class="mt-8 text-center">
-            <a href="dashboard.php" class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium">← Back to Dashboard</a>
+        <div class="mt-10 text-center">
+            <a href="dashboard.php" class="text-gray-500 hover:text-purple-600 dark:text-gray-400 font-medium inline-flex items-center gap-2 transition-colors">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
         </div>
     </div>
-</main>
-<?php mysqli_close($conn); ?>
-<?php include("../footer.php"); ?>
+</div>
+
+<script>
+function toggleMaterialForm(moduleId) {
+    const form = document.getElementById('material_form_' + moduleId);
+    form.classList.toggle('hidden');
+}
+</script>
+
+<?php 
+mysqli_close($conn);
+include("../footer.php"); 
+?>

@@ -23,8 +23,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $fee = (float)$_POST['fee']; 
     $description = mysqli_real_escape_string($conn, $_POST['description']);
     
-    $query = "INSERT INTO courses (title, level, language, fee, lecturer_id, description, category, duration) 
-              VALUES ('$title', '$level', '$language', '$fee', '$lecturer_id', '$description', '$category', $duration)";
+    // --- Image Upload Handling ---
+    $course_image = 'NULL'; // Default value for SQL
+    if (isset($_FILES['course_image']) && $_FILES['course_image']['error'] === UPLOAD_ERR_OK) {
+        $file_tmp = $_FILES['course_image']['tmp_name'];
+        $file_name = $_FILES['course_image']['name'];
+        $file_size = $_FILES['course_image']['size'];
+        $file_parts = explode('.', $file_name);
+        $file_ext = strtolower(end($file_parts));
+        
+        $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif'];
+        
+        if (in_array($file_ext, $allowed_extensions)) {
+            if ($file_size <= 5 * 1024 * 1024) { // 5MB limit
+                $new_file_name = uniqid('course_') . '.' . $file_ext;
+                $upload_dir = '../uploads/courses/';
+                
+                if (!is_dir($upload_dir)) {
+                    mkdir($upload_dir, 0777, true);
+                }
+                
+                if (move_uploaded_file($file_tmp, $upload_dir . $new_file_name)) {
+                    $course_image = "'$new_file_name'"; // Quote string for SQL
+                } else {
+                    $_SESSION['error'] = "Failed to move uploaded file.";
+                    header("Location: add_course_form.php");
+                    exit;
+                }
+            } else {
+                $_SESSION['error'] = "File size exceeds 5MB limit.";
+                header("Location: add_course_form.php");
+                exit;
+            }
+        } else {
+            $_SESSION['error'] = "Invalid file type. Only JPG, PNG, and GIF are allowed.";
+            header("Location: add_course_form.php");
+            exit;
+        }
+    }
+
+    $query = "INSERT INTO courses (title, level, language, fee, lecturer_id, description, category, duration, course_image) 
+              VALUES ('$title', '$level', '$language', '$fee', '$lecturer_id', '$description', '$category', $duration, $course_image)";
 
     $result = mysqli_query($conn, $query);
 

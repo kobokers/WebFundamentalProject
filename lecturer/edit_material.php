@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             id = '$material_id'";
 
     if (mysqli_query($conn, $update_query)) {
-        $_SESSION['success'] = "Material '{$new_title}' updated successfully.";
+        $_SESSION['success'] = "Material updated successfully.";
         header("Location: module_setup.php?course_id={$course_id}");
         exit;
     } else {
@@ -80,74 +80,93 @@ $current_type = $material['content_type'];
 $current_url = htmlspecialchars($material['content_url']);
 $current_order = $material['material_order'];
 
-// NOW include header after all redirects
 include("../header.php");
 ?>
 
-<body>
-    <div class="container mx-auto p-8">
-        <header class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 dark:text-white">Edit Learning Material</h1>
-            <p class="text-md text-gray-600 dark:text-gray-400">
-                Course: <b><?php echo $course_title; ?></b> | Module: <b><?php echo $module_title; ?></b>
+<div class="bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <!-- Header -->
+    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div class="container mx-auto px-4 lg:px-8 py-6">
+            <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
+                <a href="dashboard.php" class="hover:text-purple-600 transition-colors">Dashboard</a>
+                <i class="fas fa-chevron-right text-xs"></i>
+                <a href="module_setup.php?course_id=<?php echo $course_id; ?>" class="hover:text-purple-600 transition-colors">Modules</a>
+                <i class="fas fa-chevron-right text-xs"></i>
+                <span class="text-gray-900 dark:text-white">Edit Material</span>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+                <i class="fas fa-pen-nib text-purple-600"></i>
+                Edit Learning Material
+            </h1>
+            <p class="text-gray-500 dark:text-gray-400 mt-1">
+                Course: <span class="font-medium text-gray-900 dark:text-white"><?php echo $course_title; ?></span> • 
+                Module: <span class="font-medium text-gray-900 dark:text-white"><?php echo $module_title; ?></span>
             </p>
-        </header>
+        </div>
+    </div>
 
-        <?php if (isset($_SESSION['error'])): ?>
-        <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 rounded">
-            <?php echo $_SESSION['error']; unset($_SESSION['error']); ?></div>
-        <?php endif; ?>
-
-        <div class="max-w-xl mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-xl transition-colors duration-200">
-            <h2 class="text-xl font-semibold mb-4 text-blue-600 dark:text-blue-400">Update Material Details</h2>
-            
-            <form action="edit_material.php?material_id=<?php echo $material_id; ?>" method="POST">
-
-                <div class="mb-4">
-                    <label for="material_title" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Material Title:</label>
-                    <input type="text" id="material_title" name="material_title" value="<?php echo $current_title; ?>" required
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+    <div class="container mx-auto px-4 lg:px-8 py-8">
+        <div class="max-w-2xl mx-auto">
+            <?php if (isset($_SESSION['error'])): ?>
+                <div class="mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-xl flex items-center gap-3">
+                    <i class="fas fa-exclamation-circle text-red-500"></i>
+                    <span class="text-red-700 dark:text-red-300"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></span>
                 </div>
+            <?php endif; ?>
 
-                <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-md border border-gray-100 dark:border-gray-700 p-8">
+                <form action="edit_material.php?material_id=<?php echo $material_id; ?>" method="POST" class="space-y-6">
+
                     <div>
-                        <label for="content_type" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Content Type:</label>
-                        <select id="content_type" name="content_type" required
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
-                            <option value="reading" <?php echo ($current_type == 'reading' ? 'selected' : ''); ?>>Reading/Document</option>
-                            <option value="video" <?php echo ($current_type == 'video' ? 'selected' : ''); ?>>Video</option>
-                            <option value="quiz" <?php echo ($current_type == 'quiz' ? 'selected' : ''); ?>>Quiz/Assessment</option>
-                            <option value="link" <?php echo ($current_type == 'link' ? 'selected' : ''); ?>>External Link</option>
-                        </select>
+                        <label for="material_title" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Material Title</label>
+                        <input type="text" id="material_title" name="material_title" value="<?php echo $current_title; ?>" required
+                            class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors">
                     </div>
+
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <label for="content_type" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Content Type</label>
+                            <select id="content_type" name="content_type" required
+                                class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors appearance-none">
+                                <option value="reading" <?php echo ($current_type == 'reading' ? 'selected' : ''); ?>>Reading/Document</option>
+                                <option value="video" <?php echo ($current_type == 'video' ? 'selected' : ''); ?>>Video</option>
+                                <option value="link" <?php echo ($current_type == 'link' ? 'selected' : ''); ?>>External Link</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="material_order" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Order</label>
+                            <input type="number" id="material_order" name="material_order" min="1" value="<?php echo $current_order; ?>" required
+                                class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors">
+                        </div>
+                    </div>
+
                     <div>
-                        <label for="material_order" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">Order:</label>
-                        <input type="number" id="material_order" name="material_order" min="1" value="<?php echo $current_order; ?>" required
-                            class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white">
+                        <label for="content_url" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">URL/Link</label>
+                        <input type="text" id="content_url" name="content_url" value="<?php echo $current_url; ?>"
+                            class="w-full px-4 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:border-purple-500 transition-colors"
+                            placeholder="e.g., https://www.youtube.com/...">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 flex items-center gap-1">
+                            <i class="fas fa-info-circle"></i> Provide the direct link to the content (Video, PDF, or website).
+                        </p>
                     </div>
-                </div>
 
-                <div class="mb-6">
-                    <label for="content_url" class="block text-gray-700 dark:text-gray-300 font-semibold mb-2">URL/Link:</label>
-                    <input type="text" id="content_url" name="content_url" value="<?php echo $current_url; ?>"
-                        class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg dark:bg-gray-700 dark:text-white" placeholder="e.g., https://www.youtube.com/...">
-                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Provide the direct link to the content (Video, PDF, or website).</p>
-                </div>
-
-                <button type="submit"
-                    class="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition">
-                    Save Changes
-                </button>
-            </form>
-            
-            <div class="mt-4 text-center">
-                <a href="module_setup.php?course_id=<?php echo $course_id; ?>" 
-                    class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 font-medium">← Back to Course Structure</a>
+                    <div class="pt-4 flex gap-4">
+                        <a href="module_setup.php?course_id=<?php echo $course_id; ?>" 
+                            class="flex-1 py-3 px-6 rounded-xl border-2 border-gray-200 dark:border-gray-600 text-gray-600 dark:text-gray-300 font-semibold text-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                            Cancel
+                        </a>
+                        <button type="submit"
+                            class="flex-[2] bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-xl transition-all shadow-md flex items-center justify-center gap-2">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-
     </div>
-</body>
+</div>
 
-<?php mysqli_close($conn); ?>
-<?php include("../footer.php"); ?>
+<?php 
+mysqli_close($conn);
+include("../footer.php"); 
+?>
