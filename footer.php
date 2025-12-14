@@ -81,17 +81,17 @@
                 <h4 class="font-semibold text-gray-900 dark:text-white mb-4">Legal</h4>
                 <ul class="space-y-3">
                     <li>
-                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
+                        <a href="<?php echo BASE_URL; ?>tos.php" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Terms of Service
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
+                        <a href="<?php echo BASE_URL; ?>privacy.php" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Privacy Policy
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
+                        <a href="<?php echo BASE_URL; ?>cookie.php" class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Cookie Policy
                         </a>
                     </li>
