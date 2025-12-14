@@ -203,8 +203,8 @@ include("../header.php");
                         <input type="checkbox" id="terms" required 
                             class="mt-1 w-4 h-4 rounded border-gray-300 text-brand-blue focus:ring-brand-blue">
                         <label for="terms" class="text-sm text-gray-600 dark:text-gray-400">
-                            I agree to the <a href="#" class="text-brand-blue hover:underline">Terms of Service</a> 
-                            and <a href="#" class="text-brand-blue hover:underline">Privacy Policy</a>
+                            I agree to the <a href="<?php echo BASE_URL; ?>tos.php" class="text-brand-blue hover:underline">Terms of Service</a> 
+                            and <a href="<?php echo BASE_URL; ?>privacy.php" class="text-brand-blue hover:underline">Privacy Policy</a>
                         </label>
                     </div>
 
@@ -224,7 +224,7 @@ include("../header.php");
                     </div>
                 </div>
 
-                <!-- Social Login Buttons (Visual Only) -->
+                <!-- Social Login Buttons (Visual Only) --><!-- Google/Github -->
                 <div class="grid grid-cols-2 gap-4">
                     <button type="button" class="flex items-center justify-center gap-2 py-3 border-2 border-gray-200 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                         <svg class="w-5 h-5" viewBox="0 0 24 24">
