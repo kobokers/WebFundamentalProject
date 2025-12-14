@@ -14,6 +14,17 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['error'] = "All fields are required.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $_SESSION['error'] = "Invalid email format.";
+    // demo purpose will ignore password validation
+    // } elseif (strlen($password) < 8) {
+    //     $_SESSION['error'] = "Password must be at least 8 characters long.";
+    // } elseif (!preg_match('/[A-Z]/', $password)) {
+    //     $_SESSION['error'] = "Password must contain at least one uppercase letter.";
+    // } elseif (!preg_match('/[a-z]/', $password)) {
+    //     $_SESSION['error'] = "Password must contain at least one lowercase letter.";
+    // } elseif (!preg_match('/[0-9]/', $password)) {
+    //     $_SESSION['error'] = "Password must contain at least one number.";
+    // } elseif (!preg_match('/[!@#$%^&*]/', $password)) {
+    //     $_SESSION['error'] = "Password must contain at least one special character.";
     } else {
         // Check availability
         $check_query = "SELECT id FROM users WHERE email='$email' LIMIT 1";
@@ -175,6 +186,15 @@ include("../header.php");
                         </div>
                         <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
                             <i class="fas fa-info-circle mr-1"></i>Use 8+ characters with letters and numbers
+                        </p>
+                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-info-circle mr-1"></i>Password must contain at least one uppercase letter.
+                        </p>
+                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-info-circle mr-1"></i>Password must contain at least one lowercase letter.
+                        </p>
+                        <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-info-circle mr-1"></i>Password must contain at least one special character.
                         </p>
                     </div>
 
