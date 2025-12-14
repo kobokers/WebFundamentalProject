@@ -30,7 +30,7 @@ include("header.php");
                     <div class="flex items-start gap-6 mb-8">
                         <div class="flex-shrink-0">
                             <div class="flex items-center justify-center h-12 w-12 rounded-md bg-brand-blue text-white">
-                                <i class="fa-solid fa-anchor-lock text-xl"></i>
+                                <i class="fa-solid fa-shield-halved text-xl"></i>
                             </div>
                         </div>
                         <div>
