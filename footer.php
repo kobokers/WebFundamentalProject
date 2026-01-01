@@ -130,7 +130,7 @@
                 <p class="text-gray-400 dark:text-gray-500 text-sm">
                     Developed with <span class="text-red-500">♥</span> by
                     <a href="https://github.com/kobokers" target="_blank"
-                        class="text-brand-blue hover:underline">onyx</a>
+                        class="text-brand-blue hover:underline">onyx and team</a>
                 </p>
             </div>
         </div>
