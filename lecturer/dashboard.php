@@ -49,8 +49,18 @@ $sql_courses = "
 $result = mysqli_query($conn, $sql_courses);
 
 // Get first name
-$first_name = explode(' ', $lecturer_name)[0];
+// $first_name = explode(' ', $lecturer_name)[0];
+$name_parts = explode(' ', $lecturer_name);
 
+// Safely access all potential parts and concatenate them
+$first_name = 
+    ($name_parts[0] ?? '') . ' ' . 
+    ($name_parts[1] ?? '') . ' ' . 
+    ($name_parts[2] ?? '') . ' ' . 
+    ($name_parts[3] ?? '');
+
+// Use trim() to remove any leading/trailing spaces that might occur 
+$first_name = trim($first_name);
 include("../header.php");
 ?>
 
@@ -70,7 +80,7 @@ include("../header.php");
                         </div>
                     <?php endif; ?>
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-bold text-white mb-1">Welcome back, <?php echo htmlspecialchars($first_name); ?>!</h1>
+                        <h1 class="text-2xl md:text-3xl font-bold text-white mb-1">Welcome back, <?php echo htmlspecialchars($first_name); ?> !</h1>
                         <p class="text-purple-200 dark:text-gray-400">Lecturer Dashboard</p>
                     </div>
                 </div>
