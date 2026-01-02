@@ -146,7 +146,7 @@ include('header.php');
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10">
-                <div
+                <a href="<?php echo BASE_URL; ?>auth/catalog.php?level=&category=Design&instructor="
                     class="group relative p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] bg-slate-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 hover:shadow-[0_50px_80px_-20px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_50px_80px_-20px_rgba(0,0,0,0.3)] transition-all duration-500 cursor-pointer border-2 border-transparent hover:border-slate-100 dark:hover:border-gray-600">
                     <div
                         class="w-16 h-16 md:w-20 md:h-20 bg-orange-500 rounded-[1.25rem] md:rounded-[1.75rem] flex items-center justify-center text-white mb-8 md:mb-10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-2xl shadow-orange-200 dark:shadow-orange-900/50">
@@ -159,9 +159,9 @@ include('header.php');
                     <p
                         class="text-slate-400 dark:text-gray-500 font-bold uppercase text-[9px] md:text-[10px] tracking-[0.2em]">
                         120+ Courses Available</p>
-                </div>
+                </a>
 
-                <div
+                <a href="<?php echo BASE_URL; ?>auth/catalog.php?level=&category=Programming&instructor="
                     class="group relative p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] bg-slate-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 hover:shadow-[0_50px_80px_-20px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_50px_80px_-20px_rgba(0,0,0,0.3)] transition-all duration-500 cursor-pointer border-2 border-transparent hover:border-slate-100 dark:hover:border-gray-600">
                     <div
                         class="w-16 h-16 md:w-20 md:h-20 bg-blue-500 rounded-[1.25rem] md:rounded-[1.75rem] flex items-center justify-center text-white mb-8 md:mb-10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-2xl shadow-blue-200 dark:shadow-blue-900/50">
@@ -174,9 +174,9 @@ include('header.php');
                     <p
                         class="text-slate-400 dark:text-gray-500 font-bold uppercase text-[9px] md:text-[10px] tracking-[0.2em]">
                         250+ Courses Available</p>
-                </div>
+                </a>
 
-                <div
+                <a href="<?php echo BASE_URL; ?>auth/catalog.php?level=&category=Language&instructor="
                     class="group relative p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] bg-slate-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 hover:shadow-[0_50px_80px_-20px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_50px_80px_-20px_rgba(0,0,0,0.3)] transition-all duration-500 cursor-pointer border-2 border-transparent hover:border-slate-100 dark:hover:border-gray-600">
                     <div
                         class="w-16 h-16 md:w-20 md:h-20 bg-green-500 rounded-[1.25rem] md:rounded-[1.75rem] flex items-center justify-center text-white mb-8 md:mb-10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-2xl shadow-green-200 dark:shadow-green-900/50">
@@ -185,13 +185,13 @@ include('header.php');
                                 d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
                         </svg>
                     </div>
-                    <h3 class="text-xl md:text-2xl font-black text-slate-800 dark:text-white mb-2">Data Science</h3>
+                    <h3 class="text-xl md:text-2xl font-black text-slate-800 dark:text-white mb-2">Language</h3>
                     <p
                         class="text-slate-400 dark:text-gray-500 font-bold uppercase text-[9px] md:text-[10px] tracking-[0.2em]">
                         85+ Courses Available</p>
-                </div>
+                </a>
 
-                <div
+                <a href="<?php echo BASE_URL; ?>auth/catalog.php?level=&category=Business&instructor="
                     class="group relative p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] bg-slate-50 dark:bg-gray-800 hover:bg-white dark:hover:bg-gray-700 hover:shadow-[0_50px_80px_-20px_rgba(0,0,0,0.06)] dark:hover:shadow-[0_50px_80px_-20px_rgba(0,0,0,0.3)] transition-all duration-500 cursor-pointer border-2 border-transparent hover:border-slate-100 dark:hover:border-gray-600">
                     <div
                         class="w-16 h-16 md:w-20 md:h-20 bg-purple-500 rounded-[1.25rem] md:rounded-[1.75rem] flex items-center justify-center text-white mb-8 md:mb-10 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-2xl shadow-purple-200 dark:shadow-purple-900/50">
@@ -204,7 +204,7 @@ include('header.php');
                     <p
                         class="text-slate-400 dark:text-gray-500 font-bold uppercase text-[9px] md:text-[10px] tracking-[0.2em]">
                         150+ Courses Available</p>
-                </div>
+                </a>
             </div>
         </div>
     </section>
