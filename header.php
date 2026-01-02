@@ -58,7 +58,10 @@ if ($isLoggedIn) {
                             'blue': '#0056D2',
                             'blue-dark': '#003E99',
                             'blue-light': '#E8F0FE',
+                            'blue-light': '#E8F0FE',
                             'blue-hover': '#0047B3',
+                            'purple': '#7e22ce', // Added for admin
+                            'purple-dark': '#581c87', // Added for admin hover
                         }
                     }
                 }
@@ -88,7 +91,17 @@ if ($isLoggedIn) {
                 <div class="flex items-center gap-8">
                     <!-- Logo -->
                     <a href="<?php echo BASE_URL; ?>index.php" class="flex items-center gap-2 group flex-shrink-0">
-                        <div class="w-9 h-9 bg-brand-blue rounded-lg flex items-center justify-center group-hover:bg-brand-blue-dark transition-colors">
+                        <?php
+                        $logoColorClass = 'bg-brand-blue group-hover:bg-brand-blue-dark'; // Default
+                        if (isset($_SESSION['user_role'])) {
+                             if ($_SESSION['user_role'] === 'admin') {
+                                 $logoColorClass = 'bg-brand-blue-dark group-hover:bg-gray-900';
+                             } elseif ($_SESSION['user_role'] === 'lecturer') {
+                                 $logoColorClass = 'bg-brand-purple group-hover:bg-brand-purple-dark'; 
+                             }
+                        }
+                        ?>
+                        <div class="w-9 h-9 <?php echo $logoColorClass; ?> rounded-lg flex items-center justify-center transition-colors">
                             <i class="fas fa-graduation-cap text-white text-lg"></i>
                         </div>
                         <span class="text-xl font-bold text-gray-900 dark:text-white">OLMS</span>
@@ -96,34 +109,36 @@ if ($isLoggedIn) {
 
                     <!-- Desktop Navigation (Left Aligned) -->
                     <div class="hidden md:flex items-center gap-2">
-                        <!-- Explore Dropdown-style Link -->
-                        <?php if (!$isLoggedIn): ?>
-                            <a href="<?php echo BASE_URL; ?>auth/catalog.php" 
-                               class="flex items-center gap-1 bg-blue-600 text-white hover:bg-blue-700 font-medium px-4 py-2 rounded-lg transition-all mr-2 shadow-sm">
-                                <i class="fas fa-th-large text-sm"></i>
-                                Explore
-                            </a>
-                        <?php endif; ?>
+                        <?php if(!$isLoggedIn): ?>
+                        <a href="<?php echo BASE_URL; ?>auth/catalog.php" 
+                        class="overflow-hidden relative w-32 p-2 h-10 bg-blue-600 text-white border-none rounded-lg text-lg font-bold cursor-pointer z-10 group mr-2 shadow-sm flex items-center justify-center decoration-none">
+                            
+                            <span class="flex items-center gap-2 text-base">
+                                <i class="fas fa-th-large text-sm"></i> Explore
+                            </span>
 
-                        <?php if ($isLoggedIn && $_SESSION['user_role'] === 'student'): ?>
-                            <a href="<?php echo BASE_URL; ?>auth/dashboard.php" 
-                               class="text-gray-600 dark:text-gray-300 hover:text-brand-blue dark:hover:text-brand-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-                                My Learning
-                            </a>
+                            <span class="absolute w-36 h-32 -top-8 -left-2 bg-white rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-500 duration-1000 origin-left"></span>
+                            <span class="absolute w-36 h-32 -top-8 -left-2 bg-blue-300 rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-700 duration-700 origin-left"></span>
+                            <span class="absolute w-36 h-32 -top-8 -left-2 bg-blue-800 rotate-12 transform scale-x-0 group-hover:scale-x-100 transition-transform group-hover:duration-1000 duration-500 origin-left"></span>
+
+                            <span class="group-hover:opacity-100 group-hover:duration-1000 duration-100 opacity-0 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 text-white text-base font-bold whitespace-nowrap">
+                                <i class="fas fa-th-large text-sm"></i> Explore
+                            </span>
+                        </a>
                         <?php endif; ?>
                         
-                         <?php if ($isLoggedIn && $_SESSION['user_role'] === 'lecturer'): ?>
-                            <a href="<?php echo BASE_URL; ?>lecturer/dashboard.php" 
-                               class="text-gray-600 dark:text-gray-300 hover:text-brand-blue dark:hover:text-brand-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-                                Instructor Dashboard
-                            </a>
+                         <?php if($isLoggedIn && $_SESSION['user_role'] === 'lecturer'): ?>
+                        <a href="<?php echo BASE_URL; ?>lecturer/dashboard.php" 
+                           class="text-gray-600 dark:text-gray-300 hover:text-brand-blue dark:hover:text-brand-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                            Lecturer     Dashboard
+                        </a>
                         <?php endif; ?>
                         
-                         <?php if ($isLoggedIn && $_SESSION['user_role'] === 'admin'): ?>
-                            <a href="<?php echo BASE_URL; ?>admin/dashboard.php" 
-                               class="text-gray-600 dark:text-gray-300 hover:text-brand-blue dark:hover:text-brand-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-                                Admin Panel
-                            </a>
+                         <?php if($isLoggedIn && $_SESSION['user_role'] === 'admin'): ?>
+                        <a href="<?php echo BASE_URL; ?>admin/dashboard.php" 
+                           class="text-gray-600 dark:text-gray-300 hover:text-brand-blue dark:hover:text-brand-blue font-medium px-4 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
+                            Admin Panel
+                        </a>
                         <?php endif; ?>
                     </div>
                 </div>
@@ -131,15 +146,14 @@ if ($isLoggedIn) {
                 <!-- Right Side Actions -->
                 <div class="hidden md:flex items-center gap-3">
                     <!-- Dark Mode Toggle -->
-                    <button id="theme-toggle" type="button" 
-                            class="p-2.5 rounded-lg text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none transition-all">
-                        <svg id="theme-toggle-dark-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                        </svg>
-                        <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
+                    <div class="scale-75 origin-right">
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input id="theme-toggle" class="sr-only peer" value="" type="checkbox" />
+                            <div
+                                class="w-24 h-12 rounded-full ring-0 peer duration-500 outline-none bg-gray-200 overflow-hidden before:flex before:items-center before:justify-center after:flex after:items-center after:justify-center before:content-['☀️'] before:absolute before:h-10 before:w-10 before:top-1/2 before:bg-white before:rounded-full before:left-1 before:-translate-y-1/2 before:transition-all before:duration-700 peer-checked:before:opacity-0 peer-checked:before:rotate-90 peer-checked:before:-translate-y-full shadow-lg shadow-gray-400 peer-checked:shadow-lg peer-checked:shadow-gray-700 peer-checked:bg-[#383838] after:content-['🌑'] after:absolute after:bg-[#1d1d1d] after:rounded-full after:top-[4px] after:right-1 after:translate-y-full after:w-10 after:h-10 after:opacity-0 after:transition-all after:duration-700 peer-checked:after:opacity-100 peer-checked:after:rotate-180 peer-checked:after:translate-y-0"
+                            ></div>
+                        </label>
+                    </div>
 
                     <?php if ($isLoggedIn): ?>
                             <!-- User Menu -->
@@ -238,18 +252,19 @@ if ($isLoggedIn) {
                             <div class="border-t border-gray-100 dark:border-gray-700 my-3"></div>
                         
                             <!-- Dark Mode Toggle Mobile -->
-                            <button id="theme-toggle-mobile" type="button" 
-                                    class="w-full flex items-center justify-between text-gray-600 dark:text-gray-300 font-medium px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-                                <span><i class="fas fa-moon w-6 text-center mr-2 text-gray-400"></i>Dark Mode</span>
-                                <div class="flex items-center">
-                                    <svg id="theme-toggle-dark-icon-mobile" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                                    </svg>
-                                    <svg id="theme-toggle-light-icon-mobile" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
-                                    </svg>
+                            <div class="flex items-center justify-between px-4 py-3">
+                                <span class="text-gray-600 dark:text-gray-300 font-medium">
+                                    <i class="fas fa-moon w-6 text-center mr-2 text-gray-400"></i>Dark Mode
+                                </span>
+                                <div class="scale-75 origin-right">
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input id="theme-toggle-mobile" class="sr-only peer" value="" type="checkbox" />
+                                        <div
+                                            class="w-24 h-12 rounded-full ring-0 peer duration-500 outline-none bg-gray-200 overflow-hidden before:flex before:items-center before:justify-center after:flex after:items-center after:justify-center before:content-['☀️'] before:absolute before:h-10 before:w-10 before:top-1/2 before:bg-white before:rounded-full before:left-1 before:-translate-y-1/2 before:transition-all before:duration-700 peer-checked:before:opacity-0 peer-checked:before:rotate-90 peer-checked:before:-translate-y-full shadow-lg shadow-gray-400 peer-checked:shadow-lg peer-checked:shadow-gray-700 peer-checked:bg-[#383838] after:content-['🌑'] after:absolute after:bg-[#1d1d1d] after:rounded-full after:top-[4px] after:right-1 after:translate-y-full after:w-10 after:h-10 after:opacity-0 after:transition-all after:duration-700 peer-checked:after:opacity-100 peer-checked:after:rotate-180 peer-checked:after:translate-y-0"
+                                        ></div>
+                                    </label>
                                 </div>
-                            </button>
+                            </div>
                         
                             <div class="border-t border-gray-100 dark:border-gray-700 my-3"></div>
                         
@@ -261,18 +276,19 @@ if ($isLoggedIn) {
                             <div class="border-t border-gray-100 dark:border-gray-700 my-3"></div>
                         
                             <!-- Dark Mode Toggle Mobile -->
-                            <button id="theme-toggle-mobile-guest" type="button" 
-                                    class="w-full flex items-center justify-between text-gray-600 dark:text-gray-300 font-medium px-4 py-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-all">
-                                <span><i class="fas fa-moon w-6 text-center mr-2 text-gray-400"></i>Dark Mode</span>
-                                <div class="flex items-center">
-                                    <svg id="theme-toggle-dark-icon-mobile-guest" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-                                    </svg>
-                                    <svg id="theme-toggle-light-icon-mobile-guest" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                                        <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path>
-                                    </svg>
+                            <div class="flex items-center justify-between px-4 py-3">
+                                <span class="text-gray-600 dark:text-gray-300 font-medium">
+                                    <i class="fas fa-moon w-6 text-center mr-2 text-gray-400"></i>Dark Mode
+                                </span>
+                                <div class="scale-75 origin-right">
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input id="theme-toggle-mobile-guest" class="sr-only peer" value="" type="checkbox" />
+                                        <div
+                                            class="w-24 h-12 rounded-full ring-0 peer duration-500 outline-none bg-gray-200 overflow-hidden before:flex before:items-center before:justify-center after:flex after:items-center after:justify-center before:content-['☀️'] before:absolute before:h-10 before:w-10 before:top-1/2 before:bg-white before:rounded-full before:left-1 before:-translate-y-1/2 before:transition-all before:duration-700 peer-checked:before:opacity-0 peer-checked:before:rotate-90 peer-checked:before:-translate-y-full shadow-lg shadow-gray-400 peer-checked:shadow-lg peer-checked:shadow-gray-700 peer-checked:bg-[#383838] after:content-['🌑'] after:absolute after:bg-[#1d1d1d] after:rounded-full after:top-[4px] after:right-1 after:translate-y-full after:w-10 after:h-10 after:opacity-0 after:transition-all after:duration-700 peer-checked:after:opacity-100 peer-checked:after:rotate-180 peer-checked:after:translate-y-0"
+                                        ></div>
+                                    </label>
                                 </div>
-                            </button>
+                            </div>
                         
                             <div class="border-t border-gray-100 dark:border-gray-700 my-3"></div>
                         
