@@ -2,7 +2,7 @@
 session_start();
 include("../connection.php");
 
-// --- 1. Authentication and Validation ---
+// --- 1. Authentication ---
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'student') {
     $_SESSION['error'] = "Access denied.";
     header("Location: login.php");
@@ -10,196 +10,354 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'student') {
 }
 
 $user_id = $_SESSION['user_id'];
-$user_name = $_SESSION['user_name'];
 
-// --- Generate Student Transcript ---
+// --- 2. Helper Functions ---
+function getSemester($dateString)
+{
+    $time = strtotime($dateString);
+    $month = date('n', $time);
+    $year = date('Y', $time);
+    // Logic: Jan-Jun = Spring, Jul-Dec = Fall
+    $term = ($month <= 6) ? "Spring" : "Fall";
+    return "$term $year";
+}
 
-// 1. Fetch Enrolled Courses & Progress
+// --- 3. Fetch User Details ---
+$user_sql = "SELECT name, email FROM users WHERE id = '$user_id'";
+$user_result = mysqli_query($conn, $user_sql);
+$user_data = ($user_result) ? mysqli_fetch_assoc($user_result) : null;
+
+if (!$user_data) {
+    session_destroy();
+    header("Location: login.php");
+    exit;
+}
+
+// --- 4. Fetch Real "Join Date" ---
+$join_sql = "SELECT MIN(enroll_date) as first_join FROM enrollment WHERE user_id = '$user_id'";
+$join_result = mysqli_query($conn, $join_sql);
+$join_row = ($join_result) ? mysqli_fetch_assoc($join_result) : null;
+$user_data['join_date'] = $join_row['first_join'] ?? date('Y-m-d');
+
+// --- 5. Generate Student Metadata ---
+$user_data['student_code'] = "ST-" . str_pad($user_id, 6, '0', STR_PAD_LEFT);
+
+// --- 6. Fetch Admin for Signature ---
+$admin_sql = "SELECT name FROM users WHERE role = 'admin' LIMIT 1";
+$admin_result = mysqli_query($conn, $admin_sql);
+$admin_row = ($admin_result) ? mysqli_fetch_assoc($admin_result) : null;
+$signer_name = $admin_row ? $admin_row['name'] : "mcp";
+
+// Signature Font Scaling
+$name_len = strlen($signer_name);
+$sig_font_size = ($name_len <= 10) ? "3rem" : (($name_len <= 20) ? "2.2rem" : "1.8rem");
+
+// --- 7. Fetch Courses & Calculate Metrics (USER'S LOGIC) ---
 $sql = "SELECT 
             c.id as course_id, 
             c.title, 
             u.name as lecturer_name,
             e.enroll_date,
             (SELECT COUNT(*) FROM modules m WHERE m.course_id = c.id) as total_modules,
-            (SELECT COUNT(*) FROM progress p JOIN modules m ON p.module_id = m.id WHERE m.course_id = c.id AND p.user_id = '$user_id' AND p.status = 'completed') as completed_modules,
-            (SELECT MAX(qa.attempted_at) FROM quiz_attempts qa JOIN quizzes q ON qa.quiz_id = q.id JOIN modules m ON q.module_id = m.id WHERE m.course_id = c.id AND qa.user_id = '$user_id') as last_activity
+            (SELECT COUNT(*) FROM progress p JOIN modules m ON p.module_id = m.id WHERE m.course_id = c.id AND p.user_id = '$user_id' AND p.status = 'completed') as completed_modules
         FROM enrollment e
         JOIN courses c ON e.course_id = c.id
         JOIN users u ON c.lecturer_id = u.id
         WHERE e.user_id = '$user_id' AND e.payment_status = 'paid'
-        ORDER BY e.enroll_date DESC";
+        ORDER BY e.enroll_date ASC";
 
 $result = mysqli_query($conn, $sql);
-$courses = [];
-while ($row = mysqli_fetch_assoc($result)) {
-    $courses[] = $row;
-}
+$transcript_data = [];
 
-// 2. Fetch Quiz Averages per Course
-$quiz_scores = [];
-foreach ($courses as $course) {
-    $c_id = $course['course_id'];
-    // Get all quizzes for this course
-    $q_sql = "SELECT q.id FROM quizzes q JOIN modules m ON q.module_id = m.id WHERE m.course_id = '$c_id'";
-    $q_result = mysqli_query($conn, $q_sql);
+$completed_courses_count = 0;
 
-    $total_score_sum = 0;
-    $quiz_count = 0;
+if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $c_id = $row['course_id'];
 
-    while ($q_row = mysqli_fetch_assoc($q_result)) {
-        $q_id = $q_row['id'];
-        // Get max score for this quiz by user
-        $s_sql = "SELECT MAX(score) as max_score FROM quiz_attempts WHERE quiz_id = '$q_id' AND user_id = '$user_id'";
-        $s_result = mysqli_query($conn, $s_sql);
-        $s_row = mysqli_fetch_assoc($s_result);
+        // --- Calculate Quiz Average (User's Logic) ---
+        $all_quizzes_sql = "SELECT q.id FROM quizzes q JOIN modules m ON q.module_id = m.id WHERE m.course_id = '$c_id'";
+        $q_res = mysqli_query($conn, $all_quizzes_sql);
+        $q_sum = 0;
+        $q_count = 0;
 
-        if ($s_row['max_score'] !== null) {
-            $total_score_sum += $s_row['max_score'];
-            $quiz_count++;
+        if ($q_res) {
+            while ($q = mysqli_fetch_assoc($q_res)) {
+                $qid = $q['id'];
+                $attempt_sql = "SELECT MAX(score) as s FROM quiz_attempts WHERE quiz_id='$qid' AND user_id='$user_id'";
+                $attempt_res_q = mysqli_query($conn, $attempt_sql);
+                $attempt_res = ($attempt_res_q) ? mysqli_fetch_assoc($attempt_res_q) : null;
+
+                if ($attempt_res && $attempt_res['s'] !== null) {
+                    $q_sum += $attempt_res['s'];
+                    $q_count++;
+                }
+            }
         }
-    }
+        $avg_score = ($q_count > 0) ? round($q_sum / $q_count) : 'N/A';
 
-    $quiz_scores[$c_id] = ($quiz_count > 0) ? round($total_score_sum / $quiz_count) . '%' : 'N/A';
+        // --- Map to Friend's Design Fields ---
+        $row['course_code'] = "CRS-" . (100 + $row['course_id']);
+        $row['semester'] = getSemester($row['enroll_date']);
+        $row['quiz_avg'] = ($avg_score !== 'N/A') ? $avg_score . '%' : 'N/A';
+
+        // Status & Progress Calculation
+        $percent = ($row['total_modules'] > 0) ? round(($row['completed_modules'] / $row['total_modules']) * 100) : 0;
+        $row['progress_percent'] = $percent;
+        $row['status'] = ($percent == 100) ? 'Completed' : 'In Progress';
+
+        if ($row['status'] === 'Completed') {
+            $completed_courses_count++;
+        }
+
+        $transcript_data[] = $row;
+    }
 }
+
+$total_courses = count($transcript_data);
+$active_courses = $total_courses - $completed_courses_count;
 
 mysqli_close($conn);
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Progress Report</title>
-    <link href="../css/tailwind.min.css" rel="stylesheet">
+    <title>Academic Transcript - <?php echo $user_data['student_code']; ?></title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700&family=Great+Vibes&display=swap"
+        rel="stylesheet">
+
     <style>
+        body {
+            background-color: #525659;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .paper-sheet {
+            background-color: white;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 40px auto;
+            padding: 20mm;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .serif-font {
+            font-family: 'Playfair Display', serif;
+        }
+
+        .formal-header {
+            font-family: 'Cinzel', serif;
+        }
+
+        .transcript-table th {
+            border-bottom: 2px solid #000;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            padding-bottom: 8px;
+        }
+
+        .transcript-table td {
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 0;
+            font-size: 0.9rem;
+        }
+
+        .transcript-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .signature-text {
+            font-family: 'Great Vibes', cursive;
+            color: #1e40af;
+            line-height: 1.2;
+        }
+
         @media print {
+            body {
+                background-color: white;
+                margin: 0;
+            }
+
+            .paper-sheet {
+                width: 100%;
+                margin: 0;
+                box-shadow: none;
+                padding: 10mm;
+            }
+
             .no-print {
                 display: none !important;
             }
 
-            body {
-                background: white;
-            }
-
-            .container {
-                max-width: 100% !important;
-                padding: 0 !important;
-            }
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800">
-    <div class="container mx-auto max-w-4xl p-8 bg-white shadow-xl my-10 min-h-[800px]">
+<body>
 
-        <!-- Header -->
-        <div class="border-b-2 border-gray-200 pb-8 mb-8 flex justify-between items-start">
-            <div>
-                <h1 class="text-4xl font-bold text-brand-blue mb-2">Student Progress Report</h1>
-                <p class="text-gray-500">Generated on <?php echo date('F j, Y'); ?></p>
+    <div class="fixed top-0 left-0 w-full bg-white shadow-md p-4 flex justify-between z-50 no-print">
+        <a href="dashboard.php" class="text-gray-600 hover:text-blue-600 font-semibold flex items-center gap-2">
+            <i class="fas fa-chevron-left"></i> Back to Dashboard
+        </a>
+        <button onclick="window.print()"
+            class="bg-blue-800 text-white px-6 py-2 rounded shadow hover:bg-blue-900 transition flex items-center gap-2">
+            <i class="fas fa-file-pdf"></i> Print / Save as PDF
+        </button>
+    </div>
+
+    <div class="paper-sheet">
+
+        <div class="flex justify-between items-end border-b-4 border-gray-800 pb-6 mb-8">
+            <div class="flex items-center gap-4">
+                <div class="w-20 h-20 bg-blue-900 text-white flex items-center justify-center rounded-full text-3xl">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold uppercase tracking-widest text-gray-900 formal-header">OLMS</h1>
+                    <p class="text-gray-600 text-sm">Office of Academic Records</p>
+                </div>
             </div>
             <div class="text-right">
-                <h2 class="text-xl font-bold text-gray-800"><?php echo htmlspecialchars($user_name); ?></h2>
-                <p class="text-gray-600">Student ID: #<?php echo str_pad($user_id, 6, '0', STR_PAD_LEFT); ?></p>
+                <h2 class="text-2xl font-bold text-gray-800 serif-font">Official Transcript</h2>
+                <p class="text-sm font-semibold text-gray-500">Date Issued: <?php echo date('F d, Y'); ?></p>
             </div>
         </div>
 
-        <!-- Summary Stats -->
-        <div class="grid grid-cols-3 gap-6 mb-10">
-            <div class="bg-blue-50 p-6 rounded-xl border border-blue-100">
-                <p class="text-blue-600 font-semibold mb-1">Total Courses</p>
-                <p class="text-3xl font-bold text-blue-900"><?php echo count($courses); ?></p>
-            </div>
-            <?php
-            $completed_count = 0;
-            foreach ($courses as $c) {
-                if ($c['total_modules'] > 0 && $c['completed_modules'] == $c['total_modules'])
-                    $completed_count++;
-            }
-            ?>
-            <div class="bg-green-50 p-6 rounded-xl border border-green-100">
-                <p class="text-green-600 font-semibold mb-1">Completed</p>
-                <p class="text-3xl font-bold text-green-900"><?php echo $completed_count; ?></p>
-            </div>
-            <div class="bg-purple-50 p-6 rounded-xl border border-purple-100">
-                <p class="text-purple-600 font-semibold mb-1">Active</p>
-                <p class="text-3xl font-bold text-purple-900"><?php echo count($courses) - $completed_count; ?></p>
+        <div class="mb-8 text-sm">
+            <h3 class="font-bold text-gray-400 uppercase text-xs mb-2 border-b">Student Information</h3>
+            <div class="grid grid-cols-2 gap-y-2">
+                <div>
+                    <span class="font-semibold text-gray-700 block">Name:</span>
+                    <span class="text-gray-900"><?php echo htmlspecialchars($user_data['name']); ?></span>
+                </div>
+                <div>
+                    <span class="font-semibold text-gray-700 block">Student ID:</span>
+                    <span class="text-gray-900 font-mono"><?php echo $user_data['student_code']; ?></span>
+                </div>
+                <div class="col-span-2">
+                    <span class="font-semibold text-gray-700 block">Email:</span>
+                    <span class="text-gray-900"><?php echo htmlspecialchars($user_data['email']); ?></span>
+                </div>
             </div>
         </div>
 
-        <!-- Course Table -->
-        <table class="w-full text-left border-collapse">
-            <thead>
-                <tr class="border-b-2 border-gray-300">
-                    <th class="py-4 font-bold text-gray-600">Course Name</th>
-                    <th class="py-4 font-bold text-gray-600">Progress</th>
-                    <th class="py-4 font-bold text-gray-600">Avg. Quiz Score</th>
-                    <th class="py-4 font-bold text-gray-600">Status</th>
-                    <th class="py-4 font-bold text-gray-600">Completion</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($courses as $course):
-                    $percent = ($course['total_modules'] > 0) ? round(($course['completed_modules'] / $course['total_modules']) * 100) : 0;
-                    $is_done = ($percent == 100);
-                    ?>
-                    <tr class="border-b border-gray-100 hover:bg-gray-50">
-                        <td class="py-4 pr-4">
-                            <div class="font-bold text-gray-800"><?php echo htmlspecialchars($course['title']); ?></div>
-                            <div class="text-sm text-gray-500">By <?php echo htmlspecialchars($course['lecturer_name']); ?>
-                            </div>
-                        </td>
-                        <td class="py-4">
-                            <div class="flex items-center gap-2">
-                                <div class="w-24 bg-gray-200 rounded-full h-2">
-                                    <div class="bg-blue-600 h-2 rounded-full" style="width: <?php echo $percent; ?>%"></div>
-                                </div>
-                                <span class="text-sm font-semibold"><?php echo $percent; ?>%</span>
-                            </div>
-                        </td>
-                        <td class="py-4 font-medium">
-                            <?php echo $quiz_scores[$course['course_id']]; ?>
-                        </td>
-                        <td class="py-4">
-                            <?php if ($is_done): ?>
-                                <span
-                                    class="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold">Completed</span>
-                            <?php else: ?>
-                                <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold">In
-                                    Progress</span>
-                            <?php endif; ?>
-                        </td>
-                        <td class="py-4">
-                            <?php if ($is_done): ?>
-                                <i class="fas fa-medal text-xl text-yellow-500" title="Badge Earned"></i>
-                            <?php else: ?>
-                                <span class="text-gray-300">-</span>
-                            <?php endif; ?>
-                        </td>
+        <!-- Metric Box: Replacing GPA with Course Counts -->
+        <?php if ($total_courses > 0): ?>
+            <div class="bg-gray-50 border border-gray-200 rounded p-4 mb-8 flex justify-between items-center">
+                <div class="text-center w-1/3 border-r border-gray-300">
+                    <p class="text-xs text-gray-500 uppercase">Total Courses</p>
+                    <p class="text-2xl font-bold text-blue-900"><?php echo $total_courses; ?></p>
+                </div>
+                <div class="text-center w-1/3 border-r border-gray-300">
+                    <p class="text-xs text-gray-500 uppercase">Completed</p>
+                    <p class="text-2xl font-bold text-green-700"><?php echo $completed_courses_count; ?></p>
+                </div>
+                <div class="text-center w-1/3">
+                    <p class="text-xs text-gray-500 uppercase">Active</p>
+                    <p class="text-2xl font-bold text-purple-700"><?php echo $active_courses; ?></p>
+                </div>
+            </div>
+        <?php endif; ?>
+
+        <div class="mb-10">
+            <h3 class="font-bold text-gray-800 text-lg mb-4 serif-font">Academic Course Record</h3>
+            <table class="w-full text-left transcript-table border-collapse">
+                <thead>
+                    <tr>
+                        <th class="w-1/6">Code</th>
+                        <th class="w-1/3">Course Title</th>
+                        <th class="w-1/6">Semester</th>
+                        <th class="w-1/6 text-center">Progress</th>
+                        <th class="w-1/12 text-center">Quiz Avg</th>
+                        <th class="w-1/12 text-center">Status</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-
-        <!-- Footer -->
-        <div class="mt-20 pt-8 border-t border-gray-200 text-center text-gray-500 text-sm">
-            <p>This report is generated automatically by the Learning Management System.</p>
-            <p>© <?php echo date('Y'); ?> Education Platform. All rights reserved.</p>
+                </thead>
+                <tbody>
+                    <?php if ($total_courses > 0): ?>
+                        <?php foreach ($transcript_data as $course): ?>
+                            <tr>
+                                <td class="font-mono text-gray-600 text-xs"><?php echo $course['course_code']; ?></td>
+                                <td>
+                                    <div class="font-bold text-gray-800"><?php echo htmlspecialchars($course['title']); ?></div>
+                                    <div class="text-xs text-gray-500">Instructor:
+                                        <?php echo htmlspecialchars($course['lecturer_name']); ?>
+                                    </div>
+                                </td>
+                                <td class="text-sm text-gray-600"><?php echo $course['semester']; ?></td>
+                                <td class="text-center">
+                                    <div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">
+                                        <div class="bg-blue-900 h-1.5 rounded-full"
+                                            style="width: <?php echo $course['progress_percent']; ?>%"></div>
+                                    </div>
+                                    <span
+                                        class="text-xs text-gray-500 font-semibold"><?php echo $course['progress_percent']; ?>%</span>
+                                </td>
+                                <td class="text-center font-bold text-gray-800">
+                                    <?php echo $course['quiz_avg']; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php if ($course['status'] === 'Completed'): ?>
+                                        <span class="text-xs font-bold text-green-700 uppercase">Passed</span>
+                                    <?php else: ?>
+                                        <span class="text-xs font-bold text-yellow-600 uppercase">Active</span>
+                                    <?php endif; ?>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <tr>
+                            <td colspan="6" class="text-center py-8 text-gray-500 italic">No academic records found.</td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
 
-        <!-- Print Button -->
-        <div class="fixed bottom-8 right-8 no-print">
-            <button onclick="window.print()"
-                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center gap-2 transition-transform hover:scale-105">
-                <i class="fas fa-print"></i> Print / Save as PDF
-            </button>
-            <a href="dashboard.php"
-                class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 px-6 rounded-full shadow-lg flex items-center gap-2 mt-4 transition-transform hover:scale-105 justify-center">
-                <i class="fas fa-arrow-left"></i> Back to Dashboard
-            </a>
+
+
+
+        <div class="mt-auto pt-10 flex justify-between items-end">
+
+            <div class="w-1/3">
+                <div class="relative w-24 h-24 flex items-center justify-center text-yellow-600 mb-4">
+                    <i class="fas fa-certificate text-6xl drop-shadow-md relative z-10"></i>
+                    <div
+                        class="absolute z-20 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-inner">
+                        <i class="fas fa-star text-yellow-500 text-lg"></i>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 text-justify leading-relaxed">
+                    This document is a computer-generated transcript from the OLMS.
+                    It is valid without a physical signature.
+                </p>
+            </div>
+
+            <div class="text-center w-1/2">
+                <div class="pb-2 mb-2 border-b border-gray-400 inline-block w-full">
+                    <div class="signature-text transform -rotate-3 whitespace-nowrap"
+                        style="font-size: <?php echo $sig_font_size; ?>;">
+                        <?php echo htmlspecialchars($signer_name); ?>
+                    </div>
+                </div>
+                <p class="text-xs font-bold uppercase text-gray-600 tracking-wider">System Administrator / Registrar</p>
+            </div>
         </div>
+
+        <div class="absolute bottom-5 left-0 w-full text-center">
+            <p class="text-[10px] text-gray-300 uppercase tracking-widest">Official Academic Record • Page 1 of 1</p>
+        </div>
+
     </div>
 </body>
 

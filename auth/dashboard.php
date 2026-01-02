@@ -97,15 +97,19 @@ include("../header.php");
             <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                 <!-- Welcome Message -->
                 <div class="flex items-center gap-5">
-                    <?php if (!empty($profile_picture)): ?>
-                        <img src="../uploads/avatars/<?php echo htmlspecialchars($profile_picture); ?>" alt="Avatar"
-                            class="w-20 h-20 rounded-2xl object-cover border-4 border-white/30 shadow-lg">
-                    <?php else: ?>
-                        <div
-                            class="w-20 h-20 rounded-2xl bg-white/20 flex items-center justify-center border-4 border-white/30">
-                            <i class="fas fa-user text-3xl text-white"></i>
+                    <div class="relative w-20 h-20 flex-shrink-0">
+                        <div class="absolute inset-0 rounded-full bg-gradient-to-bl from-pink-400 via-purple-400 to-indigo-600 animate-spin shadow-lg"></div>
+                        
+                        <div class="absolute inset-1.5 rounded-full bg-slate-100 dark:bg-zinc-900 flex items-center justify-center overflow-hidden">
+                            <?php if (!empty($profile_picture)): ?>
+                                <img src="../uploads/avatars/<?php echo htmlspecialchars($profile_picture); ?>" 
+                                     alt="Avatar"
+                                     class="w-full h-full object-cover">
+                            <?php else: ?>
+                                <i class="fas fa-user text-3xl text-gray-400"></i>
+                            <?php endif; ?>
                         </div>
-                    <?php endif; ?>
+                    </div>
                     <div>
                         <h1 class="text-2xl md:text-3xl font-bold text-white mb-1">Welcome back,
                             <?php echo htmlspecialchars($first_name); ?>!
@@ -275,10 +279,23 @@ include("../header.php");
                             <!-- Action Buttons -->
                             <div class="p-5 pt-0 space-y-2">
                                 <?php if ($is_paid && $is_complete): ?>
-                                    <a href="student_actions.php?action=certificate&course_id=<?php echo $row['course_id']; ?>"
-                                        class="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 rounded-xl text-center flex items-center justify-center gap-2 transition-all shadow-md">
-                                        <i class="fas fa-certificate"></i> View Certificate
-                                    </a>
+                                    <div class="relative flex items-center justify-center gap-4 group w-full">
+                                        <div class="absolute inset-0 duration-1000 opacity-60 transition-all bg-gradient-to-r from-indigo-500 via-pink-500 to-yellow-400 rounded-xl blur-lg filter group-hover:opacity-100 group-hover:duration-200"></div>
+                                        
+                                        <a href="student_actions.php?action=certificate&course_id=<?php echo $row['course_id']; ?>" target="_blank"
+                                           role="button"
+                                           class="group relative flex items-center justify-center text-base rounded-xl bg-gray-900 px-8 py-3 font-semibold text-white transition-all duration-200 hover:bg-gray-800 hover:shadow-lg hover:-translate-y-0.5 hover:shadow-gray-600/30 w-full"
+                                           title="View Certificate">
+                                            
+                                            <i class="fas fa-certificate mr-2"></i> 
+                                            View Certificate
+                                            
+                                            <svg aria-hidden="true" viewBox="0 0 10 10" height="10" width="10" fill="none" class="mt-0.5 ml-2 -mr-1 stroke-white stroke-2">
+                                                <path d="M0 5h7" class="transition opacity-0 group-hover:opacity-100"></path>
+                                                <path d="M1 1l4 4-4 4" class="transition group-hover:translate-x-[3px]"></path>
+                                            </svg>
+                                        </a>
+                                    </div>
                                 <?php elseif ($is_paid): ?>
                                     <a href="course_view.php?id=<?php echo $row['course_id']; ?>"
                                         class="w-full bg-brand-blue hover:bg-brand-blue-dark text-white font-semibold py-3 rounded-xl text-center flex items-center justify-center gap-2 transition-all shadow-md">

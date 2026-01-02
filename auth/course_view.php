@@ -293,7 +293,7 @@ include("../header.php");
                     </div>
                     
                     <?php if ($progress_percentage == 100): ?>
-                        <a href="student_actions.php?action=certificate&course_id=<?php echo $course_id; ?>" 
+                        <a href="student_actions.php?action=certificate&course_id=<?php echo $course_id; ?>" target="_blank" 
                            class="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 rounded-xl text-center flex items-center justify-center gap-2 transition-all shadow-md">
                             <i class="fas fa-certificate"></i> Get Certificate
                         </a>
