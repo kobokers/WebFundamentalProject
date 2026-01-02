@@ -48,16 +48,25 @@
                         </a>
                     </li>
                     <li>
+                        <?php if (!$isLoggedIn): ?>
                         <a href="<?php echo BASE_URL; ?>auth/login.php"
                             class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Sign In
                         </a>
+                        <?php else: ?>
+                        <a href="<?php echo BASE_URL; ?>auth/dashboard.php"
+                            class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
+                            Dashboard
+                        </a>
+                        <?php endif; ?>
                     </li>
                     <li>
+                        <?php if (!$isLoggedIn): ?>
                         <a href="<?php echo BASE_URL; ?>auth/register.php"
                             class="text-gray-600 dark:text-gray-400 hover:text-brand-blue dark:hover:text-brand-blue text-sm transition-colors">
                             Create Account
                         </a>
+                        <?php endif; ?>
                     </li>
                     <li>
                         <a href="<?php echo BASE_URL; ?>about.php"
